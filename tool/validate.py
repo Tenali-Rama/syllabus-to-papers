@@ -73,7 +73,7 @@ mroot = os.path.join(ROOT, "manifests")
 for f in sorted(os.listdir(mroot)):
     if not f.endswith(".json"): continue
     m = json.load(open(os.path.join(mroot, f)))
-    manifests[m["run"]] = m
+    manifests[(m["syllabus"], m["run"])] = m
     rdir = os.path.join(papers_root, m["syllabus"], m["run"])
     if not os.path.isdir(rdir):
         err(f"manifest {f}: run dir {m['syllabus']}/{m['run']} does not exist")
@@ -94,12 +94,13 @@ for line in reg.splitlines():
             if not os.path.isdir(p):
                 err(f"registry row points to missing dir: {path_m.group(1)}")
             run = os.path.basename(path_m.group(1).rstrip("/"))
-            reg_runs.add(run)
-            if run not in manifests:
-                err(f"registry row for {run} has no manifest")
-for run in manifests:
-    if run not in reg_runs:
-        err(f"manifest for {run} has no registry row")
+            slug = os.path.basename(os.path.dirname(path_m.group(1).rstrip("/")))
+            reg_runs.add((slug, run))
+            if (slug, run) not in manifests:
+                err(f"registry row for {slug}/{run} has no manifest")
+for key in manifests:
+    if key not in reg_runs:
+        err(f"manifest for {key[0]}/{key[1]} has no registry row")
 
 # 6: syllabus files exist
 for m in manifests.values():
