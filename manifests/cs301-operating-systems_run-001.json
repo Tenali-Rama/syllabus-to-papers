@@ -1,0 +1,14 @@
+{
+  "syllabus": "cs301-operating-systems",
+  "run": "run-001_2026-11-23",
+  "date": "2026-11-23",
+  "status": "accepted",
+  "reviewer_score": "77/90",
+  "papers": [
+    {"difficulty": "easy", "file": "easy.md", "marks": 100},
+    {"difficulty": "medium", "file": "medium.md", "marks": 100},
+    {"difficulty": "hard", "file": "hard.md", "marks": 100}
+  ],
+  "modules_covered": 6,
+  "notes": "Seed run promoted from the qgen bake-off; round-3 delta PASS."
+}
