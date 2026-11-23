@@ -1,0 +1,14 @@
+{
+  "syllabus": "applied-econometrics-advanced-models",
+  "run": "run-001_2026-11-23",
+  "date": "2026-11-23",
+  "status": "accepted",
+  "reviewer_score": "78/90",
+  "papers": [
+    {"difficulty": "easy", "file": "easy.md", "marks": 100},
+    {"difficulty": "medium", "file": "medium.md", "marks": 100},
+    {"difficulty": "hard", "file": "hard.md", "marks": 100}
+  ],
+  "modules_covered": 4,
+  "notes": "Modules: volatility (ARCH/GARCH), cointegration & ARDL, panel data (FE/RE/CCE/AMG/Panel ARDL/GMM/MM-QR), cross-sectional & binary/limited DV estimators. Generated end-to-end by an agent following AGENTS.md; accepted in round 2 (68 -> 78/90) after fixing ADF consistency, easy-tier gradient, and template duplication. Template uniqueness machine-enforced in qa_check.py."
+}
