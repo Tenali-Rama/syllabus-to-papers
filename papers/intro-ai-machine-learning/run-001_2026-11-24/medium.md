@@ -165,7 +165,7 @@ For each point in order: compute net, decide whether an update occurs, and if so
 (D) Shorten all prompts
 *(M5, 2 marks, S18)*
 
-**Q24.** *(Numerical — token cost)* An LLM API charges **$0.50 per 1 million input tokens** and **$1.50 per 1 million output tokens**. A document-QA service sends a **350-token prompt** each call and caps the response at **150 tokens**. Compute the cost of **1,000 calls**, showing the per-call cost as an intermediate step.
+**Q24.** *(Numerical — token cost)* An LLM API charges **\$0.50 per 1 million input tokens** and **\$1.50 per 1 million output tokens**. A document-QA service sends a **350-token prompt** each call and caps the response at **150 tokens**. Compute the cost of **1,000 calls**, showing the per-call cost as an intermediate step.
 *(M5, 3 marks, S17)*
 
 ---
@@ -273,7 +273,7 @@ Given: $\log_2 0.6 = -0.737$, $\log_2 0.4 = -1.322$, $\log_2 0.2 = -2.322$, $\lo
 - Q13 (2): **B**. Backprop = chain-rule gradients flowing output→input; it does not create data or predictions.
 - Q14 (2): **B**. $\eta$ scales each weight update per mistake.
 - Q15 (3): Any two, 1.5 marks each: convolutions exploit local spatial structure and share weights, so they need far less data/parameters than a dense net on 50k+ pixels; pooling gives translation robustness for lesion position; dense MLP on raw pixels overfits and ignores locality.
-- Q16 (5): Point 1: $\text{net} = 0.5(1) + (-0.3)(2) + 0.2 = 0.1 > 0$ → predict +1 = true label → **no update** *(1)*. Point 2: $\text{net} = 0.5(2) + (-0.3)(1) + 0.2 = 0.9 > 0$ → predict +1, true −1 → mistake *(1)*. Update: $w \leftarrow (0.5, -0.3) + 0.1(-1)(2, 1) = (0.5 - 0.2, -0.3 - 0.1) = $**(0.3, −0.4)** *(1)*; $b \leftarrow 0.2 + 0.1(-1) = $**0.1** *(1)*. Final: **w = (0.3, −0.4), b = 0.1** *(1: correct final statement)*.
+- Q16 (5): Point 1: $\text{net} = 0.5(1) + (-0.3)(2) + 0.2 = 0.1 > 0$ → predict +1 = true label → **no update** *(1)*. Point 2: $\text{net} = 0.5(2) + (-0.3)(1) + 0.2 = 0.9 > 0$ → predict +1, true −1 → mistake *(1)*. Update: $w \leftarrow (0.5, -0.3) + 0.1(-1)(2, 1) = (0.5 - 0.2, -0.3 - 0.1) = (0.3, -0.4)$ → **(0.3, −0.4)** *(1)*; $b \leftarrow 0.2 + 0.1(-1) = 0.1$ → **0.1** *(1)*. Final: **w = (0.3, −0.4), b = 0.1** *(1: correct final statement)*.
 
 ### Section C — Modules 4 & 5 (18 marks)
 
@@ -289,7 +289,7 @@ Given: $\log_2 0.6 = -0.737$, $\log_2 0.4 = -1.322$, $\log_2 0.2 = -2.322$, $\lo
 - Q21 (2): **B**. In-context examples steer the output pattern for that request only; they do not retrain (A) or guarantee no hallucination (D).
 - Q22 (2): **B**. Role framing sets domain-appropriate register and defaults; weights are untouched.
 - Q23 (2): **B**. Grounding/citation in verified data targets the invented-content failure directly; higher temperature worsens it.
-- Q24 (3): Per call: input $350 \times \$0.50/10^6 = \$0.000175$; output $150 \times \$1.50/10^6 = \$0.000225$ → per-call **$0.0004** *(2 marks)*; 1,000 calls → **$0.40** *(1 mark)*.
+- Q24 (3): Per call: input $350 \times \$0.50/10^6 = \$0.000175$; output $150 \times \$1.50/10^6 = \$0.000225$ → per-call **\$0.0004** *(2 marks)*; 1,000 calls → **\$0.40** *(1 mark)*.
 
 ### Section D — Modules 6 & 7 (19 marks)
 
@@ -317,7 +317,7 @@ Given: $\log_2 0.6 = -0.737$, $\log_2 0.4 = -1.322$, $\log_2 0.2 = -2.322$, $\lo
 
 *(Integrative long answers.)*
 
-- Q36 (8): (a) $\text{Precision} = \text{TP}/(\text{TP}+\text{FP}) = 45/75 = $**0.600** *(2: 1 formula+substitution, 1 value)*. (b) $\text{Recall} = \text{TP}/(\text{TP}+\text{FN}) = 45/60 = $**0.750** *(2)*. (c) $F_1 = 2PR/(P+R) = 2(0.60)(0.75)/1.35 = 0.900/1.35 = $**0.667** *(2)*. (d) Precision 0.60: 40% of positive calls are false alarms → extra biopsies/anxiety; recall 0.75: 25% of tumors are missed *(1)*; in screening, missed tumors are far costlier than false alarms, so prioritizing recall is defensible *(1)*.
+- Q36 (8): (a) $\text{Precision} = \text{TP}/(\text{TP}+\text{FP}) = 45/75 = 0.600$ → **0.600** *(2: 1 formula+substitution, 1 value)*. (b) $\text{Recall} = \text{TP}/(\text{TP}+\text{FN}) = 45/60 = 0.750$ → **0.750** *(2)*. (c) $F_1 = 2PR/(P+R) = 2(0.60)(0.75)/1.35 = 0.900/1.35 = 0.667$ → **0.667** *(2)*. (d) Precision 0.60: 40% of positive calls are false alarms → extra biopsies/anxiety; recall 0.75: 25% of tumors are missed *(1)*; in screening, missed tumors are far costlier than false alarms, so prioritizing recall is defensible *(1)*.
 - Q37 (10): (a) Parent entropy = $-(0.6\,\log_2 0.6 + 0.4\,\log_2 0.4)$ = 0.6(0.737) + 0.4(1.322) = 0.442 + 0.529 = **0.971** *(2)*. (b) Split A: good child pure → 0; bad child: $-(0.2\,\log_2 0.2 + 0.8\,\log_2 0.8)$ = 0.2(2.322) + 0.8(0.322) = 0.464 + 0.258 = 0.722; weighted = 0.5(0) + 0.5(0.722) = 0.361; IG_A = 0.971 − 0.361 = **0.610** *(3: 1 child entropies, 1 weighting, 1 gain)*. (c) Split B: yes child: −((2/3)(−0.585) + (1/3)(−1.585)) = 0.390 + 0.528 = 0.918; no child: 1.000; weighted = 0.6(0.918) + 0.4(1.000) = 0.951; IG_B = 0.971 − 0.951 = **0.020** *(2)*. (d) **Split A (credit history)** — IG 0.610 $\gg$ 0.020 *(1)*; the gap shows credit history nearly purifies the classes (one child is pure), while income barely reduces uncertainty, so it carries almost no classification information here *(2)*.
 
 **Mark split summary:** 2-mark × 25 = 50; 3-mark × 9 = 27; 5-mark × 1 = 5; 8-mark × 1 = 8; 10-mark × 1 = 10 → **37 questions, 100 marks**. Long answers: one 8-mark, one 10-mark (≤ 3 ten-mark longs ✓).

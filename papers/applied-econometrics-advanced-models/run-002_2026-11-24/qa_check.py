@@ -227,7 +227,7 @@ for diff in PAPERS:
     for q in qs:
         if re.search(r"\(T ?[−-] ?1\)\(T ?[−-] ?2\)/2", q["full"]):
             check(f"{diff}:{q['qid']}: [P2] AB lag rule s >= 2 stated",
-                  re.search(r"s\s*(?:≥|\\geq)\s*\$?\s*2", q["full"]) is not None,
+                  re.search(r"s\s*\$?\s*(?:≥|\\geq)\s*\$?\s*2", q["full"]) is not None,
                   f"{q['qid']} mentions instrument count")
     # 3. RE quasi-demeaning weight: if θ appears near quasi-demeaning, it must be θ = 1 − √(σ²_u/(σ²_u + Tσ²_v)); never a "1 +" form
     spur = re.findall(r"(?:θ|\\theta)[^;\n]*", body)

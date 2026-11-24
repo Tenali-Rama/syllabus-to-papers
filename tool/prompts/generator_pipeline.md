@@ -53,6 +53,9 @@ Machine-verify with scripts (`verify.py`, `qa_check.py`):
 - every numerical re-simulated (compute, don't estimate); template-uniqueness scan; cross-paper duplication scan
 Fix violations, re-verify, report honestly with [M-verify.py]/[M-qa_check.py]/[Manual] evidence labels. An "n/a" on a required check is a FAIL.
 
+## Stage 3b — Study starter → `<run-dir>/starter.md`
+Per `tool/STARTER_SPEC.md`: teach every blueprint sub-topic (definition + formula + a WORKED MINI-EXAMPLE DIFFERENT FROM THE PAPERS' DATA + pitfall box mirroring the MCQ distractor misconceptions + self-check). Never reuse the papers' data/numbers/answers (leak scan is mandatory in Stage 3). Structure: how-to-use note → modules in learning order → formula sheet → misconception checklist.
+
 ## Stage 4 — Packaging
 Formatting: follow `tool/PAPER_FORMAT.md` exactly (header block, section headings with counts×marks, tag lines, Markdown tables for data, fenced code for formulas, structured answer key). Formatting-only: never alter content.
 Add YAML frontmatter to each paper (exact keys per AGENTS.md; qa_verdict: PENDING until reviewed) and write `PAPER-INDEX.md` summarizing the run. Scripts must be path-portable: resolve paper paths relative to the script's own directory. Never reference paths outside the run directory.

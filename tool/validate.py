@@ -27,8 +27,9 @@ REQUIRED_KEYS = ["syllabus", "run", "difficulty", "paper_number", "marks",
                  "duration_hours", "modules_covered", "question_types",
                  "qa_verdict", "reviewer_score"]
 PAPERS = ["easy.md", "medium.md", "hard.md"]
-ALLOWED_MD = set(PAPERS + ["blueprint.md", "qa_report.md", "PAPER-INDEX.md"])
+ALLOWED_MD = set(PAPERS + ["blueprint.md", "qa_report.md", "PAPER-INDEX.md", "starter.md"])
 RUN_FILES = PAPERS + ["blueprint.md", "qa_report.md", "verify.py", "qa_check.py", "PAPER-INDEX.md"]
+V2_FILES = ["starter.md"]
 MIN_QUESTIONS = 35
 MIN_COVERAGE = 0.85
 
@@ -113,6 +114,9 @@ for slug in sorted(os.listdir(papers_root)):
             blueprint_data[key] = ({f"S{i}" for i in st_ids}, {f"M{i}" for i in m_ids})
             is_v2 = "S1" in blueprint_data[key][0]
         v2_runs[key] = is_v2
+        for f in V2_FILES:
+            if v2_runs.get(key) and not os.path.exists(os.path.join(rdir, f)):
+                err(f"missing file {os.path.relpath(os.path.join(rdir, f), ROOT)} (required for sub-topic-tagged runs)")
 
         for f in PAPERS:
             p = os.path.join(rdir, f)
@@ -155,15 +159,24 @@ for slug in sorted(os.listdir(papers_root)):
             if totals and sum(totals) != declared[0]:
                 err(f"{rel}: tagged marks sum to {sum(totals)}, not {declared[0]}")
 
-            # math-span integrity: odd $ parity or ** inside $...$ = broken rendering
+            # math-span integrity (sequential pairing, like GitHub's renderer):
+            # unbalanced $ on a line, or ** inside a $...$ span, renders raw on GitHub
             for ln, line in enumerate(body.splitlines(), 1):
                 if line.strip().startswith(("```", "$$")): continue
-                stripped = re.sub(r"\$\$", "", line)
-                n = stripped.count("$") - stripped.count("\\$")
-                if n % 2 == 1:
-                    err(f"{rel}:L{ln}: unbalanced $ delimiters ({n}) — will render raw")
-                for mm in re.finditer(r"\$[^$\n]*?\*\*[^$\n]*?\$", line):
-                    err(f"{rel}:L{ln}: markdown bold inside $...$ math span — will render raw")
+                in_math, mstart, bold_seen = False, 0, False
+                j = 0
+                while j < len(line):
+                    if line[j:j+2] == "$$": j += 2; continue
+                    if line[j] == "\\" and j+1 < len(line): j += 2; continue
+                    if line[j] == "$":
+                        if in_math and bold_seen:
+                            err(f"{rel}:L{ln}: markdown ** inside $...$ math span — renders raw")
+                        in_math, mstart, bold_seen = not in_math, j+1, False
+                    elif in_math and line[j:j+2] == "**":
+                        bold_seen = True
+                    j += 1
+                if in_math:
+                    err(f"{rel}:L{ln}: unbalanced $ delimiters — will render raw")
 
             # 4: answer key present
             if not re.search(r"^#+.*answer key", body, re.I | re.M):

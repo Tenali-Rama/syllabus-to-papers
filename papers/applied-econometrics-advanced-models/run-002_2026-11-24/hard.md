@@ -198,7 +198,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 **C6.** Given an ARDL(p, q) with long-run coefficient estimated as $\theta = \beta_0/(1 - \sum\gamma)$, explain how a standard error for $\theta$ is obtained (delta method in one line) and what economic quantity $\theta$ represents when both variables are in logs.
 *(M2, 3, S20)*
 
-**C7.** Your Hausman statistic is 2.00 against $\chi^{2}(1) 5%$ critical value 3.84. State the decision and, importantly, two caveats that should accompany a "RE is adequate" conclusion in a short panel.
+**C7.** Your Hausman statistic is 2.00 against $\chi^{2}(1)$ 5% critical value 3.84. State the decision and, importantly, two caveats that should accompany a "RE is adequate" conclusion in a short panel.
 *(M3, 3, S22)*
 
 **C8.** Explain the difference between the common dynamic process in AMG and the cross-sectional averages in CCEMG, and state when AMG's construction is likely to be more convenient in practice.
@@ -222,7 +222,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 (ii) State the decision at 5% with the comparison. (2)
 (iii) State what the estimate of $\rho$ implies about the persistence of deviations from the long-run relation. (1)
 
-**D3.** A Hausman test on the coefficient of interest gives $\hat{\beta}_{FE} = 2.40, \hat{\beta}_{RE} = 2.00$, with $Var(\hat{\beta}_{FE}) - Var(\hat{\beta}_{RE}) = 0.08$. The $\chi^{2}(1) 5%$ critical value is 3.84. Convention: H $= (difference)^{2}/variance$ difference.
+**D3.** A Hausman test on the coefficient of interest gives $\hat{\beta}_{FE} = 2.40, \hat{\beta}_{RE} = 2.00$, with $Var(\hat{\beta}_{FE}) - Var(\hat{\beta}_{RE}) = 0.08$. The $\chi^{2}(1)$ 5% critical value is 3.84. Convention: H $= (difference)^{2}/variance$ difference.
 *(M3, 4, S21, S22)*
 
 (i) Compute H. (1)
@@ -302,7 +302,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 
 ### Section C (3 marks each)
 
-- **C1.** $\sigma^{2}_{t+k} = \omega + (\alpha+\beta)\sigma^{2}_{t+k-1}$; decays geometrically to $\omega/(1-\alpha-\beta) = \omega/0.07$ $\approx$ **$14.3\omega$** (1) $(20\omega$ would require persistence 0.95); speed set by persistence $\alpha+\beta$ (1); shocks' share of variance fades as $(\alpha+\beta)^{k}$ (1).
+- **C1.** $\sigma^{2}_{t+k} = \omega + (\alpha+\beta)\sigma^{2}_{t+k-1}$; decays geometrically to $\omega/(1-\alpha-\beta) = \omega/0.07$ $\approx$ **$14.3\omega$** (1) ($20\omega$ would require persistence 0.95); speed set by persistence $\alpha+\beta$ (1); shocks' share of variance fades as $(\alpha+\beta)^{k}$ (1).
 - **C2.** LB on residuals: p = 0.62 > 0.05 → fail to reject no serial correlation — passes (decision with comparison) (1); LB on squared residuals: p = 0.08 > 0.05 → fail to reject no remaining ARCH at 5% — passes, though borderline (decision with comparison) (1); recommendation: variance dynamics are adequate, but JB p = 0.004 rejects normality — refit with a fat-tailed error density (standardized-t/skewed-t), keeping robust standard errors as an interim safeguard (joint recommendation, JB remark stated separately) (1).
 - **C3.** low power: the cointegrating vector is estimated, and the normalization onto one variable loses information with multiple vectors; short samples make the estimated residual look more persistent (2); alternative: Johansen's system ML / bounds test (1).
 - **C4.** $\Delta y_t = \alpha_1\cdot ecm_{t-1}$ + $\sum\text{(short-run terms)}$ $+ u_{1t}$ and $\Delta x_t = \alpha_2\cdot ecm_{t-1}$ + $\sum\text{(short-run terms)}$ $+ u_{2t}$, ecm = y $- \beta x$ (1.5); the levels VAR = VECM with rank 1 restriction; $\beta$ is the cointegrating vector, $\alpha$ the loadings (1.5).

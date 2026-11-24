@@ -279,7 +279,7 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 
 - Q5 (2): **B**. A leaf holds the final class decision; internal nodes ask questions.
 - Q6 (2): **B**. Gini = mislabeling probability under the node's class distribution.
-- Q7 (3): $\text{Gini} = 1 - p_{\text{spam}}^2 - p_{\text{non}}^2$ with $p_{\text{spam}} = 8/10 = 0.8$, $p_{\text{non}} = 0.2$ → $1 - (0.64 + 0.04) = $**0.32**. *(1 mark setup, 1 mark substitution, 1 mark result.)*
+- Q7 (3): $\text{Gini} = 1 - p_{\text{spam}}^2 - p_{\text{non}}^2$ with $p_{\text{spam}} = 8/10 = 0.8$, $p_{\text{non}} = 0.2$ → $1 - (0.64 + 0.04) = 0.32$ → **0.32**. *(1 mark setup, 1 mark substitution, 1 mark result.)*
 - Q8 (2): **C**. Splits maximize purity gain; balanced counts are not the criterion.
 - Q9 (3): Pruning removes branches that fit noise in the training emails, simplifying the tree *(1–2)*; fully pure leaves encode accidental patterns of the training sample, so they fail to generalize to new mail *(1–2)*. *(Split: 1 mark what pruning does, 2 marks why purity ≠ generalization.)*
 - Q10 (2): **B**. k = 1 uses exactly the nearest neighbor's class.
@@ -290,7 +290,7 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 - Q13 (2): **B**. $\text{ReLU}(x) = \max(0, x)$ → $\max(0, -3.5) = 0$.
 - Q14 (2): **B**. Hidden layers compose intermediate features; they do not guarantee zero error (C) or remove the need for labels (D).
 - Q15 (3): **B**. Pooling downsamples feature maps, keeping strong activations and cutting computation; filter learning happens in convolutional layers, not pooling.
-- Q16 (5): $\text{net} = w_1x_1 + w_2x_2 + b$ = 0.4(1) + (−0.6)(1) + 0.1 = **−0.1** *(3 marks: formula + correct arithmetic)*; $-0.1 < 0$ → output **0** *(2 marks)*.
+- Q16 (5): $\text{net} = w_1x_1 + w_2x_2 + b = 0.4(1) + (-0.6)(1) + 0.1 = -0.1$ → **−0.1** *(3 marks: formula + correct arithmetic)*; $-0.1 < 0$ → output **0** *(2 marks)*.
 
 ### Section C — Modules 4 & 5 (18 marks)
 
@@ -335,6 +335,6 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 *(Integrative long answers.)*
 
 - Q36 (8): (a) Four stages × 1 mark, in order: collect labeled discharge records (30-day outcomes per patient); clean/normalize the records; train on the training split; evaluate on held-out data, then deploy with monitoring. *(Judgment note: the split must be defined before tuning begins, not after seeing results.)* (b) Hold out a test set of discharge records set aside **before** any model building or tuning (e.g. a 70/30 split by patient) *(1)*; the held-out set estimates performance on future discharges and exposes overfitting to the training rows *(1)*. (c) Exclude the appointment-booking feature *(1)* — its value leaks the outcome, because whether/when appointments got booked is only known after the 30-day window closes, so it inflates training accuracy and is unavailable at prediction time; the 89% training score is exactly the kind of inflated number this leakage produces *(1)*.
-- Q37 (10): (a) Root/internal nodes test attributes ("visits per week < 1"); leaves hold the final prediction — churn (Y) or stay (N) here *(2)*. (b) Parent entropy = $-(0.5\,\log_2 0.5 + 0.5\,\log_2 0.5)$ = −(0.5·(−1) + 0.5·(−1)) = **1.000** *(1)*. Child entropies: yes child (3Y,1N) = $-(0.75(-0.415) + 0.25(-2.000)) = 0.311 + 0.500 = $**0.811**; no child (1Y,3N) = same by symmetry = **0.811** *(1)*. Weighted = 0.5(0.811) + 0.5(0.811) = **0.811** *(1)*. $\text{IG} = 1.000 - 0.811 = $**0.189** *(1)*. (c) Problem: overfitting — a tree grown until every leaf is pure has memorized this sample of 8 members, including noise, so it fails on new members *(2)*. Fix: prune / cap depth / set a minimum leaf size *(1)*, because a smaller tree keeps only the splits that generalize (here, IG 0.189 is modest, so little splitting is justified at all) *(1)*.
+- Q37 (10): (a) Root/internal nodes test attributes ("visits per week < 1"); leaves hold the final prediction — churn (Y) or stay (N) here *(2)*. (b) Parent entropy = $-(0.5\,\log_2 0.5 + 0.5\,\log_2 0.5)$ = −(0.5·(−1) + 0.5·(−1)) = **1.000** *(1)*. Child entropies: yes child (3Y,1N) = $-(0.75(-0.415) + 0.25(-2.000)) = 0.311 + 0.500 = 0.811$ → **0.811**; no child (1Y,3N) = same by symmetry = **0.811** *(1)*. Weighted = 0.5(0.811) + 0.5(0.811) = **0.811** *(1)*. $\text{IG} = 1.000 - 0.811 = 0.189$ → **0.189** *(1)*. (c) Problem: overfitting — a tree grown until every leaf is pure has memorized this sample of 8 members, including noise, so it fails on new members *(2)*. Fix: prune / cap depth / set a minimum leaf size *(1)*, because a smaller tree keeps only the splits that generalize (here, IG 0.189 is modest, so little splitting is justified at all) *(1)*.
 
 **Mark split summary:** 2-mark × 25 = 50; 3-mark × 9 = 27; 5-mark × 1 = 5; 8-mark × 1 = 8; 10-mark × 1 = 10 → **37 questions, 100 marks**. Long answers: one 8-mark, one 10-mark (≤ 3 ten-mark longs ✓).

@@ -234,7 +234,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 (i) Compute the total instrument count and check it against N. (2)
 (ii) Evaluate each diagnostic at the 5% level and state what the pattern certifies about the specification. (2)
 
-**D5.** A Probit/Tobit modelling exercise reports log-likelihood $-41.2$ for the estimated model and $-52.9$ for the intercept-only model. A slope coefficient of interest has Wald statistic 4.10 against a $\chi^{2}(1) 5%$ critical value of 3.84. The LR 5% critical value is 5.99.
+**D5.** A Probit/Tobit modelling exercise reports log-likelihood $-41.2$ for the estimated model and $-52.9$ for the intercept-only model. A slope coefficient of interest has Wald statistic 4.10 against a $\chi^{2}(1)$ 5% critical value of 3.84. The LR 5% critical value is 5.99.
 *(M4, 4, S38, S39)*
 
 (i) Compute the LR statistic $2(lnL_{ur} - lnL_r)$ and state the decision at 5%. (1)

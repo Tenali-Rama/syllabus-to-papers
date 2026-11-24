@@ -16,7 +16,7 @@ This repository is a **registry + tool + archive** for agentic question-paper ge
 ### Naming
 - Syllabus slug: lowercase, hyphenated course name, e.g. `cs301-operating-systems`. One file per syllabus: `syllabi/<slug>.md`.
 - Run directory: `papers/<slug>/run-NNN_<YYYY-MM-DD>/` — NNN is the zero-padded run number **for that syllabus** (check `manifests/` for the next free number).
-- Paper files inside a run are always: `easy.md`, `medium.md`, `hard.md`, plus `blueprint.md`, `qa_report.md`, `verify.py`, `qa_check.py`, and `PAPER-INDEX.md`.
+- Paper files inside a run are always: `easy.md`, `medium.md`, `hard.md`, plus `blueprint.md`, `starter.md`, `qa_report.md`, `verify.py`, `qa_check.py`, and `PAPER-INDEX.md`. (`starter.md` is required for all runs with a sub-topic inventory — it's the study-first file the user reads before the easy paper; spec in `tool/STARTER_SPEC.md`.)
 
 ### Paper file format
 Markdown with mandatory YAML frontmatter:
@@ -48,7 +48,7 @@ Layout: per `tool/PAPER_FORMAT.md` (mandatory). Body: total marks and duration e
 3. **Run the pipeline** (4 subagent roles, per `tool/SYSTEM.md`):
    - ANALYZER: syllabus → `blueprint.md`
    - SETTER: blueprint → `easy.md`, `medium.md`, `hard.md` (use `tool/prompts/generator_pipeline.md`)
-   - QA ENGINEER: write `verify.py` + `qa_check.py`, machine-verify everything, produce `qa_report.md`
+   - QA ENGINEER: write `verify.py` + `qa_check.py`, machine-verify everything (including the starter's leak-scan and coverage), produce `qa_report.md`
    - REVIEWER: score with `tool/reviewer_rubric.md`. If < 75/90, feed the ranked defect list back into SETTER and repeat. Do not commit below 75.
 4. **Write the run.** Create `papers/<slug>/run-NNN_<date>/` with all files (rename papers to `easy.md`/`medium.md`/`hard.md` and add frontmatter), plus a `PAPER-INDEX.md`.
 5. **Write the manifest.** `manifests/<slug>_run-NNN.json` (schema below).
