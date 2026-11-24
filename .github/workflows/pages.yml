@@ -43,11 +43,10 @@ jobs:
             out="${out%.md}.html"
             pandoc "$f" -f gfm -t html --mathjax -c style.css -H site/header.html -s -o "$out" --metadata title="$(basename "$out" .html)"
           done
-          cp papers/*/run-*/PAPER-INDEX.md site/ 2>/dev/null || true
           {
             echo '<html><head><title>syllabus-to-papers</title><link rel="stylesheet" href="style.css"></head><body>'
             echo '<h1>📚 Papers</h1><ul>'
-            find site -name "*.html" ! -name index.html | sort | while read f; do
+            find site -name "*.html" ! -name index.html ! -name header.html | sort | while read f; do
               p="${f#site/}"; echo "<li><a href='$p'>$p</a></li>"
             done
             echo '</ul></body></html>'
