@@ -138,8 +138,8 @@ jobs:
             echo '</head><body>'
             cat site/topbar-index.html
             echo '<h1>📚 Papers</h1><ul>'
-            find site -name "*.html" ! -name "index.html" ! -path "site/*" | sort | while read f; do
-              p="${f#site/}"; echo "<li><a href='$p'>$p</a></li>"
+            find site -name "*.html" ! -name "index.html" ! -name "header.html" ! -name "topbar.html" ! -name "topbar-index.html" ! -name "head.html" | sort | while read f; do
+              p="${f#site/}"; n="${p%.html}"; echo "<li><a href='$p'>${n//\//› }</a></li>"
             done
             echo '</ul></body></html>'
           } > site/index.html
