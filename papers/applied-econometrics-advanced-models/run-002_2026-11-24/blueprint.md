@@ -126,7 +126,7 @@ recall/single-concept treatment (MCQ, definition, or one-step application).
 | **Total** | **10** | **24** | **24** | **25** | **17** | **100** |
 
 ### Paper 3 (Hard) — 38 questions
-| Module | MCQ (10×1) | Short-2 (12×2) | App-3 (8×3) | Numerical (6×4) | Long (10+8) | Total |
+| Module | MCQ (10×1) | Short-2 (12×2) | App-3 (8×3) | Numerical (24: D1–D4 4 each, D5 5, D6 3) | Long (10+8) | Total |
 |---|---|---|---|---|---|---|
 | M1 | 3 | 8 | 6 | 4 | 0 | 21 |
 | M2 | 3 | 4 | 12 | 4 | 10 | 33 |

@@ -30,3 +30,6 @@ The reviewer's verdict must be mirrored into the run: paper frontmatter (`qa_ver
 Read tool/QUALITY_BAR.md. Grade all 12 criteria PASS/FAIL citing a question-level example for any FAIL:
 - Criteria 1–6 are hard gates: any FAIL = NEEDS REVISION regardless of weighted total, with the failing questions listed.
 - Criteria 7–12: each FAIL deducts 1 point from the Question Quality score (which is /10).
+
+## Verifier-of-verifier (mandatory, all runs)
+Audit the run's verify.py/qa_check.py for: tautological assertions (constant vs same constant), hand-transcribed expected values that should be computed, trivially-true booleans, and checks derived from the key's convention rather than the stem's printed specification. Each finding costs 1 point off Question Quality and is listed as a defect. verify.py assertions must parse stems, not transcribe keys.

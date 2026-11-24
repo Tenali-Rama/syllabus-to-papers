@@ -26,15 +26,15 @@ syllabus: <slug>
 run: <run-dir-name>
 difficulty: easy|medium|hard
 paper_number: 1|2|3
-marks: 100
-duration_hours: 3
+marks: <total from syllabus assessment scheme>
+duration_hours: <from syllabus>
 modules_covered: <int>
 question_types: [MCQ, short-answer, numerical, long-answer]
 qa_verdict: ACCEPTED|PENDING
 reviewer_score: "<N>/90"
 ---
 ```
-Body: 100 marks, 3 hours, **≥35 questions per paper**, every question tagged `(Mn, marks, Sk)` where Sk are the blueprint's sub-topic IDs, sections with counts and totals, brief answer key with mark splits at the end.
+Body: total marks and duration exactly as the syllabus's assessment scheme declares (there is no default — real exams range from 5-mark quizzes to 1000-mark university papers, 5 minutes to 4.5 hours), **≥35 questions per paper**, every question tagged `(Mn, marks, Sk)` where Sk are the blueprint's sub-topic IDs, sections with counts and totals, brief answer key with mark splits at the end.
 
 ### Quality bar
 - **Quality**: papers must pass the 12-criteria gate in `tool/QUALITY_BAR.md` (criteria 1–6 are hard gates).

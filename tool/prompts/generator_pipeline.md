@@ -5,7 +5,7 @@ You are the orchestrator of the exam-generation pipeline. Input: a syllabus file
 ## Stage 1 — Analysis → `<run-dir>/blueprint.md`
 Produce:
 1. **Sub-topic inventory**: decompose the syllabus into an explicit numbered list of atomic sub-topics (every bullet/line in the syllabus becomes 1–3 numbered sub-topics; typically 30–60 total). This inventory is the coverage contract.
-2. **Coverage matrix**: sub-topic × paper table — for each paper, which question covers each sub-topic (or "—"). Every paper must cover ≥85% of sub-topics; every sub-topic must appear in at least one paper (100% across the run).
+1b. **Exam scheme**: read total marks and duration from the syllabus's assessment scheme verbatim — never assume 100/3h. All papers use the declared scheme.: sub-topic × paper table — for each paper, which question covers each sub-topic (or "—"). Every paper must cover ≥85% of sub-topics; every sub-topic must appear in at least one paper (100% across the run).
 3. Module × question-type marks table per paper (summing to exactly 100). Sections are module-based (one section per module, or a stated logical grouping), each section header carrying question count and mark total; questions appear in module-progressive order.
 4. Three-axis difficulty rubric (cognitive level, concepts combined, numerical complexity).
 5. Uniqueness constraint list (question templates, data sets, numericals — each template family at most once across the whole run).
@@ -15,7 +15,7 @@ Read `tool/QUALITY_BAR.md` before generating. All 12 criteria are binding; crite
 
 ## Stage 2 — Generation → `<run-dir>/easy.md`, `medium.md`, `hard.md`
 Generate from the blueprint only. Requirements:
-- 100 marks / 3 hours each; every question tagged `(Mn, marks)` AND tagged with the sub-topic IDs it covers, e.g. `(M2, 3 marks, S7)`.
+- the syllabus-declared total marks and duration each; every question tagged `(Mn, marks)` AND tagged with the sub-topic IDs it covers, e.g. `(M2, 3 marks, S7)`.
 - **Question-count floor: ≥35 questions per paper.** If marks don't fit, reduce per-question marks, not coverage. Target marks distribution: majority of questions in the 2–5 mark band; at most three 10-mark long answers per paper.
 - Long answers ≤ 10 marks, split into (a)/(b)/(c) where each sub-part targets a different sub-topic.
 - No bundling for bundling's sake: a question tagged to a sub-topic must genuinely test it, not name-drop it.
@@ -33,8 +33,17 @@ Mandatory constraints (each violation = automatic failure):
 7. No token sections (each section ≥ 10 marks, with counts and totals).
 8. Difficulty gradient per the rubric's axes, not adjectives.
 
+## Stage 2b — Consistency adjudication (trace-derived rule)
+For every numerical: derive the answer from the printed stem ONLY (parse the stem; never transcribe expected values from the key) and compare to the key. Any disagreement = spec/key divergence = FAIL. Ban constant-vs-constant assertions (check(a, a) style) — a tautological check is a FAIL.
+
+## Stage 2c — Student read pass (trace-derived rule)
+Re-read every stem blind (as a student who hasn't seen the key): flag garbled wording, leading/presupposing stems, conventions needed but unstated, and any question where wording rather than knowledge decides the mark. Fix before QA.
+
 ## Stage 3 — Self-QA → `<run-dir>/qa_report.md`
 Machine-verify with scripts (`verify.py`, `qa_check.py`):
+- concept-frequency lint across papers (same concept tested >2 times across the run = FAIL, even with different phrasing/data)
+- per-paper difficulty distribution vs the tier rubric (easy paper must not contain estimator-comparison essays etc.)
+- verify.py/qa_check.py must not contain tautological or hand-transcribed assertions (constant-vs-constant)
 - marks totals recomputed from tags = 100 per paper; question count ≥ 35 per paper
 - **coverage check**: parse sub-topic tags; compute coverage % per paper against the inventory; FAIL below 85%
 - module table matches blueprint; long answers ≤ 10; question-type mix honored

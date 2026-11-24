@@ -4,7 +4,7 @@ Verdict: **PENDING** (reviewer not run, per task instructions). All machine chec
 
 ## Machine checks
 
-### qa_check.py (86 checks, exit 0)
+### qa_check.py (89 checks, exit 0)
 - **Marks totals**: recomputed from `(Mn, marks, Sk)` tags = exactly 100 in each paper. `[M-qa_check.py]`
 - **Question counts**: 38 / 38 / 38 (≥ 35 required). `[M-qa_check.py]`
 - **Coverage %** (computed from S-tags against the 40-item blueprint inventory): `[M-qa_check.py]`
@@ -47,6 +47,17 @@ Every numerical recomputed from its question's data, including: GARCH recursions
 | **run** | 114 | 300 | **100%** | 3 |
 
 ## Changelog (post-review polish)
+- 2026-11-24 (student/teacher defect-fix pass):
+  1. easy D4(ii) stem: grading convention added — AR(1) rejection is expected under correct differencing (AR(2) should not reject); key wording aligned.
+  2. easy B9: leading stem ("common ingredient... both use") replaced with "How do CCEMG and AMG each proxy or extract common factors...? State the proxy used by each."; key rewritten to state each estimator's proxy separately (1+1).
+  3. easy B2 key: mark split made explicit — σ²_t latent/recursive variable (1); why OLS cannot handle the nonlinear latent variance, ML required (1).
+  4. hard A6 justified key line: false "trace-null complement" characterization of (d) removed — now states (c) rank ≤ r is the trace null, (d) is not a standard test hypothesis, neither matches the λ-max pair H0: rank = r vs H1: rank = r + 1.
+  5. hard D5 rebalanced 1/(1+1)/2 (was 1/2/1): transcribing the printed Φ(0.5) devalued to 1, symmetry insight now 2; false "φ(z) ≤ 1 with equality at z = 0" replaced with φ(z) ≤ φ(0) = 1/√(2π) ≈ 0.399 < 1 so φ(z)β is bounded well below β. D5 tag 4 → 5; to keep the paper at 100 and M4 at 22, D6's parts (iii)+(iv) merged into one 1-mark part (decision + consequence + estimator) and D6 tag 4 → 3; Section D header and blueprint hard-paper table header updated; no numerical constants changed.
+  6. hard D1 key: grading-convention line added — realized-shock recursion as printed; a pure-forecast recursion (E[ε²] = σ²) earns 0 for the recursion marks.
+  7. hard C2 key: LB decisions stated as decision + comparison (2 marks), with the JB/robust-SE remark a separate component of the recommendation mark (1).
+  8. hard E1 rebalanced to integers: (a) 4 → 3 (specification+admissibility 1; bounds logic+outcomes 1; F/t variants 1), (c) 4 → 5 as 2+1+2 (terms added and what they absorb 2; lag truncation 1; heterogeneity–CD reconciliation 2); E1 total stays 10. Key de-fractionalized (no more 1.5s).
+  9. hard E2(a) key: wrong "ME is Φ(z)·β times a correction factor" replaced — E[y|x] = Φ(z)(x′β + σλ(z)) with λ = φ/Φ; the ME on E[y|x] is exactly Φ(z)β; the inverse-Mills ratio sits inside the conditional mean, not the derivative; ME is scaled by Φ(z) ∈ (0,1) and varies with z.
+- Post-fix: verify.py 64/64, qa_check.py 89/89, both exit 0. No expected constants were weakened; the only mark-split constants (hard D5/D6, hard E1) changed where the rebalanced splits are genuinely correct.
 - 2026-11-24: Reworded hard D5(ii)/(iii) stems per review (neutral "whether and how" phrasing; ME-vs-β larger/smaller contrast), updated the D5 key to match, and replaced the tautological `Phi(0.5)` verify.py check with a genuine erf-based computation plus exact-φ ME at z = −0.5 (now 64 checks, all pass; qa_check.py 86/86).
 - 2026-11-24 (defect-fix pass): (1) hard C1 key: long-run variance corrected from 20ω to ω/0.07 ≈ **14.3ω** (persistence 0.93; 20ω would require 0.95); (2) hard A6 λ-max MCQ: key moved to (b) "Rank = r + 1 exactly" — the λ-max alternative — and old key-option (d) "Rank > r" (trace-test alternative, equally defensible) replaced with unambiguous distractor "Rank ≤ r − 1"; justified key line updated, letters still spread; (3) hard C7 key reweighted 1+1+1 to match its 3-mark tag; (4) hard C2 key: contradictory "borderline ARCH remains" removed — now "fail to reject no remaining ARCH at 5% (p = 0.08 borderline); non-normality (JB) may warrant robust standard errors"; (5) hard D6(iii) key: reworded "reject weak CD" to "reject the null of cross-section independence → strong cross-section dependence present"; (6) easy E2(a): bounds-test outcomes corrected to the standard three regions (above upper → reject no-cointegration; between → inconclusive; below lower → fail to reject); "degenerate" removed from stem and key; (7) easy D4 key: fractional ½+½ mark splits consolidated to integers (2; 1; 1 = 4); (8) easy D6(iii) key: FPR stated as 0.2545 (4 dp) instead of ≈ 0.25. No verify.py constants needed changing (it asserts none of the corrected prose values). Post-fix: verify.py 64/64, qa_check.py 89/89, both exit 0.
 

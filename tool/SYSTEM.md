@@ -92,3 +92,9 @@ Design principles validated across the cycle:
 - Short, single-purpose agents outperform long do-everything agents (more defects per agent-hour, fewer blind spots).
 - Never trust a prior pass: the reviewer's 12/12 quality PASS missed what an adversarial re-grader caught (bare MCQ keys). Fresh eyes on narrow scope beat experienced eyes on broad scope.
 - Every defect class found anywhere becomes a permanent machine check, so caught regressions cannot recur.
+
+## Persona evaluation layer (added after the run-002 persona cycle)
+Two simulation roles complement the technical reviewers — they catch prose/grading defects that correctness critics structurally cannot see:
+- STUDENT: takes the easy paper question-by-question blind. Reports comprehension stalls, wording-decides-marks traps, time-to-complete vs stated duration, and the paper's felt fairness/confidence effect.
+- TEACHER: grades the hard paper USING THE KEY, as a TA would. Reports grading consistency (could two TAs allocate identically?), false or misleading key mechanisms, allocatability of splits (integers only), and minutes-per-paper effort.
+Their findings feed the same fix-verify loop as reviewer defects. Both proved high-yield on first use: the student found 3 wording-trap defects and the teacher found 2 mathematically false key lines + 5 grading-consistency issues that all prior reviewers missed.

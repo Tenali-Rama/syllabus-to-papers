@@ -71,6 +71,15 @@ def run_script(path, cwd):
     except subprocess.TimeoutExpired:
         err(f"{os.path.relpath(path, ROOT)} timed out after 120s")
 
+# syllabus-declared exam scheme (marks/duration are per-syllabus, never assumed)
+scheme = {}
+for f in os.listdir(os.path.join(ROOT, "syllabi")):
+    if not f.endswith(".md") or f == "README.md": continue
+    text = open(os.path.join(ROOT, "syllabi", f), encoding="utf-8").read()
+    m = re.search(r"exam:\s*(\d{2,4})\s*marks,\s*([\d.]+)\s*hours", text, re.I)
+    if m:
+        scheme[f[:-3]] = (int(m.group(1)), float(m.group(2)))
+
 # 1-5, 7: run dirs and papers
 run_dirs = []
 v2_runs = {}
@@ -114,8 +123,15 @@ for slug in sorted(os.listdir(papers_root)):
                 err(f"{rel}: no YAML frontmatter"); continue
             for k in REQUIRED_KEYS:
                 if k not in fm: err(f"{rel}: frontmatter missing '{k}'")
-            if str(fm.get("marks")) != "100":
-                err(f"{rel}: marks != 100")
+            declared = scheme.get(slug)
+            if declared is None:
+                err(f"syllabi/{slug}.md does not declare 'exam: N marks, N hours' "
+                    f"(see syllabi/README.md)")
+                declared = (int(fm.get("marks", 0)), 3)
+            if int(fm.get("marks", -1)) != declared[0]:
+                err(f"{rel}: marks {fm.get('marks')} != syllabus-declared {declared[0]}")
+            if float(fm.get("duration_hours", -1)) != declared[1]:
+                err(f"{rel}: duration_hours {fm.get('duration_hours')} != syllabus-declared {declared[1]}")
             if fm.get("difficulty") != f.split(".")[0]:
                 err(f"{rel}: difficulty mismatch")
             if fm.get("syllabus") != slug:
@@ -136,8 +152,8 @@ for slug in sorted(os.listdir(papers_root)):
                 if v2_runs.get(key):
                     err(f"{rel}: only {len(tags)} tagged questions (< {MIN_QUESTIONS})")
             totals = [int(t[1]) for t in tags]
-            if totals and sum(totals) != 100:
-                err(f"{rel}: tagged marks sum to {sum(totals)}, not 100")
+            if totals and sum(totals) != declared[0]:
+                err(f"{rel}: tagged marks sum to {sum(totals)}, not {declared[0]}")
 
             # 4: answer key present
             if not re.search(r"^#+.*answer key", body, re.I | re.M):
@@ -207,6 +223,9 @@ for fname in sorted(os.listdir(mroot)):
         if not os.path.exists(pf):
             err(f"manifest {fname}: paper file '{pp.get('file')}' missing")
             continue
+            declared = scheme.get(key[0], (None, None))
+            if declared[0] is not None and str(pp.get("marks")) != str(declared[0]):
+                err(f"manifest {fname}: marks {pp.get('marks')} != syllabus-declared {declared[0]}")
         pfm, _ = frontmatter(pf)
         if pfm:
             if str(pfm.get("marks")) != str(pp.get("marks")):

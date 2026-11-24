@@ -67,7 +67,7 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 
 **B8. (M3, 2, S24)** What is the moment condition underlying the Arellano–Bond difference GMM estimator, expressed in one line?
 
-**B9. (M3, 2, S27)** What common ingredient do the CCEMG and AMG estimators both use to cope with cross-sectional dependence?
+**B9. (M3, 2, S27)** How do CCEMG and AMG each proxy or extract common factors to cope with cross-sectional dependence? State the proxy used by each.
 
 **B10. (M4, 2, S38)** In a Tobit (Type I) model, state the censoring rule linking the latent outcome y* to the observed y when the censoring point is zero.
 
@@ -110,7 +110,7 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 
 **D4. (M3, 4, S24, S26)** A difference GMM (Arellano–Bond) estimation uses T = 6 time periods, and the number of cross-sectional units is N = 40. The differenced-equation instruments are the lagged levels y_{i,t−s} for s ≥ 2 only (y_{i,t−1} is endogenous in the differenced equation), counted as (T − 1)(T − 2)/2. Reported diagnostics: AR(1) p-value = 0.002, AR(2) p-value = 0.31, Hansen p-value = 0.26.
 (i) Compute the instrument count and state whether the rule "instruments must not exceed N" is satisfied. (2)
-(ii) Using the conventional 5% level, state for each of AR(1), AR(2) and Hansen whether the diagnostic passes, and what each result certifies. (2)
+(ii) Using the conventional 5% level, state for each of AR(1), AR(2) and Hansen whether the diagnostic passes, and what each result certifies — noting that AR(1) rejection is expected under correct differencing (AR(2) should not reject). (2)
 
 **D5. (M4, 4, S36, S37)** A Logit model of loan default has coefficient β = 0.8 on a binary regressor "high leverage".
 (i) Compute the odds ratio e^β, to 4 decimal places, and interpret it in one sentence. (2)
@@ -151,14 +151,14 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 
 **Section B (2 marks each):**
 - B1: Returns show excess kurtosis (fat tails) relative to the normal (1); constant-variance normal cannot generate the observed clustering of extremes, so it understates tail risk (1).
-- B2: The conditional variance enters the likelihood non-linearly; OLS on the variance equation would regress σ²_t on variables that are unknown and must be solved for recursively (2).
+- B2: σ²_t is a latent, recursively-defined variable — it is never observed and each value depends on the previous one through the variance recursion (1); OLS cannot handle this: the variance equation would regress σ²_t on an unobserved, non-linearly-determined regressor, so the likelihood must be built recursively and maximized numerically (ML) (1).
 - B3: σ²_t = ω + αε²_{t−1} + βσ²_{t−1}: ω constant, α news (ARCH) term, β memory (GARCH) term (2).
 - B4: Ljung–Box on standardized residuals/squared standardized residuals — remaining serial correlation or ARCH effects (1); normality test (Jarque–Bera/Q–Q) — adequacy of the Gaussian error assumption (1).
 - B5: The cointegrating-regression residuals e_t (1); the residuals are estimated, so the test uses Engle–Granger/MacKinnon critical values, more negative than standard DF values (1).
 - B6: The fraction of last period's disequilibrium corrected each period (1); negative (and typically between −1 and 0) (1).
 - B7: Fixed Effects vs Random Effects (1); rejection favours Fixed Effects — the unit effects are correlated with regressors (1).
 - B8: E[Δy_it Δy_i,t−k ... ] = 0, i.e. lagged levels are orthogonal to the differenced errors: E[y_{i,t−s}Δu_it] = 0 for s ≥ 2 (2).
-- B9: Cross-sectional averages of the variables (and their lags) — common factors proxied by (CCE) or extracted from an estimated common dynamic process (AMG) (2).
+- B9: CCEMG proxies the unobserved common factors with cross-sectional averages of the variables (and their lags) included in each unit regression (1); AMG extracts them from an estimated common dynamic process — fitted from pooled (or first-differenced) regressions and included with unit dummies (1).
 - B10: y* = x′β + ε; y = y* if y* > 0, y = 0 otherwise (2).
 - B11: DK are HAC standard errors computed from cross-sectional averages of the moment contributions, so they are consistent under cross-sectional dependence as well as heteroskedasticity and serial correlation (2).
 - B12: McFadden pseudo-R² = 1 − lnL_model/lnL_null (1); the LR test checks joint significance of all slope coefficients against the intercept-only model (1).
@@ -177,7 +177,7 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 - D1: σ²_t = 0.000008 + 0.06(0.00025) + 0.88(0.00020) = **0.000199** (1); persistence = **0.94**; unconditional variance = 0.000008/0.06 = **0.00013333** (1); half-life = ln(0.5)/ln(0.94) ≈ **11.20** periods (2).
 - D2: Regression 1: 6.20 > 4.85 → reject no-cointegration null — **cointegration** at 5% (2); regression 2: 3.10 < 3.74 → **no cointegration** (fail to reject) (2).
 - D3: Long-run coefficient = 0.60/0.60 = **1.00** (2); ARDL→ECM: rewrite the level equation with Δ terms and a lagged error-correction term; the multiplier is the long-run (equilibrium) elasticity of y with respect to x (2).
-- D4: Instruments = (5)(4)/2 = **10** (equivalently Σ_{t=3}^{6}(t−2) = 1+2+3+4 over the lag sets {y1}, {y1,y2}, {y1,y2,y3}, {y1..y4}); 10 ≤ 40 → satisfied (2); AR(1) p = 0.002 < 0.05 → rejects, expected under differencing and not a problem, while AR(2) p = 0.31 > 0.05 → passes with no second-order serial correlation, so the moment conditions stand (1); Hansen p = 0.26 > 0.05 → passes, instruments jointly valid (1).
+- D4: Instruments = (5)(4)/2 = **10** (equivalently Σ_{t=3}^{6}(t−2) = 1+2+3+4 over the lag sets {y1}, {y1,y2}, {y1,y2,y3}, {y1..y4}); 10 ≤ 40 → satisfied (2); AR(1) p = 0.002 < 0.05 → rejects no first-order serial correlation — the expected outcome under correct differencing, so this is not a problem; AR(2) p = 0.31 > 0.05 → passes with no second-order serial correlation, so the moment conditions stand (1); Hansen p = 0.26 > 0.05 → passes, instruments jointly valid (1).
 - D5: e^0.8 = **2.2255**; one-unit increase in high leverage multiplies the odds of default by ≈ 2.23 (2); Λ(0.8) = 2.2255/3.2255 = **0.6900** (2).
 - D6: accuracy = 77/100 = **0.77** (1); sensitivity = **0.8000**; specificity = **0.7455** (2); false-positive rate 1 − 0.7455 = **0.2545** > false-negative rate 0.20 → it commits more **false positives** (1).
 
