@@ -203,15 +203,7 @@ Available = (2, 2, 4).
 Conventions (all parts): Round Robin; a process is enqueued at its arrival instant and at slice end in that order; the CPU is never idle while the ready queue is non-empty; the first dispatch of the day carries no overhead.
 (a) With quantum q = 3 and zero context-switch overhead, draw the Gantt chart and compute average turnaround and waiting times (4).
 (b) Repeat q = 3 with a 1 ms context-switch overhead charged between consecutive dispatches of *different* processes (a process continuing its burst after a quantum is impossible here since q < every burst; overhead elapses with the preempted process already re-queued, and arrivals during overhead join the ready queue before the next dispatch). Give the averages (4).
-(c) With q = 6 and zero overhead, give the averages and state the direction of change versus
-(a) (2).
-(a) With quantum q = 3 and zero context-switch overhead, draw the Gantt chart and compute average turnaround and waiting times (4).
-
-(b) Repeat q = 3 with a 1 ms context-switch overhead charged between consecutive dispatches of *different* processes (a process continuing its burst after a quantum is impossible here since q < every burst; overhead elapses with the preempted process already re-queued, and arrivals during overhead join the ready queue before the next dispatch). Give the averages (4).
-
-(c) With q = 6 and zero overhead, give the averages and state the direction of change versus
-
-(a) (2).
+(c) With q = 6 and zero overhead, give the averages and state the direction of change versus (a) (2).
 *(M3, 10)*
 
 **D4.** Every `fork()` succeeds; in the child `fork()` returns 0; `execlp` never fails and does not return.
@@ -263,7 +255,7 @@ Determine (a) how many processes exist in total (2), (b) how many of them call `
 
 ### Section D
 - **D1.** (a) Need: P0 (3,3,4), P1 (2,2,1), P2 (1,1,3), P3 (9,4,6), P4 (4,5,3). (b) Work starts (2,2,4): P0 needs (3,3,4) > work and P3 needs (9,4,6) > work, so the first scan passes over both; P1 runs → (7,3,9); P2 → (9,12,14); P3 → (10,14,17); P4 → (11,18,19); P0 → (14,20,24). **Safe**; sequence P1, P2, P3, P4, P0 — not the identity order, which is what makes the scan non-trivial. (c) Request (1,1,0) ≤ Need(P0) (3,3,4) and ≤ Available; tentative state: Available (1,1,4), Alloc(P0) (4,3,5), Need(P0) (2,2,4). Safety check: P2 (1,1,3) ≤ (1,1,4) → (3,10,9); P0 (2,2,4) ≤ → (7,13,14); P1 (2,2,1) ≤ → (12,14,19); P3 (9,4,6) ≤ → (13,16,22); P4 (4,5,3) ≤ → (14,20,24). Still safe → **grant allowed**; note the safe sequence changes to P2, P0, P1, P3, P4.
-- **D2.** (a) `EMAT(p) = (1−p)·100 + p·8,000,000 ns`; at p = 2×10⁻⁶ → 0.999998·100 + 2×10⁻⁶·8,000,000 = 99.9998 + 16 = **116.0 ns**. (b) 100 + p·7,999,900 ≤ 110 → p ≤ 10/7,999,900 ≈ **1.25×10⁻⁶**, i.e. at most about one fault per 799,990 accesses. (c) The OS must keep faults vanishingly rare — even a 1-in-a-million rate already doubles the access time budget.
+- **D2.** (a) $EMAT(p) = (1-p)\cdot 100 + p\cdot 8{,}000{,}000$ ns; at $p = 2\times 10^{-6}$: $0.999998\cdot 100 + 2\times 10^{-6}\cdot 8{,}000{,}000 = 99.9998 + 16$ = **116.0 ns**. (b) $100 + p\cdot 7{,}999{,}900 \le 110$ → $p \le 10/7{,}999{,}900 \approx$ **$1.25\times 10^{-6}$**, i.e. at most about one fault per 799,990 accesses. (c) The OS must keep faults vanishingly rare — even a 1-in-a-million rate already doubles the access time budget.
 - **D3.** (a) Gantt: P1 0–3, P2 3–6, P3 6–9, P4 9–12, P1 12–15, P2 15–16, P3 16–19, P4 19–21, P1 21–23, P3 23–26. Completion: P1 23, P2 16, P3 26, P4 21. Turnaround: 23, 15, 24, 18 → **avg 20.0 ms**; waiting: 15, 11, 15, 13 → **avg 13.5 ms**. (b) Same service order; each of the 9 inter-process dispatch gaps adds 1 ms; completions: P2 21, P4 28, P1 31, P3 35. Turnaround: 31, 20, 33, 25 → **avg 27.25 ms**; waiting: 23, 16, 24, 20 → **avg 20.75 ms**. (c) q = 6: P1 0–6, P2 6–10, P3 10–16, P4 16–21, P1 21–23, P3 23–26. Completion: P1 23, P2 10, P3 26, P4 21. Turnaround: 23, 9, 24, 18 → **avg 18.5 ms**; waiting: 15, 5, 15, 13 → **avg 12.0 ms**. Both averages *decrease* (fewer preemptions, less switching).
 - **D4.** (a) after the first fork: 2 processes; both execute the second fork → **4** processes. (b) the two children of the second fork take the `if` body → **2** exec calls. (c) the two exec'ing children never reach the printf; the two parents do → **2** `CS301` lines.
 - **D5.** (a) pointers per block = 2048/4 = 512. Blocks = 12 + 512 + 512×512 = **262,668** blocks = 262,668 × 2048 = **537,944,064 bytes ≈ 513.02 MiB**. (b) block index = 500,000 div 2048 = **244**, offset = 500,000 mod 2048 = **288**; since 12 ≤ 244 < 524, it lies in the **single-indirect** region.

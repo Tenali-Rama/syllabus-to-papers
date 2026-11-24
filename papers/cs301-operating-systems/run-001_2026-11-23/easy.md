@@ -200,15 +200,7 @@ Tag legend: each question carries `(Mn, marks)` — Mn is the blueprint module n
 **D3.** Three threads share an integer `x` initialized to 0. Each thread executes `x = x + 1` exactly three times. Memory loads and stores are not atomic, and there is no synchronization. Threads run to completion.
 (a) Determine the minimum possible final value of `x`, and justify (3).
 (b) Determine the maximum possible final value of `x` (3).
-(c) If a binary mutex semaphore initialized to 1 surrounds each increment, determine the final value of `x` and explain the term for the lost updates in part
-(a) (4).
-(a) Determine the minimum possible final value of `x`, and justify (3).
-
-(b) Determine the maximum possible final value of `x` (3).
-
-(c) If a binary mutex semaphore initialized to 1 surrounds each increment, determine the final value of `x` and explain the term for the lost updates in part
-
-(a) (4).
+(c) If a binary mutex semaphore initialized to 1 surrounds each increment, determine the final value of `x` and explain the term for the lost updates in part (a) (4).
 *(M4, 10)*
 
 **D4.** Assume every `fork()` succeeds, and in the child `fork()` returns 0 while in the parent it returns the child's PID; `&&` short-circuits.
@@ -249,12 +241,12 @@ Tag legend: each question carries `(Mn, marks)` — Mn is the blueprint module n
 
 ### Section C
 - **C1.** initial values empty=N, full=0, mutex=1; mutex=0 makes even the first entry block forever (deadlock).
-- **C2.** (a) linear table size ≈ 2^addressbits/2^offsetbits entries × entry size; (b) only active outer tables resident, inner on demand; cost = extra memory references per walk; (c) inverted: one entry per frame indexed by (process, page) hash; trade-off: shared frame space but slow lookup / TLB dependence.
+- **C2.** (a) linear table size ≈ $2^{\text{addressbits}}/2^{\text{offsetbits}}$ entries × entry size; (b) only active outer tables resident, inner on demand; cost = extra memory references per walk; (c) inverted: one entry per frame indexed by (process, page) hash; trade-off: shared frame space but slow lookup / TLB dependence.
 - **C3.** contiguous: excellent both accesses, external fragmentation; linked: good sequential, poor random, no external fragmentation; indexed: good random, index overhead; (b) inode ≈ indexed (plus limited indirect blocks).
 
 ### Section D
 - **D1.** (a) FCFS order P1→P2→P3→P4. Waiting: 0, 5, 7, 7 → avg 4.75 ms; turnaround: 7, 9, 8, 11 → avg 8.75 ms. (b) SJF order P1→P3→P2→P4. Waiting: 0, 3, 6, 7 → avg 4.0 ms; turnaround: 7, 4, 10, 11 → avg 8.0 ms. (c) Yes — improvement 0.75 ms.
 - **D2.** (a) 6 bits page number, 10 bits offset. (b) 5824 = 5×1024 + 704 → page 5→frame 9 → physical 9×1024 + 704 = **9920**. (c) 2000 = 1×1024 + 976 → page 1→frame 5 → physical **6096**.
 - **D3.** (a) min **2** — after any store, x ≥ 1 forever (a store always writes its loaded value + 1, i.e., ≥ 1), and the last store executed is some thread's third store; that thread's third load happens after its own first store, so it reads ≥ 1 and the final store writes ≥ 2. Value 2 is reachable: T1 loads 0; T2 loads 0; T1 runs fully (1, 2, 3); T3 loads 3 and stores 4, 5; T2 now stores its stale 0 (x = 1), then 2, 3; T3's third load reads 1 and its last store writes 2. (b) max 9 — fully serialized execution, every increment sees the latest x. (c) with mutex: exactly 9; the value losses in (a) are a **race condition / lost-update problem**.
-- **D4.** (a) 2² = **4** processes. (b) after the first `fork`: 2 processes; the child sees `0` and short-circuits (no second fork); the parent sees a non-zero PID and forks again → **3** processes.
+- **D4.** (a) $2^2$ = **4** processes. (b) after the first `fork`: 2 processes; the child sees `0` and short-circuits (no second fork); the parent sees a non-zero PID and forks again → **3** processes.
 - **D5.** (a) 42 (8), then 38 (4), then 65 (27). (b) total = 8 + 4 + 27 = **39** cylinders.

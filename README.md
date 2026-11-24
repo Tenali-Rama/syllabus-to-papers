@@ -1,31 +1,39 @@
 # syllabus-to-papers
 
-A registry, tool, and archive for **agentic question-paper generation**: input a syllabus, output three papers of increasing difficulty (easy / medium / hard), 100 marks each, machine-verified and reviewer-accepted.
+Agentic question-paper generation: syllabus in → three graded papers out (verified, reviewer-accepted).
 
-This repo is designed to be operated **entirely by autonomous agents**.
+## 📱 Latest papers (tap to open)
 
-- **Agents**: start with [`AGENTS.md`](AGENTS.md) — it is the complete protocol.
-- **Humans**: start with `registry.md` to browse what's been generated.
+### Intro AI & Machine Learning — run-001 (2026-11-24) · 81/90
+| | |
+|---|---|
+| [Easy](papers/intro-ai-machine-learning/run-001_2026-11-24/easy.md) · [Medium](papers/intro-ai-machine-learning/run-001_2026-11-24/medium.md) · [Hard](papers/intro-ai-machine-learning/run-001_2026-11-24/hard.md) | [Run info](papers/intro-ai-machine-learning/run-001_2026-11-24/PAPER-INDEX.md) |
 
-## Layout
+### Applied Econometrics — run-002 (2026-11-24) · 80/90 *(latest version)*
+| | |
+|---|---|
+| [Easy](papers/applied-econometrics-advanced-models/run-002_2026-11-24/easy.md) · [Medium](papers/applied-econometrics-advanced-models/run-002_2026-11-24/medium.md) · [Hard](papers/applied-econometrics-advanced-models/run-002_2026-11-24/hard.md) | [Run info](papers/applied-econometrics-advanced-models/run-002_2026-11-24/PAPER-INDEX.md) |
 
-```
-AGENTS.md            ← the agent protocol (naming, workflow, quality bar)
-registry.md          ← append-only index of all runs
-manifests/*.json     ← structured per-run records (for programmatic search)
-syllabi/             ← input syllabi, one file per course
-papers/<slug>/run-NNN_<date>/   ← output archives (easy/medium/hard + QA artifacts)
-tool/                ← the pipeline: SYSTEM.md, prompts/, reviewer rubric
-```
+<details>
+<summary><b>📚 All papers by subject (older runs)</b></summary>
 
-## How it works
+| Subject | Run | Date | Score | Papers |
+|---|---|---|---|---|
+| Applied Econometrics | run-001 | 2026-11-23 | 78/90 | [Easy](papers/applied-econometrics-advanced-models/run-001_2026-11-23/easy.md) · [Medium](papers/applied-econometrics-advanced-models/run-001_2026-11-23/medium.md) · [Hard](papers/applied-econometrics-advanced-models/run-001_2026-11-23/hard.md) |
+| CS301 Operating Systems | run-001 | 2026-11-23 | 77/90 | [Easy](papers/cs301-operating-systems/run-001_2026-11-23/easy.md) · [Medium](papers/cs301-operating-systems/run-001_2026-11-23/medium.md) · [Hard](papers/cs301-operating-systems/run-001_2026-11-23/hard.md) |
 
-1. An agent registers a syllabus in `syllabi/`.
-2. It runs the 4-role pipeline (ANALYZER → SETTER → QA ENGINEER → REVIEWER) defined in `tool/SYSTEM.md`.
-3. The REVIEWER scores the papers against `tool/reviewer_rubric.md`; below 75/90 the defects loop back to the SETTER.
-4. Accepted runs are committed with a manifest, a registry row, and per-paper YAML frontmatter.
-5. CI (`validate.yml`) blocks merges that fail integrity checks (marks totals, frontmatter, registry/manifest consistency).
+</details>
 
-## Paper format
+## 🔍 Finding papers
 
-Markdown with YAML frontmatter (syllabus, difficulty, marks, QA verdict, score). Body: 100 marks / 3 hours, questions tagged `(Mn, marks)`, sectioned, with answer keys including mark splits. See any run under `papers/` for a live example.
+- **This README** — newest runs are always linked at the top.
+- **[registry.md](registry.md)** — complete index of every run (subject, date, score, path).
+- **GitHub search** (works in the mobile app): open the repo → search icon → type a subject word, e.g. `GARCH`, `banker`, `cointegration` — every paper file is plain Markdown, so full-text search hits the exact question.
+- **By subject folder**: `papers/<subject>/run-NNN_<date>/easy|medium|hard.md`.
+- Difficulty is always `easy.md` / `medium.md` / `hard.md` — same names in every run, so muscle memory works.
+
+## 🤖 For agents
+Start with [`AGENTS.md`](AGENTS.md) — the complete generation protocol. Tooling in [`tool/`](tool) (pipeline, quality bar, question-type catalog, format spec, validator).
+
+---
+*Every run: 100-mark papers unless the syllabus states otherwise, machine-verified numerics (`verify.py`), reviewer ≥75/90, CI-validated.*

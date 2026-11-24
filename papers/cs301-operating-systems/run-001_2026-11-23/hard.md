@@ -184,12 +184,10 @@ Tag legend: each question carries `(Mn, marks)` — Mn is the blueprint module n
 
 Conventions: under RMS, T1 > T2 > T3 in priority (shorter period = higher priority); the response-time iteration is
 
-```
-R = C + Σ⌈R/Tₕ⌉·Cₕ
-```
+$$R = C + \sum_{h}\lceil R/T_h \rceil\cdot C_h$$
 
-over higher-priority tasks, started from R₀ = C and iterated to convergence; schedulability requires R ≤ T for every task.
-(a) Compute the total utilization and compare it with the Liu–Layland bound for 3 tasks, 3(2^{1/3} − 1). Determine whether the bound is exceeded (2).
+over higher-priority tasks, started from $R_0 = C$ and iterated to convergence; schedulability requires R ≤ T for every task.
+(a) Compute the total utilization and compare it with the Liu–Layland bound for 3 tasks, $3(2^{1/3} - 1)$. Determine whether the bound is exceeded (2).
 (b) Run the response-time iteration for T2 and T3 and determine whether the task set is RMS-schedulable despite part (a) (4).
 (c) Determine whether the set is EDF-schedulable, and whether both arguments can be true simultaneously (4).
 *(M3, 10)*
@@ -247,7 +245,7 @@ Conventions: all frames initially empty; demand loading; a load of an empty fram
 - **C3.** (a) type/device/size, timestamps, link count, and 12–15 pointers including indirects; (b) root inode → lookup "a" → directory block entries (name, inode#) → inode of a → ... → file inode; (c) scan/set bitmap bit, decrement free count, write pointer into the inode, then the data write.
 
 ### Section D
-- **D1.** (a) `U = 1/4 + 2/5 + 3/10 = 0.95 > 3(2^{1/3} − 1) ≈ 0.780` → **bound exceeded**. (b) T2: `R₀=2 → 2 + ⌈2/4⌉·1 = 3 → 2 + ⌈3/4⌉·1 = 3 = R* = 3 ≤ 5`. T3: `R₀=3 → 3 + ⌈3/4⌉·1 + ⌈3/5⌉·2 = 6 → 3 + ⌈6/4⌉ + ⌈6/5⌉·2 = 9 → 3 + ⌈9/4⌉ + ⌈9/5⌉·2 = 10 → 3 + ⌈10/4⌉ + ⌈10/5⌉·2 = 10 = R* = 10 ≤ 10` (equality allowed: a job finishing exactly at its deadline meets it). R1 = 1 ≤ 4. **RMS-schedulable**; a full hyperperiod simulation (H = 20) shows no deadline misses. (c) EDF: schedulability test for EDF on one processor is U ≤ 1 and 0.95 ≤ 1 → **EDF-schedulable**. Both can be true: the Liu–Layland bound is only sufficient for pure fixed-priority RMS, not necessary; dynamic-priority EDF exploits deadlines directly.
-- **D2.** (a) level 1: 2⁸ = 256 entries; level 2: 2⁶ = 64; level 3: 2⁶ = 64; offset 2¹² = 4096 = page size ✓; 8+6+6+12 = 32 ✓. (b) 0x004031A4 = 0000 0000 | 01 0000 | 00 0011 | 0001 1010 0100 → L1 index = 0x00 (0), L2 index = 0x10 (**16**), L3 index = 0x03 (**3**), offset = 0x1A4. (c) hit: 20 + 100 = 120 ns; miss: 20 + 3×100 + 100 = 420 ns; EAT = 0.8×120 + 0.2×420 = 96 + 84 = **180 ns**.
+- **D1.** (a) $U = 1/4 + 2/5 + 3/10 = 0.95 > 3(2^{1/3} - 1) \approx 0.780$ → **bound exceeded**. (b) T2: $R_0 = 2 \to 2 + \lceil 2/4\rceil\cdot 1 = 3 \to 2 + \lceil 3/4\rceil\cdot 1 = 3 = R^* = 3 \le 5$. T3: $R_0 = 3 \to 3 + \lceil 3/4\rceil\cdot 1 + \lceil 3/5\rceil\cdot 2 = 6 \to 3 + \lceil 6/4\rceil + \lceil 6/5\rceil\cdot 2 = 9 \to 3 + \lceil 9/4\rceil + \lceil 9/5\rceil\cdot 2 = 10 \to 3 + \lceil 10/4\rceil + \lceil 10/5\rceil\cdot 2 = 10 = R^* = 10 \le 10$ (equality allowed: a job finishing exactly at its deadline meets it). R1 = 1 ≤ 4. **RMS-schedulable**; a full hyperperiod simulation (H = 20) shows no deadline misses. (c) EDF: schedulability test for EDF on one processor is U ≤ 1 and 0.95 ≤ 1 → **EDF-schedulable**. Both can be true: the Liu–Layland bound is only sufficient for pure fixed-priority RMS, not necessary; dynamic-priority EDF exploits deadlines directly.
+- **D2.** (a) level 1: $2^8 = 256$ entries; level 2: $2^6 = 64$; level 3: $2^6 = 64$; offset $2^{12} = 4096$ = page size ✓; 8+6+6+12 = 32 ✓. (b) 0x004031A4 = 0000 0000 | 01 0000 | 00 0011 | 0001 1010 0100 → L1 index = 0x00 (0), L2 index = 0x10 (**16**), L3 index = 0x03 (**3**), offset = 0x1A4. (c) hit: 20 + 100 = 120 ns; miss: 20 + 3×100 + 100 = 420 ns; EAT = 0.8×120 + 0.2×420 = 96 + 84 = **180 ns**.
 - **D3.** (a) FIFO 3 frames: faults at 4,1,2,0,4,1,5,3,0 → **9 faults** (final frames: 5,3,0). (b) FIFO 4 frames: faults at 4,1,2,0,5,4,1,3,0,5 → **10 faults**. Yes — 10 > 9 with *more* frames, which is precisely Belady's anomaly for this string. (c) LRU: 3 frames → **10**, 4 frames → **8**. (d) Optimal: 3 frames → **7**, 4 frames → **6**. LRU and OPT both improve monotonically with more frames; the anomaly is a property of FIFO's eviction order, not of the string itself.
 - **D4.** (a) paging device 90% busy while CPU only 20% busy is the classic thrashing signature: the machine spends its time servicing faults → **thrashing**. (b) required frames 5×5 = 25 > 24 → the working sets cannot all be resident; more faults will follow → **cannot cover them**. (c) suspend one process: remaining demand 4×5 = 20 ≤ 24 → every remaining working set fits, fault rate falls, CPU utilization rises → **thrashing resolves** (20 frames resident vs 24 available leaves slack). (d) EMAT = 0.99×100 + 0.01×5,000,000 = 99 + 50,000 = **50,099 ns ≈ 50.1 µs**; at 0.1%: 0.999×100 + 0.001×5,000,000 = 99.9 + 5,000 = **5,099.9 ns ≈ 5.1 µs** — a 10× reduction from a 10× fault-rate cut.
