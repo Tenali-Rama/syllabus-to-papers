@@ -155,6 +155,16 @@ for slug in sorted(os.listdir(papers_root)):
             if totals and sum(totals) != declared[0]:
                 err(f"{rel}: tagged marks sum to {sum(totals)}, not {declared[0]}")
 
+            # math-span integrity: odd $ parity or ** inside $...$ = broken rendering
+            for ln, line in enumerate(body.splitlines(), 1):
+                if line.strip().startswith(("```", "$$")): continue
+                stripped = re.sub(r"\$\$", "", line)
+                n = stripped.count("$") - stripped.count("\\$")
+                if n % 2 == 1:
+                    err(f"{rel}:L{ln}: unbalanced $ delimiters ({n}) — will render raw")
+                for mm in re.finditer(r"\$[^$\n]*?\*\*[^$\n]*?\$", line):
+                    err(f"{rel}:L{ln}: markdown bold inside $...$ math span — will render raw")
+
             # 4: answer key present
             if not re.search(r"^#+.*answer key", body, re.I | re.M):
                 err(f"{rel}: no Answer Key section found")

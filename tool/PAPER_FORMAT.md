@@ -93,3 +93,10 @@ Immediately after the instructions table, insert a summary table so the reader s
 | **Total** | | **37** | **100** |
 ```
 Question stems should read as self-contained prose — bold only the `Qn.` label; keep scenario context before the actual ask; where a stem is longer than 4 lines, precede the ask with a bolded **Task:** line.
+
+## 7. Math-span integrity (hard rule — broken spans render as raw $ on GitHub)
+- `$...$` wraps ONLY mathematical expressions: variables, numbers, operators, \ln/\times/\Phi etc.
+- NEVER inside a math span: markdown bold (`**`), italics, prose, "(1);"-style mark splits, or parenthetical commentary.
+- Bold results go OUTSIDE: `$\sigma^2_{t+1} = ...$ = **0.000416** (½)` — math first, then bold result as markdown text.
+- Every line must have balanced `$` delimiters (even count, excluding `$$` blocks and escaped `\$`).
+- Unicode minus (−) inside math spans must be ASCII `-` for MathJax.

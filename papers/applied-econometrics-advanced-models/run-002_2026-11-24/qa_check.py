@@ -225,12 +225,13 @@ for diff in PAPERS:
           f"bad-form occurrences: {_bad}, persistence-form found: {_good}")
     # 2. Arellano–Bond instruments s >= 2 stated wherever the (T-1)(T-2)/2 count appears
     for q in qs:
-        if "(T − 1)(T − 2)/2" in q["full"]:
-            check(f"{diff}:{q['qid']}: [P2] AB lag rule s >= 2 stated", "s ≥ 2" in q["full"],
+        if re.search(r"\(T ?[−-] ?1\)\(T ?[−-] ?2\)/2", q["full"]):
+            check(f"{diff}:{q['qid']}: [P2] AB lag rule s >= 2 stated",
+                  re.search(r"s\s*(?:≥|\\geq)\s*\$?\s*2", q["full"]) is not None,
                   f"{q['qid']} mentions instrument count")
     # 3. RE quasi-demeaning weight: if θ appears near quasi-demeaning, it must be θ = 1 − √(σ²_u/(σ²_u + Tσ²_v)); never a "1 +" form
-    spur = re.findall(r"θ\s*=\s*[^.;\n]*", body)
-    bad = [s for s in spur if ("1 +" in s or ("√" in s and "1 −" not in s))]
+    spur = re.findall(r"(?:θ|\\theta)[^;\n]*", body)
+    bad = [s for s in spur if ("1 +" in s or "1+" in s or ("√" in s and "1 −" not in s and "1-" not in s))]
     check(f"{diff}: [P3] no spurious RE quasi-demeaning θ weight", not bad,
           f"θ formulas found: {len(spur)}, spurious: {bad}")
     # 4. Tobit mean correctly labelled as unconditional censored mean
@@ -244,9 +245,10 @@ for diff in PAPERS:
           all(s in low for s in ["Calculator", "no negative marking", "exactly one option"]),
           "calculator / negative marking / MCQ recording present")
     # 7. half-life formula identical in stem and key
-    stem_f = re.findall(r"ln\(0\.5\)/ln\((α \+ β|β)\)", body)
+    stem_f = re.findall(r"ln\(0\.5\)/ln\((α ?\+ ?β|β)\)|\\ln\(0\.5\)/\\ln\((α ?\+ ?β|β|\\alpha\+\\beta|\\beta)\)", body)
+    stem_f = [a or b for a, b in stem_f]
     check(f"{diff}: [P7] half-life formula consistent (always α+β form)",
-          len(stem_f) == 0 or all(f == "α + β" for f in stem_f),
+          len(stem_f) == 0 or all(f in ("α + β", "α+β", "\\alpha+\\beta", "\\alpha + \\beta") for f in stem_f),
           f"formula occurrences: {stem_f}")
     # 8. module-progressive ordering within sections
     for sec in ["A", "B", "C", "D", "E"]:

@@ -88,9 +88,9 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 
 (b) Rank = r + 1 exactly
 
-(c) Rank ≤ r
+(c) Rank $\leq$ r
 
-(d) Rank ≤ r $- 1$
+(d) Rank $\leq$ r $- 1$
 
 **A7.** The Nickell bias of the FE estimator with a lagged dependent variable is:
 *(M3, 1, S23)*
@@ -222,7 +222,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 (ii) State the decision at 5% with the comparison. (2)
 (iii) State what the estimate of $\rho$ implies about the persistence of deviations from the long-run relation. (1)
 
-**D3.** A Hausman test on the coefficient of interest gives $\hat{\beta}_{FE} = 2.40, \hat{\beta}_{RE} = 2.00$, with $Var(\hat{\beta}_{FE}) - Var(\hat{\beta}_{RE}) = 0.08$. The $\chi^{2}(1) 5%$ critical value is 3.84. Convention: H = (difference$)^{2}/variance$ difference.
+**D3.** A Hausman test on the coefficient of interest gives $\hat{\beta}_{FE} = 2.40, \hat{\beta}_{RE} = 2.00$, with $Var(\hat{\beta}_{FE}) - Var(\hat{\beta}_{RE}) = 0.08$. The $\chi^{2}(1) 5%$ critical value is 3.84. Convention: H $= (difference)^{2}/variance$ difference.
 *(M3, 4, S21, S22)*
 
 (i) Compute H. (1)
@@ -279,7 +279,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 - **A3. (c)** — Each observation's density depends on $\sigma^{2}_t$, which is a recursive function of all earlier shocks, so the likelihood must be built through the variance recursion; (a) is false — OLS remains consistent under heteroskedasticity once standard errors are corrected, it is just inefficient.
 - **A4. (b)** — Granger and Newbold showed regressions among integrated series are dominated by shared stochastic trends, giving widely misleading inference; (d) is wrong because the estimates are inconsistent, not consistent with wider intervals.
 - **A5. (d)** — Phillips–Perron non-parametrically corrects the DF statistics for serial correlation and heteroskedasticity via the long-run variance estimate; (a) parametric lag augmentation is the ADF's distinguishing device.
-- **A6. (b)** — The $\lambda$-max statistic tests H0: rank = r against H1: rank = r + 1 exactly; (a) restates the null itself; (c) rank ≤ r is the trace test's null, and (d) rank ≤ r $- 1$ is not a standard test hypothesis — neither (c) nor (d) matches the $\lambda$-max pair H0: rank = r vs H1: rank = r + 1.
+- **A6. (b)** — The $\lambda$-max statistic tests H0: rank = r against H1: rank = r + 1 exactly; (a) restates the null itself; (c) rank $\leq$ r is the trace test's null, and (d) rank $\leq$ r $- 1$ is not a standard test hypothesis — neither (c) nor (d) matches the $\lambda$-max pair H0: rank = r vs H1: rank = r + 1.
 - **A7. (c)** — Nickell showed the FE estimator with a lagged dependent variable is biased by order O(1/T), typically downward for the autoregressive coefficient in short panels; (b) is the wrong order, and (d) clustering standard errors does not remove a coefficient bias.
 - **A8. (b)** — The level-equation moments use lagged differences as instruments for levels, which is valid only if deviations of initial conditions from unit means are uncorrelated with the effects, i.e. mean-stationarity; (c) strict exogeneity of regressors is a separate assumption not introduced by the level moments.
 - **A9. (a)** — A larger bandwidth corrects more long-run autocovariances (less truncation bias) but requires estimating more of them (higher variance); (d) is false — bandwidth choice materially affects finite-sample HAC estimates.
@@ -293,7 +293,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 - **B4.** $\omega > 0, \alpha \geq 0, \beta \geq 0$ for positivity; $\alpha + \beta < 1$ for covariance stationarity (2).
 - **B5.** EG normalizes on one variable and can find at most the single cointegrating vector implied by that normalization; with r $\geq 2$ the residual test is a mixture and estimates are inconsistent for any one vector (2).
 - **B6.** a cointegrated variable's long-run path is pinned by the shared stochastic trend; omitting ecm from an equation imposes that it does not adjust to the disequilibrium — its long-run relation is lost (2).
-- **B7.** FE ≈ linear combination of FD estimates with weights depending on T (1); coincide (up to scale) when T = 2 (1).
+- **B7.** FE $\approx$ linear combination of FD estimates with weights depending on T (1); coincide (up to scale) when T = 2 (1).
 - **B8.** $E[y_{i,t-s}\Delta u_{it}] = 0$ for s $= 2,\dots,t-1$ (1); $\Delta u_{it}$ involves $u_{it}$ which contains $y_{i,t-1}$, so $y_{i,t-1}$ itself is correlated with $\Delta u_{it}$ — only $y_{i,t-2}$ and earlier are valid (1).
 - **B9.** Hansen p $\approx 1$ signals instrument proliferation/over-fitting — the J test is being satisfied trivially; check the instrument count rule and try collapsed matrices (2).
 - **B10.** quantile restrictions define moments only at the specified $\tau$ (check-function based) (1); at $\tau = 0.90$ it estimates the upper-tail conditional relation — effects for high-quantile units, which mean regression averages away (1).
@@ -302,7 +302,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 
 ### Section C (3 marks each)
 
-- **C1.** $\sigma^{2}_{t+k} = \omega + (\alpha+\beta)\sigma^{2}_{t+k-1}$; decays geometrically to $\omega/(1-\alpha-\beta) = \omega/0.07$ ≈ **$14.3\omega$** (1) $(20\omega$ would require persistence 0.95); speed set by persistence $\alpha+\beta$ (1); shocks' share of variance fades as $(\alpha+\beta)^{k}$ (1).
+- **C1.** $\sigma^{2}_{t+k} = \omega + (\alpha+\beta)\sigma^{2}_{t+k-1}$; decays geometrically to $\omega/(1-\alpha-\beta) = \omega/0.07$ $\approx$ **$14.3\omega$** (1) $(20\omega$ would require persistence 0.95); speed set by persistence $\alpha+\beta$ (1); shocks' share of variance fades as $(\alpha+\beta)^{k}$ (1).
 - **C2.** LB on residuals: p = 0.62 > 0.05 → fail to reject no serial correlation — passes (decision with comparison) (1); LB on squared residuals: p = 0.08 > 0.05 → fail to reject no remaining ARCH at 5% — passes, though borderline (decision with comparison) (1); recommendation: variance dynamics are adequate, but JB p = 0.004 rejects normality — refit with a fat-tailed error density (standardized-t/skewed-t), keeping robust standard errors as an interim safeguard (joint recommendation, JB remark stated separately) (1).
 - **C3.** low power: the cointegrating vector is estimated, and the normalization onto one variable loses information with multiple vectors; short samples make the estimated residual look more persistent (2); alternative: Johansen's system ML / bounds test (1).
 - **C4.** $\Delta y_t = \alpha_1\cdot ecm_{t-1}$ + $\sum\text{(short-run terms)}$ $+ u_{1t}$ and $\Delta x_t = \alpha_2\cdot ecm_{t-1}$ + $\sum\text{(short-run terms)}$ $+ u_{2t}$, ecm = y $- \beta x$ (1.5); the levels VAR = VECM with rank 1 restriction; $\beta$ is the cointegrating vector, $\alpha$ the loadings (1.5).
@@ -314,7 +314,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 
 ### Section D (as per mark splits)
 
-- **D1.** $\sigma^{2}_{t+1} = 0.000004 + 0.12(0.0006) + 0.85(0.0004)$ = **0.000416** (½); $\sigma^{2}_{t+2} = 0.000004 + 0.12(0.0003) + 0.85(0.000416)$ = **0.0003936** (½); $\sigma^{2}_{t+3} = 0.000004 + 0.12(0.0008) + 0.85(0.0003936)$ = **0.00043456** (1); half-life = $\ln(0.5)/\ln(0.97)$ ≈ **22.76** (1); unconditional = 0.000004/0.03 = 0.00013333; after step 3 variance 0.00043456 is **above** the unconditional level (1). **Grading convention:** part (i) is graded via the realized-shock recursion as printed; a pure-forecast recursion $(using E[\epsilon^{2}] = \sigma^{2}$ in place of the realized shocks) earns 0 for the recursion marks — the question supplies realized shocks.
+- **D1.** $\sigma^{2}_{t+1} = 0.000004 + 0.12(0.0006) + 0.85(0.0004)$ = **0.000416** (½); $\sigma^{2}_{t+2} = 0.000004 + 0.12(0.0003) + 0.85(0.000416)$ = **0.0003936** (½); $\sigma^{2}_{t+3} = 0.000004 + 0.12(0.0008) + 0.85(0.0003936)$ = **0.00043456** (1); half-life = $\ln(0.5)/\ln(0.97)$ $\approx$ **22.76** (1); unconditional = 0.000004/0.03 = 0.00013333; after step 3 variance 0.00043456 is **above** the unconditional level (1). **Grading convention:** part (i) is graded via the realized-shock recursion as printed; a pure-forecast recursion (using $E[\epsilon^{2}] = \sigma^{2}$ in place of the realized shocks) earns 0 for the recursion marks — the question supplies realized shocks.
 - **D2.** $\tau = -0.55/0.14$ = **$-3.93$** (1); $-3.93 < -3.37$ → **reject no-cointegration: cointegrated at 5%** (2); $\rho = -0.55$ ⇒ deviations decay at ~55% per period — fairly rapid mean reversion around the long-run relation (1).
 - **D3.** H $= (0.40)^{2}/0.08$ = **2.00** (1); 2.00 < 3.84 → **fail to reject: RE adequate** at 5% (1); non-rejection certifies only that RE's extra orthogonality assumption cannot be rejected here — both estimators remain consistent under RE; time-invariant regressors are then usable (FE would expunge them) (2).
 - **D4.** (6)(5)/2 = **15** instruments (lag sets {y1} … {y1,…,y5} over t = 3,…,7); $15 \leq 80$ ✓ (1); AR(1) p = 0.02 rejects — expected under differencing, not a violation (½); AR(2) p = 0.36 → no second-order correlation, moment conditions valid (½); Hansen p = 0.27 → instruments jointly exogenous (1); robustness: collapse the instrument matrix or restrict lag depth, re-check Hansen (1).

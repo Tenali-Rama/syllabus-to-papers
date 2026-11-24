@@ -224,7 +224,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 **D3.** An ARDL model of y on x has an estimated short-run (impact) coefficient on x of 0.60, and the sum of the estimated coefficients on the lagged levels of the dependent variable in the level equation is 0.40.
 *(M2, 4, S20)*
 
-(i) Compute the long-run coefficient of y on x as (short-run coefficient$)/(1 $− sum of lagged-level coefficients). (2)
+(i) Compute the long-run coefficient of y on x as $(\text{short-run coefficient})/(1 - \text{sum of lagged-level coefficients})$. (2)
 (ii) State the ARDL-to-ECM reparameterization in one line and what the multiplier computed in (i) represents. (2)
 
 **D4.** A difference GMM (Arellano–Bond) estimation uses T = 6 time periods, and the number of cross-sectional units is N = 40. The differenced-equation instruments are the lagged levels $y_{i,t-s}$ for s $\geq 2$ only $(y_{i,t-1}$ is endogenous in the differenced equation), counted as $(T - 1)(T - 2)/2$. Reported diagnostics: AR(1) p-value = 0.002, AR(2) p-value = 0.31, Hansen p-value = 0.26.
@@ -271,7 +271,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 ### Section A (one line per MCQ)
 
 - **A1. (b)** — Large-|return| spells following large-|return| spells is volatility clustering: the conditional variance is serially dependent; (d) homoskedasticity is precisely the assumption this stylized fact violates.
-- **A2. (d)** — $\alpha$ multiplies $\epsilon^{2}_{t-1}$ in the variance equation, so it is the reaction of today's variance to yesterday's squared shock; (a) confuses reaction with persistence, which is $\beta$ $(or \alpha + \beta)$.
+- **A2. (d)** — $\alpha$ multiplies $\epsilon^{2}_{t-1}$ in the variance equation, so it is the reaction of today's variance to yesterday's squared shock; (a) confuses reaction with persistence, which is $\beta$ (or $\alpha + \beta)$.
 - **A3. (a)** — ARCH-LM regresses squared residuals on their own lags to detect autoregressive conditional heteroskedasticity; (b) unit roots are the ADF's remit, not a test on residuals' squares.
 - **A4. (b)** — Spurious regression: two unrelated trending series share stochastic trends, producing apparently significant t-statistics; (a) describes heteroskedasticity, which is a different failure.
 - **A5. (c)** — The ADF null is a unit root, so failing to reject means the series still needs differencing; (a) is the alternative hypothesis, not the null.
@@ -301,7 +301,7 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 - **C1.** $\alpha + \beta = 0.95$ (1); $\bar{\sigma}^{2} = \omega/(1 - 0.95) = \omega/0.05$ (1); slower than $\alpha+\beta = 0.80$ (shocks decay more slowly) (1).
 - **C2.** Time for a shock's effect on variance to halve (1); $\alpha + \beta = 0.95$ gives a longer half-life (1); $\ln(0.5)/\ln(\alpha+\beta)$ (1).
 - **C3.** VECM is a VAR in differences plus lagged level (error-correction) terms (1); the restriction is that levels are cointegrated, i.e. the levels VAR has reduced rank (1); appropriate when the series are cointegrated (1).
-- **C4.** Trace statistic and maximum-eigenvalue statistic (1); nulls: rank ≤ r and rank = r respectively (1); move from r = 0 upward; stop at the first non-rejection (1).
+- **C4.** Trace statistic and maximum-eigenvalue statistic (1); nulls: rank $\leq$ r and rank = r respectively (1); move from r = 0 upward; stop at the first non-rejection (1).
 - **C5.** x Granger-causes y if past x improves forecasts of y given past y (2); predictive precedence, not structural/true causation (1).
 - **C6.** PMG pools the long-run (cointegrating) coefficients, allows unit-specific short-run coefficients and intercepts, and averages the unit-specific speed-of-adjustment coefficients (3).
 - **C7.** Cross-section averages of the variables and their lags (and often their first differences) (2); they absorb cross-sectionally dependent common factors, avoiding the spurious regression/CD bias (1).
@@ -309,10 +309,10 @@ Each question carries the marks shown in its tag `(module, marks, sub-topic(s))`
 
 ### Section D (as per mark splits)
 
-- **D1.** $\sigma^{2}_t = 0.000008 + 0.06(0.00025) + 0.88(0.00020)$ = **0.000199** (1); persistence = **0.94**; unconditional variance = 0.000008/0.06 = **0.00013333** (1); half-life = $\ln(0.5)/\ln(0.94)$ ≈ **11.20** periods (2).
+- **D1.** $\sigma^{2}_t = 0.000008 + 0.06(0.00025) + 0.88(0.00020)$ = **0.000199** (1); persistence = **0.94**; unconditional variance = 0.000008/0.06 = **0.00013333** (1); half-life = $\ln(0.5)/\ln(0.94)$ $\approx$ **11.20** periods (2).
 - **D2.** Regression 1: 6.20 > 4.85 → reject no-cointegration null — **cointegration** at 5% (2); regression 2: 3.10 < 3.74 → **no cointegration** (fail to reject) (2).
 - **D3.** Long-run coefficient = 0.60/0.60 = **1.00** (2); ARDL→ECM: rewrite the level equation with $\Delta$ terms and a lagged error-correction term; the multiplier is the long-run (equilibrium) elasticity of y with respect to x (2).
-- **D4.** Instruments = (5)(4)/2 = **10** $(equivalently \sum_{t=3}^{6}(t-2) = 1+2+3+4$ over the lag sets {y1}, {y1,y2}, {y1,y2,y3}, {y1..y4}); $10 \leq 40$ → satisfied (2); AR(1) p = 0.002 < 0.05 → rejects no first-order serial correlation — the expected outcome under correct differencing, so this is not a problem; AR(2) p = 0.31 > 0.05 → passes with no second-order serial correlation, so the moment conditions stand (1); Hansen p = 0.26 > 0.05 → passes, instruments jointly valid (1).
+- **D4.** Instruments = (5)(4)/2 = **10** (equivalently $\sum_{t=3}^{6}(t-2) = 1+2+3+4$ over the lag sets {y1}, {y1,y2}, {y1,y2,y3}, {y1..y4}); $10 \leq 40$ → satisfied (2); AR(1) p = 0.002 < 0.05 → rejects no first-order serial correlation — the expected outcome under correct differencing, so this is not a problem; AR(2) p = 0.31 > 0.05 → passes with no second-order serial correlation, so the moment conditions stand (1); Hansen p = 0.26 > 0.05 → passes, instruments jointly valid (1).
 - **D5.** $e^{0.8}$ = **2.2255**; one-unit increase in high leverage multiplies the odds of default by $\approx 2.23$ (2); $\Lambda(0.8) = 2.2255/3.2255$ = **0.6900** (2).
 - **D6.** accuracy = 77/100 = **0.77** (1); sensitivity = **0.8000**; specificity = **0.7455** (2); false-positive rate $1 - 0.7455$ = **0.2545** > false-negative rate 0.20 → it commits more **false positives** (1).
 
