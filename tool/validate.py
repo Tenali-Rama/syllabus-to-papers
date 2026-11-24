@@ -172,7 +172,7 @@ for slug in sorted(os.listdir(papers_root)):
                         if in_math and bold_seen:
                             err(f"{rel}:L{ln}: markdown ** inside $...$ math span — renders raw")
                         in_math, mstart, bold_seen = not in_math, j+1, False
-                    elif in_math and line[j:j+2] == "**":
+                    elif in_math and (line[j:j+2] == "**" or line[j] == "|"):
                         bold_seen = True
                     j += 1
                 if in_math:

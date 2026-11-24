@@ -46,7 +46,7 @@
   <details><summary>reveal answer</summary>$1 - (0.5^2 + 0.5^2) = 0.5$ — the maximum, i.e. a coin-flip node.</details>
 
 ### S5 — Information gain [D]
-- **What it is:** the impurity drop from splitting a node on an attribute: $IG = H_{parent} - \sum_v \frac{|v|}{|parent|} H(v)$. The tree picks the attribute with the largest gain.
+- **What it is:** the impurity drop from splitting a node on an attribute: $IG = H_{parent} - \sum_v \frac{\lvert v\rvert}{\lvert \text{parent}\rvert} H(v)$. The tree picks the attribute with the largest gain.
 - **Worked mini-example:** 15 pet-adoption records: 8 adopted (A), 7 not (N). Parent: $H = -(0.533\log_2 0.533 + 0.467\log_2 0.467) \approx 0.997$ (given $\log_2 0.533 \approx -0.907$, $\log_2 0.467 \approx -1.100$). Split on "age $< 3$ years": **Yes → 9 rows (7A, 2N)**: $H = 0.778 \cdot 0.363 + 0.222 \cdot 2.170 \approx 0.764$; **No → 6 rows (1A, 5N)**: $H = 0.833 \cdot 0.263 + 0.167 \cdot 2.585 \approx 0.650$. Weighted child entropy $= \frac{9}{15}(0.764) + \frac{6}{15}(0.650) \approx 0.718$. $IG \approx 0.997 - 0.718 = 0.279$.
 - **Pitfall:** $IG = 0$ does not mean the attribute is "wrong" — it means the split leaves the classes exactly as mixed as before, so the attribute carries no classification information here. And comparing candidate splits always uses the **weighted** child entropy, not the raw sum or the best child alone.
 - **Self-check:** After a split, one child is pure and the other has entropy $0.9$. Could the gain still be small?
@@ -174,7 +174,7 @@
   <details><summary>reveal answer</summary>$70 - 30 = 40$ columns.</details>
 
 ### S21 — Confusion-matrix metrics and IoU [D]
-- **What it is:** from TP/FP/FN/TN: $\text{Precision} = TP/(TP+FP)$ (of predicted positives, how many were right), $\text{Recall} = TP/(TP+FN)$ (of actual positives, how many were found), $F_1 = 2PR/(P+R)$. For boxes: $\text{IoU} = \frac{|A \cap B|}{|A \cup B|}$, accepted if above a threshold.
+- **What it is:** from TP/FP/FN/TN: $\text{Precision} = TP/(TP+FP)$ (of predicted positives, how many were right), $\text{Recall} = TP/(TP+FN)$ (of actual positives, how many were found), $F_1 = 2PR/(P+R)$. For boxes: $\text{IoU} = \frac{\lvert A \cap B\rvert}{\lvert A \cup B\rvert}$, accepted if above a threshold.
 - **Worked mini-example:** a defect detector on 30 parts: TP $= 5$, FP $= 3$, FN $= 4$, TN $= 18$. Precision $= 5/8 = 0.625$; Recall $= 5/9 \approx 0.556$; $F_1 = 2(0.625)(0.556)/(0.625 + 0.556) \approx 0.695/1.181 \approx 0.588$. Boxes: ground truth spans columns 10–42, rows 20–52 ($32\times32$); prediction spans columns 26–58, rows 36–68 ($32\times32$). Intersection $= 16\times16 = 256$; union $= 1024 + 1024 - 256 = 1792$; IoU $= 256/1792 = 0.143$ → below a $0.5$ threshold → **rejected**.
 - **Pitfall:** precision and recall answer different questions — a screening system that must not miss cases cares about recall, one where false alarms are costly cares about precision; accuracy conflates both. For IoU, intersection is computed on **both** axes and union subtracts the intersection once (don't add the areas twice).
 - **Self-check:** A detector finds all 10 defects but also flags 30 good parts. Is precision or recall the problem?
@@ -231,7 +231,7 @@
 |---|---|---|
 | Gini impurity | $1 - \sum_c p_c^2$ | $0$ at purity, max at uniform mix |
 | Entropy | $H = -\sum_c p_c \log_2 p_c$ | same shape as Gini; log base 2 |
-| Information gain | $IG = H_{parent} - \sum_v \frac{|v|}{|parent|}H(v)$ | weighted child entropy |
+| Information gain | $IG = H_{parent} - \sum_v \frac{\lvert v\rvert}{\lvert \text{parent}\rvert}H(v)$ | weighted child entropy |
 | Perceptron net | $net = \sum_i w_i x_i + b$ | output 1 if $net > 0$ else 0 |
 | Perceptron update | $w \leftarrow w + \eta\,y\,x$ | on mistakes; $\eta$ = learning rate |
 | Sigmoid | $\sigma(z) = \frac{1}{1+e^{-z}}$ | range $(0,1)$, open interval |
@@ -241,7 +241,7 @@
 | Precision | $TP/(TP+FP)$ | of predicted positives |
 | Recall | $TP/(TP+FN)$ | of actual positives |
 | $F_1$ | $2PR/(P+R)$ | harmonic mean |
-| IoU | $\frac{|A \cap B|}{|A \cup B|}$ | union subtracts intersection once |
+| IoU | $\frac{\lvert A \cap B\rvert}{\lvert A \cup B\rvert}$ | union subtracts intersection once |
 | Disparate impact | $\text{rate}_{min}/\text{rate}_{max}$ | four-fifths rule: $< 0.80$ flags impact |
 | LLM cost | $(in \cdot r_{in} + out \cdot r_{out})$ | rates per million tokens; $\times$ calls |
 | Train/test split | $n_{train} = n \cdot f$, $n_{test} = n(1-f)$ | define split before tuning |
