@@ -156,6 +156,15 @@ for diff, fname in PAPERS.items():
     key_answers = re.findall(r"([A-D]\d+)\)?\s*\(([a-d])\)", key)
     check(f"{diff}: MCQ answer key covers all MCQs", len(key_answers) == len(mcqs),
           f"key={len(key_answers)}, mcqs={len(mcqs)}")
+    # criterion 5-6: every MCQ key entry carries a one-line justification of the mechanism
+    # (quality-bar hard gate; a bare letter list is a defect)
+    just_lines = re.findall(r"^- ([A-D]\d+) \(([a-d])\) — (.+)$", key, re.M)
+    keyed_ids = {a[0] for a in key_answers if a[0].startswith("A") and a[0][1:].isdigit()}
+    mcq_ids = {q["qid"] for q in mcqs}
+    check(f"{diff}: MCQ key entries carry justification lines (criterion 5-6)",
+          keyed_ids == mcq_ids and len(just_lines) == len(mcq_ids)
+          and all(len(j[2]) >= 40 for j in just_lines),
+          f"justified={len(just_lines)}/{len(mcq_ids)}, too-short={[j[0] for j in just_lines if len(j[2]) < 40]}")
 
 # cross-run coverage
 allcov = set()
@@ -241,7 +250,6 @@ for diff in PAPERS:
 # 5. MCQ correct-answer letters spread (no letter > 50%)
 for diff in PAPERS:
     _, body, qs, key = paper_data[diff]
-    keym = re.search(r"Section A[:*]*\*?\*?\s*(.*?)(?:\n|$)", key)
     ans = re.findall(r"([A-D]\d+)\)?\s*\(([a-d])\)", key)
     letters = [a[1] for a in ans if a[0].startswith("A") and a[0][1:].isdigit()]
     from collections import Counter

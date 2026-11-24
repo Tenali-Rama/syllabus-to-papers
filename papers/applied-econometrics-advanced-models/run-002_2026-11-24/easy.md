@@ -124,12 +124,12 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 ## Section E — Long Answer (2 questions, 18 marks)
 
 **E1. (M1, 8, S4, S8, S10)** A bank's risk team has fitted a symmetric GARCH(1,1) to daily returns by maximum likelihood and obtained α + β = 0.97. The reported diagnostics are: Ljung–Box statistic on the standardized residuals' squares insignificant (p = 0.41), residual skewness −0.9, and residual excess kurtosis 2.1.
-(a) Explain why GARCH is estimated by maximum likelihood and what the likelihood contributes beyond OLS (2).
+(a) State in one sentence why GARCH must be estimated by maximum likelihood rather than by OLS, naming the feature of the model that OLS cannot handle (2).
 (b) Using the diagnostic evidence given, decide whether the symmetric GARCH(1,1) is adequate, and name the asymmetric variant you would fit next, stating precisely how it captures the asymmetry (4).
 (c) State what an IGARCH restriction (α + β = 1) would imply for the unconditional variance and for long-horizon forecasts, and why a risk team might rule it out (2).
 
 **E2. (M2, 10, S15, S19, S20)** An analyst studies the relation between log consumption and log income, both found to be I(1), and considers three routes: a VAR in levels, a VECM, and an ARDL bounds test.
-(a) Set out the ARDL bounds-testing procedure: why mixed I(0)/I(1) regressors are admissible, how the Pesaran F statistic is formed, the roles of the lower and upper critical bounds, and the four possible decision outcomes (5).
+(a) Set out the ARDL bounds-testing procedure: why mixed I(0)/I(1) regressors are admissible, how the Pesaran F statistic is formed, the roles of the lower and upper critical bounds, and the decision outcomes (5).
 (b) State why no variable may be I(2) for the bounds test to be valid (1).
 (c) Given cointegration is found, show how the ARDL is reparameterized into an error-correction form, identify the speed-of-adjustment coefficient and the long-run coefficient, and state what each measures (4).
 
@@ -137,7 +137,17 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 
 ## Answer Key — Paper 1 (Easy)
 
-**Section A:** A1 (b) · A2 (d) · A3 (a) · A4 (b) · A5 (c) · A6 (a) · A7 (b) · A8 (a) · A9 (c) · A10 (d)
+**Section A (one line per MCQ):**
+- A1 (b) — Large-|return| spells following large-|return| spells is volatility clustering: the conditional variance is serially dependent; (d) homoskedasticity is precisely the assumption this stylized fact violates.
+- A2 (d) — α multiplies ε²_{t−1} in the variance equation, so it is the reaction of today's variance to yesterday's squared shock; (a) confuses reaction with persistence, which is β (or α + β).
+- A3 (a) — ARCH-LM regresses squared residuals on their own lags to detect autoregressive conditional heteroskedasticity; (b) unit roots are the ADF's remit, not a test on residuals' squares.
+- A4 (b) — Spurious regression: two unrelated trending series share stochastic trends, producing apparently significant t-statistics; (a) describes heteroskedasticity, which is a different failure.
+- A5 (c) — The ADF null is a unit root, so failing to reject means the series still needs differencing; (a) is the alternative hypothesis, not the null.
+- A6 (a) — Engle–Granger step 1 is the cointegrating regression of y on x whose residuals are then unit-root tested; (c) the trace statistic belongs to Johansen's system approach.
+- A7 (b) — The within estimator demeans each variable by its unit-specific time average, sweeping the fixed effect out of the regression; (a) first-differencing is a related but distinct transformation that also loses one observation.
+- A8 (a) — Nickell bias arises from including a lagged dependent variable alongside fixed effects in a short (small-T) panel; (c) is backwards — the bias is O(1/T) and vanishes only as T grows.
+- A9 (c) — Newey–West is a HAC estimator: consistent under heteroskedasticity and autocorrelation of unknown form simultaneously; (a) and (b) each describe only half of what it corrects.
+- A10 (d) — Probit applies the standard normal CDF Φ(x′β) to the index; (a) the logistic CDF Λ(x′β) defines the Logit model instead.
 
 **Section B (2 marks each):**
 - B1: Returns show excess kurtosis (fat tails) relative to the normal (1); constant-variance normal cannot generate the observed clustering of extremes, so it understates tail risk (1).
@@ -167,10 +177,10 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 - D1: σ²_t = 0.000008 + 0.06(0.00025) + 0.88(0.00020) = **0.000199** (1); persistence = **0.94**; unconditional variance = 0.000008/0.06 = **0.00013333** (1); half-life = ln(0.5)/ln(0.94) ≈ **11.20** periods (2).
 - D2: Regression 1: 6.20 > 4.85 → reject no-cointegration null — **cointegration** at 5% (2); regression 2: 3.10 < 3.74 → **no cointegration** (fail to reject) (2).
 - D3: Long-run coefficient = 0.60/0.60 = **1.00** (2); ARDL→ECM: rewrite the level equation with Δ terms and a lagged error-correction term; the multiplier is the long-run (equilibrium) elasticity of y with respect to x (2).
-- D4: Instruments = (5)(4)/2 = **10** (equivalently Σ_{t=3}^{6}(t−2) = 1+2+3+4 over the lag sets {y1}, {y1,y2}, {y1,y2,y3}, {y1..y4}); 10 ≤ 40 → satisfied (2); AR(1) p = 0.002 < 0.05 → rejects, expected and not a problem (first-order negative correlation is inherent to differencing) (½); AR(2) p = 0.31 > 0.05 → passes, no second-order serial correlation in differenced errors (½); Hansen p = 0.26 > 0.05 → passes, instruments jointly valid (1).
+- D4: Instruments = (5)(4)/2 = **10** (equivalently Σ_{t=3}^{6}(t−2) = 1+2+3+4 over the lag sets {y1}, {y1,y2}, {y1,y2,y3}, {y1..y4}); 10 ≤ 40 → satisfied (2); AR(1) p = 0.002 < 0.05 → rejects, expected under differencing and not a problem, while AR(2) p = 0.31 > 0.05 → passes with no second-order serial correlation, so the moment conditions stand (1); Hansen p = 0.26 > 0.05 → passes, instruments jointly valid (1).
 - D5: e^0.8 = **2.2255**; one-unit increase in high leverage multiplies the odds of default by ≈ 2.23 (2); Λ(0.8) = 2.2255/3.2255 = **0.6900** (2).
-- D6: accuracy = 77/100 = **0.77** (1); sensitivity = **0.8000**; specificity = **0.7455** (2); false-positive rate 1 − 0.7455 ≈ 0.25 > false-negative rate 0.20 → it commits more **false positives** (1).
+- D6: accuracy = 77/100 = **0.77** (1); sensitivity = **0.8000**; specificity = **0.7455** (2); false-positive rate 1 − 0.7455 = **0.2545** > false-negative rate 0.20 → it commits more **false positives** (1).
 
 **Section E:**
 - E1: (a) likelihood evaluated recursively through the variance recursion; handles the time-varying σ² (2). (b) LB on squared standardized residuals insignificant → no remaining ARCH (1); but strong negative skewness and excess kurtosis → asymmetry present (1); fit GJR-GARCH/EGARCH with a negative-shock dummy term so negative shocks add extra volatility (2). (c) IGARCH → no finite unconditional variance, shocks permanent, long-horizon forecasts never revert; risk teams need mean-reverting vol → ruled out (2).
-- E2: (a) admissibility 1, F-test formulation 1, bounds roles 1, four outcomes (above upper / below lower / between → inconclusive / degenerate) 2. (b) I(2) breaks the bounds distribution — the tabulated bounds assume at most I(1) (1). (c) ECM form with Δy_t on Δx lags/current plus −θ·ecm_{t−1} (1); θ = speed of adjustment toward equilibrium (1); long-run coefficient from the level terms = equilibrium elasticity (1); each measures short-run dynamics vs long-run relation (1).
+- E2: (a) admissibility 1, F-test formulation 1, bounds roles 1, three decision outcomes — above upper → reject no-cointegration; between bounds → inconclusive; below lower → fail to reject no-cointegration — 2. (b) I(2) breaks the bounds distribution — the tabulated bounds assume at most I(1) (1). (c) ECM form with Δy_t on Δx lags/current plus −θ·ecm_{t−1} (1); θ = speed of adjustment toward equilibrium (1); long-run coefficient from the level terms = equilibrium elasticity (1); each measures short-run dynamics vs long-run relation (1).

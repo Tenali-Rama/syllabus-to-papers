@@ -139,7 +139,17 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 
 ## Answer Key — Paper 2 (Medium)
 
-**Section A:** A1 (b) · A2 (a) · A3 (d) · A4 (b) · A5 (c) · A6 (d) · A7 (b) · A8 (c) · A9 (b) · A10 (a)
+**Section A (one line per MCQ):**
+- A1 (b) — Clustering means today's variance is informative about tomorrow's, i.e. serially dependent; (d) independence of past shocks is exactly what clustering denies.
+- A2 (a) — The nR² statistic from regressing squared residuals on their lags is the Engle ARCH Lagrange-multiplier test, which tests the restricted (no-ARCH) model without estimating the alternative; (b) a Wald test requires fitting the unrestricted ARCH regression.
+- A3 (d) — βσ²_{t−1} carries yesterday's variance forward, so shocks decay gradually at rate (α + β) rather than vanishing after one period; (a) would require β = 0.
+- A4 (b) — Two independent random walks share stochastic trends, so the regression is spurious: high R² and significant t-statistics with no true relation; (a) is exactly the inference that fails.
+- A5 (c) — Stationary after exactly two differences means integrated of order 2, I(2); (b) I(1) would be stationary after a single differencing.
+- A6 (d) — Cointegration makes the levels VAR reduced rank, and that rank deficiency is precisely what yields the VECM error-correction representation; (a) a stable full-rank VAR needs no error-correction term.
+- A7 (b) — The between estimator runs the regression on unit means, so it uses only cross-unit variation of the unit-specific averages; (a) within-unit time variation is the within estimator's input.
+- A8 (c) — CCEMG augments each unit's regression with cross-sectional averages of the dependent and explanatory variables (and lags) as common-factor proxies; (a) time dummies alone cannot capture unit-specific factor loadings.
+- A9 (b) — The bandwidth must grow with n at an appropriate rate so that both the truncation bias and the estimation variance of the long-run covariance vanish asymptotically; (c) truncating at lag 1 misses the long-run autocovariances.
+- A10 (a) — Censoring maps every latent value y* ≤ 0 to the observed corner y = 0; (c) is wrong because the mass at zero accumulates all negative latent values, not just y* = 0 exactly.
 
 **Section B (2 marks each):**
 - B1: VaR is understated in the tails; the normal tail is too thin, so the probability of extreme losses is underestimated (2).

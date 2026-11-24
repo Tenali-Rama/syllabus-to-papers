@@ -28,14 +28,14 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 **A3. (M1, 1, S4)** Maximizing the GARCH likelihood requires the variance recursion because:
 (a) OLS is inconsistent under any heteroskedasticity (b) The mean equation is non-linear (c) Each observation's density depends on σ²_t, which is a function of all earlier shocks (d) Parameters are restricted to be positive
 
-**A4. (M2, 1, S11)** Granger and Newberg's classic finding was that regressions of integrated series on integrated series produce:
+**A4. (M2, 1, S11)** Granger and Newbold's classic finding was that regressions of integrated series on integrated series produce:
 (a) Correct inference after HAC corrections (b) Widely misleading inference dominated by the shared stochastic trends (c) Blue estimates (d) Consistent estimates with wider intervals
 
 **A5. (M2, 1, S12)** The Phillips–Perron test differs from ADF mainly in that it:
 (a) Uses parametric lag augmentation of the test regression (b) Tests I(2) directly (c) Requires normality (d) Non-parametrically corrects the test statistics for serial correlation and heteroskedasticity
 
 **A6. (M2, 1, S16)** The maximum-eigenvalue Johansen test's alternative hypothesis is:
-(a) Rank = r (b) Rank = r + 1 exactly (c) Rank ≤ r (d) Rank > r
+(a) Rank = r (b) Rank = r + 1 exactly (c) Rank ≤ r (d) Rank ≤ r − 1
 
 **A7. (M3, 1, S23)** The Nickell bias of the FE estimator with a lagged dependent variable is:
 (a) Upward in all cases (b) Of order O(1/N) (c) Of order O(1/T) and typically downward for the autoregressive coefficient (d) Eliminated by clustering standard errors
@@ -126,7 +126,7 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 (iii) State the decision at 5% and the consequence for OLS panel inference in this panel. (1)
 (iv) Name one estimator appropriate under this finding. (1)
 
-## Section E — Long Answer (2 questions, 8 + 10 = 18 marks)
+## Section E — Long Answer (2 questions, 10 + 8 = 18 marks)
 
 **E1. (M2, 10, S19, S35)** You test for a long-run relation between exchange rates and relative prices in a panel of 24 countries over 1990–2024, where cross-sectionally averaged (world) shocks matter and unit-specific slopes are suspected.
 (a) Set out the ARDL bounds test you would run for a single country: specification, why I(0)/I(1) mixture is admissible, the Pesaran F and t variants, the lower/upper bounds logic, and the four decision outcomes with the 5% convention (4).
@@ -142,7 +142,17 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 
 ## Answer Key — Paper 3 (Hard)
 
-**Section A:** A1 (b) · A2 (b) · A3 (c) · A4 (b) · A5 (d) · A6 (d) · A7 (c) · A8 (b) · A9 (a) · A10 (a)
+**Section A (one line per MCQ):**
+- A1 (b) — Under clustering the conditional variance is serially dependent, so backtest exceptions cluster in time and violate the independence assumption underlying the binomial backtest; (a) independence of exceptions is exactly the property that fails.
+- A2 (b) — α = 0.18 vs 0.04 means faster reaction to news, and β = 0.70 vs 0.92 means faster decay — the first series is more reactive but less persistent (α + β = 0.88 < 0.96); (a) reverses the comparison, since lower α + β means shorter memory.
+- A3 (c) — Each observation's density depends on σ²_t, which is a recursive function of all earlier shocks, so the likelihood must be built through the variance recursion; (a) is false — OLS remains consistent under heteroskedasticity once standard errors are corrected, it is just inefficient.
+- A4 (b) — Granger and Newbold showed regressions among integrated series are dominated by shared stochastic trends, giving widely misleading inference; (d) is wrong because the estimates are inconsistent, not consistent with wider intervals.
+- A5 (d) — Phillips–Perron non-parametrically corrects the DF statistics for serial correlation and heteroskedasticity via the long-run variance estimate; (a) parametric lag augmentation is the ADF's distinguishing device.
+- A6 (b) — The λ-max statistic tests H0: rank = r against H1: rank = r + 1 exactly; (a) restates the null itself, and (c)/(d) are one-sided directions that belong to the trace test's null and its complement, not the λ-max alternative.
+- A7 (c) — Nickell showed the FE estimator with a lagged dependent variable is biased by order O(1/T), typically downward for the autoregressive coefficient in short panels; (b) is the wrong order, and (d) clustering standard errors does not remove a coefficient bias.
+- A8 (b) — The level-equation moments use lagged differences as instruments for levels, which is valid only if deviations of initial conditions from unit means are uncorrelated with the effects, i.e. mean-stationarity; (c) strict exogeneity of regressors is a separate assumption not introduced by the level moments.
+- A9 (a) — A larger bandwidth corrects more long-run autocovariances (less truncation bias) but requires estimating more of them (higher variance); (d) is false — bandwidth choice materially affects finite-sample HAC estimates.
+- A10 (a) — The logistic CDF has heavier tails than the normal, so Probit and Logit fitted probabilities differ most in the tails, not near the centre; (c) is close empirically but they never coincide exactly.
 
 **Section B (2 marks each):**
 - B1: e²_t regressed on e²_{t−1},…,e²_{t−q} plus constant; statistic nR² ~ χ²(q) (2).
@@ -159,13 +169,13 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 - B12: the odds ratio is constant (e^0.6 ≈ 1.82 per unit) but the probability effect is Λ(x′β+0.6) − Λ(x′β), which depends on the baseline probability and is largest near p = 0.5 (2).
 
 **Section C (3 marks each):**
-- C1: σ²_{t+k} = ω + (α+β)σ²_{t+k−1}; decays geometrically to ω/(1−α−β) = 20ω (1); speed set by persistence α+β (1); shocks' share of variance fades as (α+β)^k (1).
-- C2: LB on residuals: p = 0.62 → no remaining serial correlation in levels ✓ (1); LB on squares: p = 0.08 → marginal, not rejected at 5% but borderline ARCH remains (1); JB rejects normality → refit with a standardized-t or skewed-t error distribution (joint recommendation) (1).
+- C1: σ²_{t+k} = ω + (α+β)σ²_{t+k−1}; decays geometrically to ω/(1−α−β) = ω/0.07 ≈ **14.3ω** (1) (20ω would require persistence 0.95); speed set by persistence α+β (1); shocks' share of variance fades as (α+β)^k (1).
+- C2: LB on residuals: p = 0.62 → no remaining serial correlation in levels ✓ (1); LB on squares: p = 0.08 > 0.05 → fail to reject no remaining ARCH at 5% (p = 0.08 borderline); note non-normality (JB) may warrant robust standard errors (1); JB rejects normality → refit with a standardized-t or skewed-t error distribution (joint recommendation) (1).
 - C3: low power: the cointegrating vector is estimated, and the normalization onto one variable loses information with multiple vectors; short samples make the estimated residual look more persistent (2); alternative: Johansen's system ML / bounds test (1).
 - C4: Δy_t = α₁·ecm_{t−1} + Σ(short-run terms) + u₁t and Δx_t = α₂·ecm_{t−1} + Σ(short-run terms) + u₂t, ecm = y − βx (1.5); the levels VAR = VECM with rank 1 restriction; β is the cointegrating vector, α the loadings (1.5).
 - C5: in a cointegrated system the ecm carries the long-run causal channel; differencing alone discards it (1.5); omitting ecm biases the causality test — it can fail to find causality that operates through the disequilibrium term (mis-sized test) (1.5).
 - C6: SE(θ) via delta method: Var(θ) ≈ (∂θ/∂β₀)²Var(β₀) + (∂θ/∂Σγ)²Var(Σγ) + 2(∂θ/∂β₀)(∂θ/∂Σγ)Cov (1.5); θ = long-run elasticity of y with respect to x (1.5).
-- C7: fail to reject → RE cannot be rejected; RE consistent only under uncorrelated effects (1); caveats: the test compares FE/RE only (both could be inconsistent under other problems — endogenous regressors), and with unbalanced/short panels the variance-difference matrix can be non-positive-definite, invalidating H (2).
+- C7: fail to reject → RE cannot be rejected; RE consistent only under uncorrelated effects (1); caveat 1: the test compares FE/RE only — both could be inconsistent under other problems such as endogenous regressors (1); caveat 2: with unbalanced/short panels the variance-difference matrix can be non-positive-definite, invalidating H (1).
 - C8: CCEMG proxies the unobserved factors directly with cross-sectional averages inside each unit regression (1); AMG constructs the common dynamic process from pooled/first-difference regressions and includes its fitted (or differenced) values with unit dummies (1); AMG convenient when a common variable structure/regression is needed across units or with the Stata-style two-step dummy approach (1).
 - (C8's third point credited for either construction detail; award 3 across.)
 
@@ -175,7 +185,7 @@ Instructions: Answer all questions. Calculators are permitted; all necessary for
 - D3: H = (0.40)²/0.08 = **2.00** (1); 2.00 < 3.84 → **fail to reject: RE adequate** at 5% (1); non-rejection certifies only that RE's extra orthogonality assumption cannot be rejected here — both estimators remain consistent under RE; time-invariant regressors are then usable (FE would expunge them) (2).
 - D4: (6)(5)/2 = **15** instruments (lag sets {y1} … {y1,…,y5} over t = 3,…,7); 15 ≤ 80 ✓ (1); AR(1) p = 0.02 rejects — expected under differencing, not a violation (½); AR(2) p = 0.36 → no second-order correlation, moment conditions valid (½); Hansen p = 0.27 → instruments jointly exogenous (1); robustness: collapse the instrument matrix or restrict lag depth, re-check Hansen (1).
 - D5: ME = 0.3521 × 1.2 = **0.4225** (1); Φ(0.5) = **0.6915**; the ME is **smaller** than β because φ(z) ≤ 1 with equality only at z = 0 — the coefficient shifts the index, not the probability, and the probability effect φ(z)β is non-linear in z (2); at z = −0.5 it **does not change**: φ(−0.5)·1.2 = **0.4225** as well by symmetry of φ — but for any other z it differs, illustrating dependence on the individual's index; more generally ME falls as |z| grows (1).
-- D6: pairs = 10·9/2 = **45** (½); CD = √(40/90) × 18 = 0.6667 × 18 = **12.00** (1½); 12.00 > 1.96 → **reject weak cross-section dependence: strong CD**; OLS/standard panel SEs are inconsistent — inference invalid (1); e.g. CCEMG/AMG/Driscoll–Kraay (1).
+- D6: pairs = 10·9/2 = **45** (½); CD = √(40/90) × 18 = 0.6667 × 18 = **12.00** (1½); 12.00 > 1.96 → **reject the null of cross-section independence → strong cross-section dependence present**; OLS/standard panel SEs are inconsistent — inference invalid (1); e.g. CCEMG/AMG/Driscoll–Kraay (1).
 
 **Section E:**
 - E1: (a) ARDL specification with ecm in levels formulation; mixture admissibility because the bounds F/t distributions are tabulated for all combinations of I(0)/I(1) regressors (1); F and t(PSS) variants 1; lower = I(0) bound, upper = I(1) bound, reject above upper, accept below lower, inconclusive between (2). (b) I(2) invalidates tabulated distributions (they assume at most one unit root); screen: ADF/PP on levels and first differences of every variable; if I(2), difference before modelling (2). (c) add cross-section averages of the dependent and regressors (levels and lags) to each country's ARDL (1.5); lag truncation controls how many factor lags are proxied — too few leaves residual CD (1); CS-ARDL keeps unit-specific long/short-run coefficients (heterogeneity) while the averages absorb the common factors, so the bounds logic applies country-by-country or pooled with CD-robust inference (1.5).
