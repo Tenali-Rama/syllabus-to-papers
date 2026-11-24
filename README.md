@@ -1,7 +1,5 @@
 # syllabus-to-papers
 
-Syllabus in → 3 graded papers out (verified, reviewed ≥75/90, CI-checked).
-
 ## 📱 Latest papers
 
 | | Easy | Medium | Hard | Info |
