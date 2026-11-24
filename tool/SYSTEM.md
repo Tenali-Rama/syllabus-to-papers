@@ -77,3 +77,18 @@ A separate strict REVIEWER agent scores each output against `tool/reviewer_rubri
 - The blueprint decouples analysis from generation and makes coverage mechanically checkable via tags.
 - Reviewers must independently verify; generator self-reports (and even generator QA scripts) can overstate what they checked.
 - Difficulty must be defined by rubric axes, not adjectives, or papers converge to the same cognitive level.
+
+## Convergence protocol (added after the run-002 cycle)
+
+Acceptance is not the finish line. After a run is accepted:
+1. Commission FRESH critic agents (never the same ones) with narrow mandates: technical accuracy, quality-bar adversarial grade, spec consistency, validator blind spots.
+2. Apply all defect-list fixes in one batch; strengthen qa_check.py with a machine check for each NEW defect class found (justification-line check and MCQ-spread check were both added this way).
+3. Re-run scripts + CI validator; commission another fresh critic round.
+4. Converged = a full round where no critic finds anything above minor. Only then is the run final.
+
+Observed convergence for run-002: round 1 found 2 hard-gate fails (bare MCQ keys) + 8 technical defects; round 2 found 1 typo + 3 minor items → converged.
+
+Design principles validated across the cycle:
+- Short, single-purpose agents outperform long do-everything agents (more defects per agent-hour, fewer blind spots).
+- Never trust a prior pass: the reviewer's 12/12 quality PASS missed what an adversarial re-grader caught (bare MCQ keys). Fresh eyes on narrow scope beat experienced eyes on broad scope.
+- Every defect class found anywhere becomes a permanent machine check, so caught regressions cannot recur.
