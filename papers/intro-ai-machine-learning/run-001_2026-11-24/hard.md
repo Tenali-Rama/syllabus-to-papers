@@ -18,7 +18,7 @@ reviewer_score: "81/90"
 | Instructions | |
 |---|---|
 | Answer all questions | |
-| Unless stated otherwise, log = log₂; round final numerical answers to 3 decimal places | |
+| Unless stated otherwise, log = $\log_2$; round final numerical answers to 3 decimal places | |
 
 Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-topic IDs.
 
@@ -62,24 +62,30 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 *(M3, 2 marks, S9)*
 
 **Q12.** A network must output a **predicted delivery time in minutes** (e.g. 34.7). The appropriate output-layer activation is:
-(A) Sigmoid  (B) Step  (C) Linear/identity  (D) Softmax over 2 classes
+(A) Sigmoid
+
+(B) Step
+
+(C) Linear/identity
+
+(D) Softmax over 2 classes
 *(M3, 2 marks, S9)*
 
-**Q13.** In a perceptron trained with the update w ← w + η·y·x, an engineer sets **η = 50**. Evaluate what will go wrong compared with η = 0.1, and why the issue is worse when input features have very different scales.
+**Q13.** In a perceptron trained with the update $w \leftarrow w + \eta\,y\,x$, an engineer sets **$\eta = 50$**. Evaluate what will go wrong compared with $\eta = 0.1$, and why the issue is worse when input features have very different scales.
 *(M3, 2 marks, S8)*
 
 **Q14.** State the role of the **chain rule** in backpropagation: what quantity flows backward, and how a layer far from the output still receives a training signal.
 *(M3, 2 marks, S10)*
 
-**Q15.** A clinic must classify X-rays but has only **800 labeled images**, and clinicians require a justification for each prediction. Evaluate CNN vs a small MLP trained on raw **512×512 grayscale** pixels (262,144 input values) for this setting, addressing data efficiency and interpretability.
+**Q15.** A clinic must classify X-rays but has only **800 labeled images**, and clinicians require a justification for each prediction. Evaluate CNN vs a small MLP trained on raw **$512 \times 512$ grayscale** pixels (262,144 input values) for this setting, addressing data efficiency and interpretability.
 *(M3, 3 marks, S11)*
 
-**Q16.** *(Numerical — CNN dimensions)* An input image of size **28 × 28 × 1** passes through:
+**Q16.** *(Numerical — CNN dimensions)* An input image of size **$28 \times 28 \times 1$** passes through:
 
 | Layer | Operation | Parameters |
 |---|---|---|
-| 1 | Convolution | **16 filters, kernel 3×3, stride 1, padding 1** |
-| 2 | Max-pooling | **2×2, stride 2** |
+| 1 | Convolution | **16 filters, kernel $3 \times 3$, stride 1, padding 1** |
+| 2 | Max-pooling | **$2 \times 2$, stride 2** |
 
 (a) Compute Layer 1's output dimensions, showing the formula with substituted values. *(2 marks)*
 (b) Compute Layer 2's output dimensions. *(2 marks)*
@@ -194,10 +200,10 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 ### Section B — Module 3 (16 marks)
 - Q11 (2): Two reasons × 1 mark: sigmoid gradients shrink toward 0 for large |z|, so deep stacks suffer vanishing gradients; ReLU keeps gradient 1 on the positive side, and its zero output for negative inputs gives sparse, cheaper activations.
 - Q12 (2): **C** *(letter 1; justification 1)* — a linear output can emit any real value such as 34.7; sigmoid caps at (0,1) and softmax makes a distribution, both wrong for regression targets.
-- Q13 (2): With η = 50, one misclassified point throws the weights a huge distance, so training oscillates/diverges instead of settling *(1)*; with unscaled features the largest-magnitude feature dominates the 50·x term, compounding the overshoot *(1)*.
+- Q13 (2): With $\eta = 50$, one misclassified point throws the weights a huge distance, so training oscillates/diverges instead of settling *(1)*; with unscaled features the largest-magnitude feature dominates the $50x$ term, compounding the overshoot *(1)*.
 - Q14 (2): The loss gradient w.r.t. each layer's outputs/weights flows backward *(1)*; the chain rule multiplies downstream gradients by each layer's local derivatives, so even early layers receive a signal proportional to their influence on the loss *(1)*.
-- Q15 (3): Data efficiency: CNN from scratch on 800 images overfits; transfer learning / weight sharing needs far fewer labeled examples than an MLP on 262,144 grayscale inputs (accept ≈786k if the answer states the RGB assumption, since 512×512×3 ≈ 786k — either figure is correct when its channel basis is stated) *(1.5)*; interpretability: pixel MLP gives no localization, while CNN feature-map visualizations (e.g. saliency over the lesion region) give clinicians checkable evidence — though neither is a full justification, supporting human review *(1.5)*.
-- Q16 (5): (a) Out = ⌊(28 + 2·1 − 3)/1⌋ + 1 = ⌊27⌋ + 1 = **28 → 28 × 28 × 16** *(2: 1 formula with substitution, 1 result incl. channels)*. (b) Pool: ⌊(28 − 2)/2⌋ + 1 = 13 + 1 = **14 → 14 × 14 × 16** *(2)*. (c) Weights = 3·3·1·16 = 144 + 16 biases = **160** *(1)*.
+- Q15 (3): Data efficiency: CNN from scratch on 800 images overfits; transfer learning / weight sharing needs far fewer labeled examples than an MLP on 262,144 grayscale inputs (accept $\approx 786$k if the answer states the RGB assumption, since $512 \times 512 \times 3 \approx 786$k — either figure is correct when its channel basis is stated) *(1.5)*; interpretability: pixel MLP gives no localization, while CNN feature-map visualizations (e.g. saliency over the lesion region) give clinicians checkable evidence — though neither is a full justification, supporting human review *(1.5)*.
+- Q16 (5): (a) Out = $\lfloor(28 + 2 \cdot 1 - 3)/1\rfloor + 1 = \lfloor 27 \rfloor + 1 = $**28 → 28 × 28 × 16** *(2: 1 formula with substitution, 1 result incl. channels)*. (b) Pool: $\lfloor(28 - 2)/2\rfloor + 1$ = 13 + 1 = **14 → 14 × 14 × 16** *(2)*. (c) Weights = $3 \cdot 3 \cdot 1 \cdot 16$ = 144 + 16 biases = **160** *(1)*.
 
 ### Section C — Modules 4 & 5 (18 marks)
 
@@ -205,7 +211,7 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 
 - Q17 (2): Failure mode: reward hacking — exploiting the metric rather than the intent *(1)*; fix (i) is better because it re-anchors the reward to the true goal (cleanliness), while (ii) only patches one loophole and invites others *(1)*.
 - Q18 (2): The designer controls the **policy** (the recommendation logic) directly *(1)*; the environment's transition behaviour (user reactions, click probabilities) must be learned from feedback *(1)*.
-- Q19 (3): Strategy: ε-greedy — with probability ε show an exploratory non-sports article, else the current best *(1)*; ε is the fraction of traffic spent exploring, tunable as interests drift *(1)*; cost of too much exploration: wasted impressions the user dislikes, lower engagement/revenue than exploitation would give *(1)*.
+- Q19 (3): Strategy: $\epsilon$-greedy — with probability $\epsilon$ show an exploratory non-sports article, else the current best *(1)*; $\epsilon$ is the fraction of traffic spent exploring, tunable as interests drift *(1)*; cost of too much exploration: wasted impressions the user dislikes, lower engagement/revenue than exploitation would give *(1)*.
 
 *(Module 5 questions.)*
 

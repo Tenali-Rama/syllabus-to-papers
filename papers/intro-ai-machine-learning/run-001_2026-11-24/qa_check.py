@@ -62,7 +62,7 @@ families = {
     "TF2 entropy/IG splits (numerical)": r"compute[^\n]{0,40}information gain",
     "TF3 split sizing": r"70% train / 30% test",
     "TF4 perceptron forward": r"step activation with threshold 0",
-    "TF5 perceptron update": r"update rule.*w ← w \+ η",
+    "TF5 perceptron update": r"update rule.*(w ← w \+ η|w \\leftarrow w \\+ \\eta)",
     "TF6 precision/recall": r"TP = 45, FN = 15",
     "TF7 IoU compute": r"Compute the intersection area",
     "TF8 token cost": r"per 1 million input tokens",

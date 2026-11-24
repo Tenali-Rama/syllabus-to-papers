@@ -38,14 +38,26 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 *(M1, 2 marks, S1)*
 
 **Q3.** Put these ML workflow steps in the correct order: (i) model training, (ii) data collection, (iii) evaluation on held-out data, (iv) data cleaning.
-(A) ii → i → iii → iv  (B) ii → iv → i → iii  (C) ii → iv → iii → i  (D) iv → ii → i → iii
+(A) ii → i → iii → iv
+
+(B) ii → iv → i → iii
+
+(C) ii → iv → iii → i
+
+(D) iv → ii → i → iii
 *(M1, 2 marks, S2)*
 
 **Q4.** *(Numerical)* An inbox provider has **1,200 labeled emails** and splits them **70% train / 30% test**. State the number of emails in each set, and name the problem that training accuracy alone cannot detect.
 *(M1, 2 marks, S2, S3)*
 
 **Q5.** In a decision tree for loan approval, a **leaf node** represents:
-(A) A question about one attribute  (B) A final predicted decision (class)  (C) The root of the tree  (D) A measurement error
+(A) A question about one attribute
+
+(B) A final predicted decision (class)
+
+(C) The root of the tree
+
+(D) A measurement error
 *(M2, 2 marks, S4)*
 
 **Q6.** The **Gini impurity** of a node measures:
@@ -94,7 +106,13 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 *(M3, 2 marks, S9)*
 
 **Q13.** Using the **ReLU** activation, the output for an input of **−3.5** is:
-(A) −3.5  (B) 0  (C) 1  (D) 3.5
+(A) −3.5
+
+(B) 0
+
+(C) 1
+
+(D) 3.5
 *(M3, 2 marks, S9)*
 
 **Q14.** Hidden layers in a multi-layer perceptron allow the network to:
@@ -106,12 +124,12 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 
 **Q15.** In a CNN, a **pooling layer** typically:
 (A) Learns new filters by gradient descent
-(B) Downsamples a feature map (e.g. taking the max in each 2×2 region), reducing its size while keeping strong activations
+(B) Downsamples a feature map (e.g. taking the max in each $2 \times 2$ region), reducing its size while keeping strong activations
 (C) Converts images to text
 (D) Adds labeled examples to the dataset
 *(M3, 3 marks, S11)*
 
-**Q16.** *(Numerical)* A perceptron has weights **w₁ = 0.4, w₂ = −0.6**, bias **b = 0.1**, and step activation with threshold 0 (output 1 if net ≥ 0, else 0). For the input **x₁ = 1, x₂ = 1**, compute the net input and the perceptron's output, showing the substitution.
+**Q16.** *(Numerical)* A perceptron has weights **$w_1 = 0.4$, $w_2 = -0.6$**, bias **$b = 0.1$**, and step activation with threshold 0 (output 1 if $net \ge 0$, else 0). For the input **$x_1 = 1$, $x_2 = 1$**, compute the net input and the perceptron's output, showing the substitution.
 *(M3, 5 marks, S8)*
 
 ---
@@ -175,7 +193,13 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 *(M6, 2 marks, S19)*
 
 **Q26.** A traffic system must output **where each car is** (a box) **and** what it is. The required task is:
-(A) Image classification  (B) Object detection  (C) Image generation  (D) Semantic segmentation only
+(A) Image classification
+
+(B) Object detection
+
+(C) Image generation
+
+(D) Semantic segmentation only
 *(M6, 2 marks, S20)*
 
 **Q27.** To train an image classifier of crop diseases, the training data must be:
@@ -235,7 +259,7 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 (c) State whether the appointment-booking feature should be used in the shipped model, and why. *(2 marks)*
 *(M1, 8 marks, S1, S2, S3)*
 
-**Q37.** A gym's membership team builds a decision tree to predict churn. From **8 members** in an illustrative sample, **4 churned (Y)** and **4 stayed (N)**. Candidate split — "visits per week < 1": Yes → 4 members (**3 Y, 1 N**); No → 4 members (**1 Y, 3 N**). Given: log₂0.75 = −0.415, log₂0.25 = −2.000.
+**Q37.** A gym's membership team builds a decision tree to predict churn. From **8 members** in an illustrative sample, **4 churned (Y)** and **4 stayed (N)**. Candidate split — "visits per week < 1": Yes → 4 members (**3 Y, 1 N**); No → 4 members (**1 Y, 3 N**). Given: $\log_2 0.75 = -0.415$, $\log_2 0.25 = -2.000$.
 (a) Name the parts of a decision tree and what a leaf represents here. *(2 marks)*
 (b) Using the log values provided, calculate the parent entropy, the weighted child entropy for this split, and its information gain. *(4 marks)*
 (c) The tree was then grown until every leaf was pure, after which its accuracy on new members dropped sharply. Name the problem and recommend one fix, with a sentence of justification. *(4 marks)*
@@ -255,7 +279,7 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 
 - Q5 (2): **B**. A leaf holds the final class decision; internal nodes ask questions.
 - Q6 (2): **B**. Gini = mislabeling probability under the node's class distribution.
-- Q7 (3): Gini = 1 − p_spam² − p_non² with p_spam = 8/10 = 0.8, p_non = 0.2 → 1 − (0.64 + 0.04) = **0.32**. *(1 mark setup, 1 mark substitution, 1 mark result.)*
+- Q7 (3): $\text{Gini} = 1 - p_{\text{spam}}^2 - p_{\text{non}}^2$ with $p_{\text{spam}} = 8/10 = 0.8$, $p_{\text{non}} = 0.2$ → $1 - (0.64 + 0.04) = $**0.32**. *(1 mark setup, 1 mark substitution, 1 mark result.)*
 - Q8 (2): **C**. Splits maximize purity gain; balanced counts are not the criterion.
 - Q9 (3): Pruning removes branches that fit noise in the training emails, simplifying the tree *(1–2)*; fully pure leaves encode accidental patterns of the training sample, so they fail to generalize to new mail *(1–2)*. *(Split: 1 mark what pruning does, 2 marks why purity ≠ generalization.)*
 - Q10 (2): **B**. k = 1 uses exactly the nearest neighbor's class.
@@ -263,10 +287,10 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 ### Section B — Module 3 (16 marks)
 - Q11 (2): **B**. Perceptron = weighted sum + bias → step threshold.
 - Q12 (2): **A**. Without non-linear activations, stacked layers collapse to one linear map.
-- Q13 (2): **B**. ReLU(x) = max(0, x) → max(0, −3.5) = 0.
+- Q13 (2): **B**. $\text{ReLU}(x) = \max(0, x)$ → $\max(0, -3.5) = 0$.
 - Q14 (2): **B**. Hidden layers compose intermediate features; they do not guarantee zero error (C) or remove the need for labels (D).
 - Q15 (3): **B**. Pooling downsamples feature maps, keeping strong activations and cutting computation; filter learning happens in convolutional layers, not pooling.
-- Q16 (5): net = w₁x₁ + w₂x₂ + b = 0.4(1) + (−0.6)(1) + 0.1 = **−0.1** *(3 marks: formula + correct arithmetic)*; −0.1 < 0 → output **0** *(2 marks)*.
+- Q16 (5): $\text{net} = w_1x_1 + w_2x_2 + b$ = 0.4(1) + (−0.6)(1) + 0.1 = **−0.1** *(3 marks: formula + correct arithmetic)*; $-0.1 < 0$ → output **0** *(2 marks)*.
 
 ### Section C — Modules 4 & 5 (18 marks)
 
@@ -311,6 +335,6 @@ Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-to
 *(Integrative long answers.)*
 
 - Q36 (8): (a) Four stages × 1 mark, in order: collect labeled discharge records (30-day outcomes per patient); clean/normalize the records; train on the training split; evaluate on held-out data, then deploy with monitoring. *(Judgment note: the split must be defined before tuning begins, not after seeing results.)* (b) Hold out a test set of discharge records set aside **before** any model building or tuning (e.g. a 70/30 split by patient) *(1)*; the held-out set estimates performance on future discharges and exposes overfitting to the training rows *(1)*. (c) Exclude the appointment-booking feature *(1)* — its value leaks the outcome, because whether/when appointments got booked is only known after the 30-day window closes, so it inflates training accuracy and is unavailable at prediction time; the 89% training score is exactly the kind of inflated number this leakage produces *(1)*.
-- Q37 (10): (a) Root/internal nodes test attributes ("visits per week < 1"); leaves hold the final prediction — churn (Y) or stay (N) here *(2)*. (b) Parent entropy = −(0.5·log₂0.5 + 0.5·log₂0.5) = −(0.5·(−1) + 0.5·(−1)) = **1.000** *(1)*. Child entropies: yes child (3Y,1N) = −(0.75·(−0.415) + 0.25·(−2.000)) = 0.311 + 0.500 = **0.811**; no child (1Y,3N) = same by symmetry = **0.811** *(1)*. Weighted = 0.5(0.811) + 0.5(0.811) = **0.811** *(1)*. IG = 1.000 − 0.811 = **0.189** *(1)*. (c) Problem: overfitting — a tree grown until every leaf is pure has memorized this sample of 8 members, including noise, so it fails on new members *(2)*. Fix: prune / cap depth / set a minimum leaf size *(1)*, because a smaller tree keeps only the splits that generalize (here, IG 0.189 is modest, so little splitting is justified at all) *(1)*.
+- Q37 (10): (a) Root/internal nodes test attributes ("visits per week < 1"); leaves hold the final prediction — churn (Y) or stay (N) here *(2)*. (b) Parent entropy = $-(0.5\,\log_2 0.5 + 0.5\,\log_2 0.5)$ = −(0.5·(−1) + 0.5·(−1)) = **1.000** *(1)*. Child entropies: yes child (3Y,1N) = $-(0.75(-0.415) + 0.25(-2.000)) = 0.311 + 0.500 = $**0.811**; no child (1Y,3N) = same by symmetry = **0.811** *(1)*. Weighted = 0.5(0.811) + 0.5(0.811) = **0.811** *(1)*. $\text{IG} = 1.000 - 0.811 = $**0.189** *(1)*. (c) Problem: overfitting — a tree grown until every leaf is pure has memorized this sample of 8 members, including noise, so it fails on new members *(2)*. Fix: prune / cap depth / set a minimum leaf size *(1)*, because a smaller tree keeps only the splits that generalize (here, IG 0.189 is modest, so little splitting is justified at all) *(1)*.
 
 **Mark split summary:** 2-mark × 25 = 50; 3-mark × 9 = 27; 5-mark × 1 = 5; 8-mark × 1 = 8; 10-mark × 1 = 10 → **37 questions, 100 marks**. Long answers: one 8-mark, one 10-mark (≤ 3 ten-mark longs ✓).

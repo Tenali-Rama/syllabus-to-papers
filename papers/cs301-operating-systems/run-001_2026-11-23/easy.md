@@ -25,43 +25,103 @@ Tag legend: each question carries `(Mn, marks)` — Mn is the blueprint module n
 ## Section A — Multiple Choice (10 questions × 1 mark = 10 marks)
 
 **A1.** Which of the following can execute only in kernel mode?
-(a) An arithmetic addition (b) Loading a value from a user-mode variable (c) Setting the hardware timer (d) An unconditional jump instruction
+(a) An arithmetic addition
+
+(b) Loading a value from a user-mode variable
+
+(c) Setting the hardware timer
+
+(d) An unconditional jump instruction
 *(M1, 1)*
 
 **A2.** In which OS structure do file-system and device-driver services run as separate user-space server processes on top of a minimal privileged kernel?
-(a) Monolithic (b) Layered (c) Microkernel (d) Modular kernel
+(a) Monolithic
+
+(b) Layered
+
+(c) Microkernel
+
+(d) Modular kernel
 *(M1, 1)*
 
 **A3.** Which of the following is *not* stored in a process's PCB?
-(a) CPU register values (b) Scheduling priority (c) The contents of the process's user data segment (d) Memory-management information
+(a) CPU register values
+
+(b) Scheduling priority
+
+(c) The contents of the process's user data segment
+
+(d) Memory-management information
 *(M2, 1)*
 
 **A4.** In the many-to-one threading model, which statement is true?
-(a) Threads run truly in parallel on a multiprocessor (b) A blocking system call made by one user thread blocks the entire process (c) Each user thread maps to its own kernel thread (d) Thread scheduling is done by the kernel
+(a) Threads run truly in parallel on a multiprocessor
+
+(b) A blocking system call made by one user thread blocks the entire process
+
+(c) Each user thread maps to its own kernel thread
+
+(d) Thread scheduling is done by the kernel
 *(M2, 1)*
 
 **A5.** The convoy effect — many processes waiting for one busy resource — is most directly a weakness of which scheduling algorithm?
-(a) FCFS (b) SRTF (c) Priority with aging (d) Round Robin
+(a) FCFS
+
+(b) SRTF
+
+(c) Priority with aging
+
+(d) Round Robin
 *(M3, 1)*
 
 **A6.** SRTF is best described as which of the following?
-(a) The preemptive version of SJF (b) A non-preemptive priority scheme (c) Round Robin with a one-unit quantum (d) The real-time variant of FCFS
+(a) The preemptive version of SJF
+
+(b) A non-preemptive priority scheme
+
+(c) Round Robin with a one-unit quantum
+
+(d) The real-time variant of FCFS
 *(M3, 1)*
 
 **A7.** A race condition exists when:
-(a) Two processes run on different CPUs (b) Two processes use semaphores correctly (c) The result of concurrent access to shared data depends on execution order (d) A process holds a lock and requests a second lock
+(a) Two processes run on different CPUs
+
+(b) Two processes use semaphores correctly
+
+(c) The result of concurrent access to shared data depends on execution order
+
+(d) A process holds a lock and requests a second lock
 *(M4, 1)*
 
 **A8.** Internal fragmentation is suffered by which allocation scheme?
-(a) Dynamic contiguous partitions with best-fit (b) Pure segmentation (c) Paging, in the last page of a process (d) Indexed file allocation
+(a) Dynamic contiguous partitions with best-fit
+
+(b) Pure segmentation
+
+(c) Paging, in the last page of a process
+
+(d) Indexed file allocation
 *(M5, 1)*
 
 **A9.** Which allocation method supports direct (random) access by keeping, for each file, a block listing the addresses of all its data blocks?
-(a) Contiguous (b) Linked (c) Indexed (d) Pure FIFO
+(a) Contiguous
+
+(b) Linked
+
+(c) Indexed
+
+(d) Pure FIFO
 *(M6, 1)*
 
 **A10.** C-SCAN disk scheduling is characterized by:
-(a) Serving the request closest to the head at all times (b) Serving requests only in one direction of head travel and jumping back to the start afterwards (c) Serving requests in arrival order (d) Reversing direction at the last request without reaching the end
+(a) Serving the request closest to the head at all times
+
+(b) Serving requests only in one direction of head travel and jumping back to the start afterwards
+
+(c) Serving requests in arrival order
+
+(d) Reversing direction at the last request without reaching the end
 *(M6, 1)*
 
 ---
@@ -138,7 +198,17 @@ Tag legend: each question carries `(Mn, marks)` — Mn is the blueprint module n
 *(M5, 10)*
 
 **D3.** Three threads share an integer `x` initialized to 0. Each thread executes `x = x + 1` exactly three times. Memory loads and stores are not atomic, and there is no synchronization. Threads run to completion.
-(a) Determine the minimum possible final value of `x`, and justify (3). (b) Determine the maximum possible final value of `x` (3). (c) If a binary mutex semaphore initialized to 1 surrounds each increment, determine the final value of `x` and explain the term for the lost updates in part (a) (4).
+(a) Determine the minimum possible final value of `x`, and justify (3).
+(b) Determine the maximum possible final value of `x` (3).
+(c) If a binary mutex semaphore initialized to 1 surrounds each increment, determine the final value of `x` and explain the term for the lost updates in part
+(a) (4).
+(a) Determine the minimum possible final value of `x`, and justify (3).
+
+(b) Determine the maximum possible final value of `x` (3).
+
+(c) If a binary mutex semaphore initialized to 1 surrounds each increment, determine the final value of `x` and explain the term for the lost updates in part
+
+(a) (4).
 *(M4, 10)*
 
 **D4.** Assume every `fork()` succeeds, and in the child `fork()` returns 0 while in the parent it returns the child's PID; `&&` short-circuits.

@@ -125,7 +125,7 @@ check("[num] easy Q4 split sizes 840/360",
       f"computed train {etrain:.0f}, test {etest:.0f}; key must state both")
 # TF1 easy Q7: Gini(8,2)
 g = round(gini(8, 2), 2)
-check("[num] easy Q7 Gini(8 spam,2 non) == 0.32", close(num_in(easy_key, r"\(0\.64 \+ 0\.04\) = \*\*(0\.\d+)\*\*"), g), f"computed {g}")
+check("[num] easy Q7 Gini(8 spam,2 non) == 0.32", close(num_in(easy_key, r"\(0\.64 \+ 0\.04\) = \$\*\*(0\.\d+)\*\*"), g), f"computed {g}")
 # easy Q16 perceptron forward pass: net = 0.4 - 0.6 + 0.1
 net = round(0.4 * 1 + (-0.6) * 1 + 0.1, 6)
 check("[num] easy Q16 net == -0.1, output 0",
@@ -165,9 +165,9 @@ check("[num] medium Q28 2880/day, 4 days",
 # TF6 medium Q36 precision/recall/F1
 TP, FN, FP, TN = 45, 15, 30, 910
 P = TP / (TP + FP); R = TP / (TP + FN); F1 = 2 * P * R / (P + R)
-kp = re.search(r"Precision = TP/\(TP\+FP\) = 45/75 = \*\*([\d.]+)\*\*", med_key)
-kr = re.search(r"Recall = TP/\(TP\+FN\) = 45/60 = \*\*([\d.]+)\*\*", med_key)
-kf = re.search(r"0\.900/1\.35 = \*\*([\d.]+)\*\*", med_key)
+kp = re.search(r"Precision\} = \\text\{TP\}/\(\\text\{TP\}\+\\text\{FP\}\) = 45/75 = \$\*\*([\d.]+)\*\*", med_key)
+kr = re.search(r"Recall\} = \\text\{TP\}/\(\\text\{TP\}\+\\text\{FN\}\) = 45/60 = \$\*\*([\d.]+)\*\*", med_key)
+kf = re.search(r"0\.900/1\.35 = \$\*\*([\d.]+)\*\*", med_key)
 check("[num] medium Q36 precision 0.600", kp and close(kp.group(1), P), f"computed {P:.3f}")
 check("[num] medium Q36 recall 0.750", kr and close(kr.group(1), R), f"computed {R:.3f}")
 check("[num] medium Q36 F1 0.667", kf and close(kf.group(1), F1), f"computed {F1:.3f}")
@@ -189,7 +189,7 @@ def conv_out(size, k, s, p):
 l1 = conv_out(28, 3, 1, 1)
 l2 = conv_out(l1, 2, 2, 0)
 wts = 3 * 3 * 1 * 16 + 16
-k1 = num_in(hard_key, r"= ⌊27⌋ \+ 1 = \*\*(\d+)(?: → \d+ × \d+ × \d+)?\*\*")
+k1 = num_in(hard_key, r"\\lfloor 27 \\rfloor \+ 1 = \$\*\*(\d+)(?: → \d+ × \d+ × \d+)?\*\*")
 k2 = num_in(hard_key, r"13 \+ 1 = \*\*(\d+)(?: → \d+ × \d+ × \d+)?\*\*")
 check("[num] hard Q16 conv 28x28x16, pool 14x14x16, 160 weights",
       close(k1, l1) and close(k2, l2)

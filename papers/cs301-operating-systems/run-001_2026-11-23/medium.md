@@ -25,43 +25,103 @@ Tag legend: each question carries `(Mn, marks)` — Mn is the blueprint module n
 ## Section A — Multiple Choice (10 questions × 1 mark = 10 marks)
 
 **A1.** When a user process executes a system-call instruction, dual-mode hardware causes:
-(a) The process to be terminated (b) A trap that switches the CPU to kernel mode and vectors to the OS handler (c) The instruction to be retried in user mode (d) An interrupt disabled until the next timer tick
+(a) The process to be terminated
+
+(b) A trap that switches the CPU to kernel mode and vectors to the OS handler
+
+(c) The instruction to be retried in user mode
+
+(d) An interrupt disabled until the next timer tick
 *(M1, 1)*
 
 **A2.** The main reason a server pre-creates a thread pool is:
-(a) To give each thread its own address space (b) To avoid repeated thread creation/destruction cost and to bound the number of concurrent threads (c) To allow threads to share kernel resources exclusively (d) To eliminate the need for synchronization
+(a) To give each thread its own address space
+
+(b) To avoid repeated thread creation/destruction cost and to bound the number of concurrent threads
+
+(c) To allow threads to share kernel resources exclusively
+
+(d) To eliminate the need for synchronization
 *(M2, 1)*
 
 **A3.** After a process calls `exec()` successfully:
-(a) A new process is created with a new PID (b) The calling process's image is replaced by the new program, with the PID unchanged (c) The process returns from `exec()` on failure only (d) Both (b) and (c)
+(a) A new process is created with a new PID
+
+(b) The calling process's image is replaced by the new program, with the PID unchanged
+
+(c) The process returns from `exec()` on failure only
+
+(d) Both (b) and (c)
 *(M2, 1)*
 
 **A4.** In a fixed-priority multilevel queue system, lower-priority queues can starve unless the system provides:
-(a) A smaller time quantum (b) A mechanism such as aging or inter-queue migration (c) FCFS within every queue (d) Preemption inside a queue only
+(a) A smaller time quantum
+
+(b) A mechanism such as aging or inter-queue migration
+
+(c) FCFS within every queue
+
+(d) Preemption inside a queue only
 *(M3, 1)*
 
 **A5.** Priority inversion occurs when:
-(a) A high-priority task runs before a low-priority one (b) Priorities are assigned by deadline (c) A high-priority task waits for a resource held by a low-priority task while medium tasks run (d) Two tasks have equal priority
+(a) A high-priority task runs before a low-priority one
+
+(b) Priorities are assigned by deadline
+
+(c) A high-priority task waits for a resource held by a low-priority task while medium tasks run
+
+(d) Two tasks have equal priority
 *(M3, 1)*
 
 **A6.** Compare-and-swap (CAS) atomically:
-(a) Increments a value (b) Updates a word to a new value only if its current value equals the expected value (c) Swaps two memory locations unconditionally (d) Sets a lock bit and enables interrupts
+(a) Increments a value
+
+(b) Updates a word to a new value only if its current value equals the expected value
+
+(c) Swaps two memory locations unconditionally
+
+(d) Sets a lock bit and enables interrupts
 *(M4, 1)*
 
 **A7.** Which of the following is *not* one of the four necessary conditions for deadlock?
-(a) Mutual exclusion (b) Hold and wait (c) Preemption (d) Circular wait
+(a) Mutual exclusion
+
+(b) Hold and wait
+
+(c) Preemption
+
+(d) Circular wait
 *(M4, 1)*
 
 **A8.** With copy-on-write, a child created by `fork()`:
-(a) Immediately receives duplicates of all parent pages (b) Shares parent pages as read-only; a write by either side triggers copying of that page (c) Cannot write to any page (d) Replaces the parent's pages
+(a) Immediately receives duplicates of all parent pages
+
+(b) Shares parent pages as read-only; a write by either side triggers copying of that page
+
+(c) Cannot write to any page
+
+(d) Replaces the parent's pages
 *(M5, 1)*
 
 **A9.** An inverted page table:
-(a) Has one entry per virtual page of each process (b) Is indexed by physical frame number, with one entry per frame (c) Eliminates the TLB (d) Stores the page table inside each PCB
+(a) Has one entry per virtual page of each process
+
+(b) Is indexed by physical frame number, with one entry per frame
+
+(c) Eliminates the TLB
+
+(d) Stores the page table inside each PCB
 *(M5, 1)*
 
 **A10.** A FAT-based file system improves on pure linked allocation because:
-(a) The FAT is stored in memory, so random access does not traverse the chain on disk (b) It eliminates external fragmentation (c) Each file stores its own index block (d) Blocks of a file must be contiguous
+(a) The FAT is stored in memory, so random access does not traverse the chain on disk
+
+(b) It eliminates external fragmentation
+
+(c) Each file stores its own index block
+
+(d) Blocks of a file must be contiguous
 *(M6, 1)*
 
 ---
@@ -125,7 +185,10 @@ Available = (2, 2, 4).
 *(M4, 10)*
 
 **D2.** Demand paging: a memory access takes 100 ns; servicing a page fault takes 8 ms (the fault service time already includes the disk access and the restart). Let p be the page-fault rate per access.
-(a) Write the effective memory access time (EMAT) as a function of p and evaluate it for p = 1/500,000 (4). (b) Determine the maximum p such that EMAT does not exceed 110 ns (4). (c) Interpret what the result of (b) says about the required per-fault frequency (2).
+(a) Write the effective memory access time (EMAT) as a function of p and evaluate it for p = 1/500,000 (4).
+(b) Determine the maximum p such that EMAT does not exceed 110 ns (4).
+(c) Interpret what the result of
+(b) says about the required per-fault frequency (2).
 *(M5, 10)*
 
 **D3.** Four processes, all times in ms:
@@ -138,7 +201,17 @@ Available = (2, 2, 4).
 | P4 | 3 | 5 |
 
 Conventions (all parts): Round Robin; a process is enqueued at its arrival instant and at slice end in that order; the CPU is never idle while the ready queue is non-empty; the first dispatch of the day carries no overhead.
-(a) With quantum q = 3 and zero context-switch overhead, draw the Gantt chart and compute average turnaround and waiting times (4). (b) Repeat q = 3 with a 1 ms context-switch overhead charged between consecutive dispatches of *different* processes (a process continuing its burst after a quantum is impossible here since q < every burst; overhead elapses with the preempted process already re-queued, and arrivals during overhead join the ready queue before the next dispatch). Give the averages (4). (c) With q = 6 and zero overhead, give the averages and state the direction of change versus (a) (2).
+(a) With quantum q = 3 and zero context-switch overhead, draw the Gantt chart and compute average turnaround and waiting times (4).
+(b) Repeat q = 3 with a 1 ms context-switch overhead charged between consecutive dispatches of *different* processes (a process continuing its burst after a quantum is impossible here since q < every burst; overhead elapses with the preempted process already re-queued, and arrivals during overhead join the ready queue before the next dispatch). Give the averages (4).
+(c) With q = 6 and zero overhead, give the averages and state the direction of change versus
+(a) (2).
+(a) With quantum q = 3 and zero context-switch overhead, draw the Gantt chart and compute average turnaround and waiting times (4).
+
+(b) Repeat q = 3 with a 1 ms context-switch overhead charged between consecutive dispatches of *different* processes (a process continuing its burst after a quantum is impossible here since q < every burst; overhead elapses with the preempted process already re-queued, and arrivals during overhead join the ready queue before the next dispatch). Give the averages (4).
+
+(c) With q = 6 and zero overhead, give the averages and state the direction of change versus
+
+(a) (2).
 *(M3, 10)*
 
 **D4.** Every `fork()` succeeds; in the child `fork()` returns 0; `execlp` never fails and does not return.

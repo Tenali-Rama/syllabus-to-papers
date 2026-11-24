@@ -79,3 +79,17 @@ All papers follow this layout exactly. Formatting-only rule: content (wording, m
 - Consistent bold usage: `**Qn.**`, section totals, key answers. No bold in body prose.
 - ASCII/unicode math allowed (σ², Φ, ·, →) but consistent throughout the paper.
 ```
+
+## 6. Exam-at-a-glance map (readability requirement)
+Immediately after the instructions table, insert a summary table so the reader sees the paper's shape before starting:
+```markdown
+## Exam at a Glance
+
+| Section | Type | Questions | Marks |
+|---|---|---|---|
+| A | Multiple choice | 10 × 1 | 10 |
+| B | Short answer | 12 × 2 | 24 |
+| ... | ... | ... | ... |
+| **Total** | | **37** | **100** |
+```
+Question stems should read as self-contained prose — bold only the `Qn.` label; keep scenario context before the actual ask; where a stem is longer than 4 lines, precede the ask with a bolded **Task:** line.
