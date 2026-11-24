@@ -101,7 +101,7 @@ for i, e2 in enumerate([0.025 ** 2, 0.04 ** 2, 0.01 ** 2, 0.03 ** 2]):
     check(f"hard C1 (i): vol t+{i + 1}", math.sqrt(s), [0.0294, 0.0296, 0.0285, 0.0282][i], 5e-5)
 check("hard C1 (ii): persistence", a + b, 0.97, 1e-12)
 check("hard C1 (ii): unconditional variance", w / (1 - a - b), 0.0001, 1e-15)
-check("hard C1 (iii): half-life", math.log(0.5) / math.log(0.92), 8.31, 5e-3)
+check("hard C1 (iii): half-life of a variance shock", math.log(0.5) / math.log(0.05 + 0.92), 22.76, 5e-3)
 check_bool("hard C1 (iii): stationary in variance", a + b < 1, True)
 check("hard C1 (iv): variance change t -> t+1", 0.0009 - 0.00086225, 0.00003775, 1e-10)
 

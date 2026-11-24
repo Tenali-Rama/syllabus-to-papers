@@ -1,0 +1,14 @@
+{
+  "syllabus": "applied-econometrics-advanced-models",
+  "run": "run-002_2026-11-24",
+  "date": "2026-11-24",
+  "status": "accepted",
+  "reviewer_score": "80/90",
+  "papers": [
+    {"difficulty": "easy", "file": "easy.md", "marks": 100},
+    {"difficulty": "medium", "file": "medium.md", "marks": 100},
+    {"difficulty": "hard", "file": "hard.md", "marks": 100}
+  ],
+  "modules_covered": 4,
+  "notes": "Breadth-first v2 redo of run-001 (which it supersedes in quality; history preserved). 40 sub-topics, 38 questions/paper, 87.5-90% per-paper coverage, 100% run coverage. First run graded against tool/QUALITY_BAR.md: 12/12 PASS, hard gates clean. Reviewer re-simulated 34 numericals independently. Accepted round 1 (80/90); post-review polish fixed two D5 stems and one tautological assertion."
+}

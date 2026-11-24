@@ -328,7 +328,9 @@ print(f"P3 D4: 4x5={4*5}<=24 fits; 5x5=25>24 no; suspend -> {4*5}<=24 recovers; 
 
 # ---------------------------------------------------------------- cross-paper data duplication scan
 import re
-texts = {n: open(f"qgen/outputs/B2/{n}.md").read()
+import os
+_d = os.path.dirname(os.path.abspath(__file__))
+texts = {n: open(os.path.join(_d, f"{n.split('_')[1]}.md")).read()
          for n in ["paper1_easy", "paper2_medium", "paper3_hard"]}
 fragments = {
     "page string":      "4, 1, 2, 0, 4, 1, 5",
