@@ -29,7 +29,7 @@ paper_number: 1|2|3
 marks: <total from syllabus assessment scheme>
 duration_hours: <from syllabus>
 modules_covered: <int>
-question_types: [MCQ, short-answer, numerical, long-answer]
+question_types: [types ACTUALLY used — see tool/QUESTION_TYPES.md]
 qa_verdict: ACCEPTED|PENDING
 reviewer_score: "<N>/90"
 ---

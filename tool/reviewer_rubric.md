@@ -33,3 +33,6 @@ Read tool/QUALITY_BAR.md. Grade all 12 criteria PASS/FAIL citing a question-leve
 
 ## Verifier-of-verifier (mandatory, all runs)
 Audit the run's verify.py/qa_check.py for: tautological assertions (constant vs same constant), hand-transcribed expected values that should be computed, trivially-true booleans, and checks derived from the key's convention rather than the stem's printed specification. Each finding costs 1 point off Question Quality and is listed as a defect. verify.py assertions must parse stems, not transcribe keys.
+
+## Type-assignment review (mandatory, all runs)
+Read tool/QUESTION_TYPES.md. Check: (1) the blueprint's coverage matrix carries a type column with reasons; (2) each sub-topic's type matches its concept nature per the selection rules — flag mismatches (e.g. a workflow tested as MCQ-recall, a computation tested as essay); (3) each sub-topic appears in ≥2 types across the three papers; (4) no type exceeds 40% of a paper's marks unless syllabus-mandated. Each violation costs 1 point off Coverage.

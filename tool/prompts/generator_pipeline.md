@@ -10,6 +10,9 @@ Produce:
 4. Three-axis difficulty rubric (cognitive level, concepts combined, numerical complexity).
 5. Uniqueness constraint list (question templates, data sets, numericals — each template family at most once across the whole run).
 
+## Stage -1 — Question-type assignment
+Read `tool/QUESTION_TYPES.md`. At blueprint time, assign question type(s) PER SUB-TOPIC using its selection rules (concept nature → primary type; ≥2 types per sub-topic across papers; no type >40% of a paper's marks unless the syllabus mandates; record the reason in the coverage matrix). Do not default to a fixed 4-type mix. The syllabus's declared scheme is the allowed set, not the choice.
+
 ## Stage 0 — Quality bar
 Read `tool/QUALITY_BAR.md` before generating. All 12 criteria are binding; criteria 1–6 are hard gates (any FAIL rejects the run). Self-check every question against criteria 1–5 while writing, not after.
 
