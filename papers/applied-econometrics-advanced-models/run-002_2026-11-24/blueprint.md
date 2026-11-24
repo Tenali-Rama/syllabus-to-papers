@@ -93,8 +93,8 @@ fine-grained coverage. This inventory is the coverage contract.
 | S33 | B11 | E2 | — |
 | S34 | — | C7 | — |
 | S35 | C7 | C8 | E1 |
-| S36 | A10 | B12 | A10 |
-| S37 | C8 | — | B12 |
+| S36 | A10 | B12 | A10, D5 |
+| S37 | C8 | — | B12, D5 |
 | S38 | B10 | A10, D6 | E2 |
 | S39 | B12 | D5 | E2 |
 | S40 | D6 | — | E2 |
