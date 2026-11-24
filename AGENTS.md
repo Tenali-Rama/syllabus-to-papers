@@ -34,10 +34,12 @@ qa_verdict: ACCEPTED|PENDING
 reviewer_score: "<N>/90"
 ---
 ```
-Body: 100 marks, 3 hours, every question tagged `(Mn, marks)`, sections with counts and totals, brief answer key with mark splits at the end.
+Body: 100 marks, 3 hours, **≥35 questions per paper**, every question tagged `(Mn, marks, Sk)` where Sk are the blueprint's sub-topic IDs, sections with counts and totals, brief answer key with mark splits at the end.
 
 ### Quality bar
-Before committing a run, it must have passed the review loop defined in `tool/reviewer_rubric.md`: a strict reviewer agent must score ≥ 75/90 (`qa_verdict: ACCEPTED`). The full pipeline architecture is in `tool/SYSTEM.md` and the generator prompt is `tool/prompts/generator_pipeline.md`.
+- **Quality**: papers must pass the 12-criteria gate in `tool/QUALITY_BAR.md` (criteria 1–6 are hard gates).
+- **Breadth**: every paper must cover ≥85% of the syllabus's sub-topics (per the blueprint's numbered inventory); 100% across the run. Question count ≥35 per paper.
+- Before committing a run, it must have passed the review loop defined in `tool/reviewer_rubric.md`: a strict reviewer agent must score ≥ 75/90 (`qa_verdict: ACCEPTED`). The full pipeline architecture is in `tool/SYSTEM.md` and the generator prompt is `tool/prompts/generator_pipeline.md`.
 
 ## Workflow A — Generate papers for a syllabus
 

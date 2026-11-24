@@ -1,4 +1,5 @@
-import re, sys, collections
+import re, sys, collections, os
+_d = os.path.dirname(os.path.abspath(__file__))
 
 modtot = {"easy":{"M1":6,"M2":11,"M3":16,"M4":23,"M5":23,"M6":21},
           "medium":{"M1":3,"M2":9,"M3":25,"M4":27,"M5":16,"M6":20},
@@ -7,7 +8,7 @@ modtot = {"easy":{"M1":6,"M2":11,"M3":16,"M4":23,"M5":23,"M6":21},
 sec = {"easy":None,"medium":None,"hard":None}
 for name in ["paper1_easy","paper2_medium","paper3_hard"]:
     key = "easy" if "easy" in name else ("medium" if "medium" in name else "hard")
-    txt = open(f"qgen/outputs/B2/{name}.md").read()
+    txt = open(os.path.join(_d, f"{name.split('_')[1]}.md")).read()
     qs = re.findall(r"\*\*([ABCD]\d+)\.\s*\((M\d),\s*(\d+)\)\*\*", txt)
     # recompute totals
     total = sum(int(m) for _,_,m in qs)
@@ -40,7 +41,7 @@ for name in ["paper1_easy","paper2_medium","paper3_hard"]:
 
 # cross-paper data duplication scan
 print("\n--- cross-paper duplication scan ---")
-texts = {n: open(f"qgen/outputs/B2/{n}.md").read() for n in ["paper1_easy","paper2_medium","paper3_hard"]}
+texts = {n: open(os.path.join(_d, f"{n.split('_')[1]}.md")).read() for n in ["paper1_easy","paper2_medium","paper3_hard"]}
 canon = ["98", "183, 37", "122", "7, 0, 1", "1, 2, 3, 4, 1, 2, 5", "3, 2, 1"]
 for c in canon:
     hits = [n for n,t in texts.items() if c in t]

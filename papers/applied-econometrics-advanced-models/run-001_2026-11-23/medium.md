@@ -128,13 +128,13 @@ Last period's values are y_{t−1} = 5, x_{t−1} = 4, and this period Δx_t = 1
 - B4: Two independent random walks share stochastic trends/time drift; the regression picks up common trending, not a causal link — spurious regression (2).
 - B5: Δz_t = Π z_{t−1} + Γ(L)Δz_{t−1}+…; Π z_{t−1} contains the error-correction terms, rank of Π = cointegration rank (2).
 - B6: Reject both (cointegration); reject only upper (inconclusive); reject only lower (inconclusive); reject neither (no cointegration) (2).
-- B7: y*_it = y_it − θ ȳ_i, x likewise; θ = 1 − √(σ²_u/(σ²_u + (1+Tσ²_v)))-type weight between 0 and 1 (2).
+- B7: y*_it = y_it − θ ȳ_i, x likewise; θ = 1 − √(σ²_u/(σ²_u + T σ²_v)), a weight between 0 and 1 (2).
 - B8: CCEMG with lags of the dependent variable and cross-section averages included (dynamic), accommodating unit-specific dynamics and persistence in common factors (2).
 - B9: When the true relation is nonlinear of unknown form; KRLS learns it through kernels without pre-specified functional form while regularizing (2).
 - B10: β gives the effect on the latent index (1); the marginal effect on E[y|x] combines β with the probability mass at/above the censoring point (scaled by Φ in the censored mean) (1).
 
 **Section C:**
-- C1: (i) persistence = **0.94**; σ̄² = 0.00002/0.06 = **0.00033333** (to 8 dp) (3); (ii) k=1: **0.000584000**; k=3: 0.94³ = 0.830584 → **0.000554822**; k=5: 0.94⁵ = 0.733904 → **0.000529041** (4); (iii) need 0.94^k ≤ 0.05(0.00033333)/0.00026667 = 0.0625 → k ≥ ln(0.0625)/ln(0.94) = 44.8 → **k = 45** (3).
+- C1: (i) persistence = **0.94**; σ̄² = 0.00002/0.06 = 1/3000 ≈ **0.00033333** (8 dp, rounded) (3); (ii) k=1: **0.000584000**; k=3: 0.94³ = 0.830584 → **0.000554822**; k=5: 0.94⁵ = 0.733904 → **0.000529041** (4); (iii) need 0.94^k ≤ 0.05(0.00033333)/0.00026667 = 0.0625 → k ≥ ln(0.0625)/ln(0.94) = 44.8 → **k = 45** (3).
 - C2: (i) ecm = 5 − 2 − 0.8(4) = **−0.2** (2); (ii) Δy = 0.30 − 0.40(−0.2) + 0.60(1) = **0.98** (3); (iii) set Δ terms to 0 and ecm = 0: y = 2 + 0.8x; at x = 4, y = **5.2** (3); (iv) 40% of last period's disequilibrium is corrected each period; negative sign confirms stability (2).
 - C3: F = 5.2 > upper bound 5.10 (2) → reject the null of no level relationship even when all regressors are I(1) → conclude a long-run relationship exists at 5% (3).
 - C4: unit demeaning gives within sums ΣΣdxdy = 48, ΣΣdx² = 24 → **β_FE = 2.0** (5); between: unit means (4, 3, 5) on (28/3, 22/3, 32/3) → **β_between = 5/3 ≈ 1.667** (3); the gap suggests cross-unit heterogeneity in the x–y relationship (or correlated unit effects), motivating FE over pooled OLS (2).

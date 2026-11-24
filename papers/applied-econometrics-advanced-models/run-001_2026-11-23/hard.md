@@ -53,7 +53,7 @@ Instructions: Answer all questions. Marks are shown against each question as (Mn
 
 **B1. (M1, 2)** Explain why the constraint α ≥ 0 and β ≥ 0 with α + β < 1 in GARCH(1,1) guarantees a positive conditional variance and stationarity in variance.
 
-**B2. (M1, 2)** A GARCH(1,1) has β = 0.92. Without computing numerically, state (with the formula) how you would find the number of periods for a shock's variance effect to halve.
+**B2. (M1, 2)** A GARCH(1,1) has α = 0.05 and β = 0.92. Without computing numerically, state (with the formula) how you would find the number of periods for a shock's variance effect to halve.
 
 **B3. (M2, 2)** Why can the Engle–Granger procedure be problematic when the system contains more than two variables?
 
@@ -76,7 +76,7 @@ Instructions: Answer all questions. Marks are shown against each question as (Mn
 **C1. (M1, 10)** A GARCH(1,1) model has ω = 0.000003, α = 0.05, β = 0.92. The current conditional variance is σ²_t = 0.0009 and the next four return shocks are ε_{t+1} = 0.025, ε_{t+2} = 0.040, ε_{t+3} = 0.010, ε_{t+4} = 0.030 (so ε² takes the squares of these).
 (i) Compute σ²_{t+1} through σ²_{t+4}, to 8 decimal places, and the corresponding conditional volatilities (standard deviations) to 4 decimal places. (5)
 (ii) Compute the persistence α + β and the unconditional variance. (2)
-(iii) Compute the half-life ln(0.5)/ln(β) to 2 decimal places, and state whether the fitted process is stationary in variance. (2)
+(iii) Compute the half-life of a variance shock, ln(0.5)/ln(α + β), to 2 decimal places, and state whether the fitted process is stationary in variance. (2)
 (iv) By how much (to 6 decimal places) does the conditional variance change from t to t+1? (1)
 
 **C2. (M2, 10)** In an Engle–Granger two-step analysis of consumption and income, the cointegrating regression gives y_t = 120.0 + 1.5 x_t + u_t, and the residual unit-root regression estimated in levels form is:
@@ -123,23 +123,23 @@ r = 0: λ_trace = 45.2 (critical value 29.8); r ≤ 1: λ_trace = 19.3 (critical
 
 **Section B (key points; 2 marks each):**
 - B1: Non-negativity keeps the recursion's right side a positive combination of non-negative terms (1); α+β < 1 makes the variance process mean-reverting with finite unconditional variance (1).
-- B2: ln(0.5)/ln(0.92) (formula, 1); approximately 8 periods without needing to evaluate precisely (1).
+- B2: a variance shock decays at persistence α + β, so half-life = ln(0.5)/ln(α + β) = ln(0.5)/ln(0.97) (formula, 1); approximately 23 periods without needing to evaluate precisely (1).
 - B3: The normalization is arbitrary with multiple cointegrating vectors; residual-based tests lose power and cannot identify more than one vector (2).
 - B4: It normalizes the coefficient of y to 1 (1); implies the long-run relation y = β₁x₁ + β₂x₂ (+ deterministic terms) (1).
 - B5: y corrects 30% of the previous disequilibrium each period (1); x does not adjust significantly — x is weakly exogenous (1).
 - B6: Bounds test is valid for mixed I(0)/I(1) regressors and has better small-sample properties; Johansen needs all-I(1) variables and larger samples (2).
 - B7: H₀: no second-order serial correlation in the differenced errors (1); if AR(2) fails, lags y_{t−2} are not valid instruments — they are correlated with Δε_{i,t} (1).
 - B8: Persistent factors make today's averages insufficient proxies; including lags captures their dynamics so the spanned factor space is adequate (2).
-- B9: Effect on the latent mean β (1); effect on the expected observed outcome (censored mean), which is β scaled by the uncensored probability Φ(x′β/σ) (1).
+- B9: (i) effect on the latent (index) mean: β (1); (ii) effect on the unconditional censored expectation E[y|x]: β·Φ(x′β/σ) — the latent effect scaled by the probability of being uncensored (1). (Note β·Φ(x′β/σ) is the unconditional-mean effect, not the conditional-on-uncensored mean effect.)
 - B10: Each unit's ARDL is augmented with cross-section averages of the dependent variable, regressors and their lags (1); addresses cross-sectional dependence from unobserved common factors (1).
 
 **Section C:**
-- C1: (i) σ²_{t+1} = 0.000003 + 0.05(0.000625) + 0.92(0.0009) = **0.00086225** (vol **0.0294**); σ²_{t+2} = 0.000003 + 0.05(0.0016) + 0.92(0.00086225) = **0.00087627** (vol **0.0296**); σ²_{t+3} = 0.000003 + 0.05(0.0001) + 0.92(0.00087627) = **0.00081417** (vol **0.0285**); σ²_{t+4} = 0.000003 + 0.05(0.0009) + 0.92(0.00081417) = **0.00079703** (vol **0.0282**) (5); (ii) persistence = **0.97**; unconditional variance = 0.000003/0.03 = **0.0001** (2); (iii) half-life = ln0.5/ln0.92 ≈ **8.31** periods; α+β < 1 → stationary in variance (2); (iv) falls by 0.0009 − 0.00086225 = **0.00003775** ≈ 3.78 × 10⁻⁵ (1).
+- C1: (i) σ²_{t+1} = 0.000003 + 0.05(0.000625) + 0.92(0.0009) = **0.00086225** (vol **0.0294**); σ²_{t+2} = 0.000003 + 0.05(0.0016) + 0.92(0.00086225) = **0.00087627** (vol **0.0296**); σ²_{t+3} = 0.000003 + 0.05(0.0001) + 0.92(0.00087627) = **0.00081417** (vol **0.0285**); σ²_{t+4} = 0.000003 + 0.05(0.0009) + 0.92(0.00081417) = **0.00079703** (vol **0.0282**) (5); (ii) persistence = **0.97**; unconditional variance = 0.000003/0.03 = **0.0001** (2); (iii) half-life = ln0.5/ln(α+β) = ln0.5/ln0.97 ≈ **22.76** periods; α+β < 1 → stationary in variance (2); (iv) falls by 0.0009 − 0.00086225 = **0.00003775** ≈ 3.78 × 10⁻⁵ (1).
 - C2: (i) τ = (0.85 − 1)/0.20 = **−0.75** (3); (ii) −0.75 > −3.37 → the unit root in the residuals is not rejected at 5% (2); (iii) the residuals are non-stationary → no cointegration; the levels regression is spurious, its t/R² reflect common trends and are unreliable (3); (iv) e.g., ARDL bounds test — valid with mixed I(0)/I(1) regressors (or Johansen: full-information, handles multiple vectors) (2).
 - C3: (i) H = (0.25)²/(0.09 − 0.04) = 0.0625/0.05 = **1.25** (4); (ii) 1.25 < 3.84 → not rejected at 5% (2); (iii) supports Random Effects — the evidence does not reject RE consistency, so the more efficient RE estimator is preferred (2); (iv) Var(β̂_RE) − Var(β̂_FE) = 0.03 − 0.04 < 0 — negative denominator (undefined H), a known small-sample Hausman pathology (2).
 - C4: (i) ME = 0.2897 × 1.2 = **0.3476** (3); (ii) ME = 1.2 × 0.69 × 0.31 = **0.2567** (3); (iii) the Logit ME is smaller here because it is evaluated at a larger p (p(1−p) falls as p moves past 0.5); both are attenuated relative to β because probabilities are bounded (2); (iv) in neither model is it constant: Probit ME = φ(x′β)β and Logit ME = Λ(x′β)(1−Λ(x′β))β both vary with the individual's index x′β (2).
 
 **Section D:**
-- D1: (i) valid s = t−1, t−2 → for t = 3: {y_{i,1}, y_{i,2}}, t = 4: {y_{i,1..3}}, t = 5: {y_{i,1..4}}; instruments = (5−1)(5−2)/2 = **6** (3); (ii) instrument proliferation overfits the endogenous variables, weakening Hansen J; rule of thumb: instruments ≤ number of groups (units) (2); (iii) System GMM adds E[y_{i,t−1} ε_{i,t}] = 0-type level equations using differences as instruments; requires mean-stationarity of initial conditions (3); (iv) AR(1) (expected), AR(2) (must pass), Hansen/Sargan overidentification (2).
+- D1: (i) for the differenced equation, valid lags are s ≥ 2 → t = 3: {y_{i,1}}, t = 4: {y_{i,1}, y_{i,2}}, t = 5: {y_{i,1}, y_{i,2}, y_{i,3}}; instruments = (5−1)(5−2)/2 = **6** (3); (ii) instrument proliferation overfits the endogenous variables, weakening Hansen J; rule of thumb: instruments ≤ number of groups (units) (2); (iii) System GMM adds E[y_{i,t−1} ε_{i,t}] = 0-type level equations using differences as instruments; requires mean-stationarity of initial conditions (3); (iv) AR(1) (expected), AR(2) (must pass), Hansen/Sargan overidentification (2).
 - D2: marking guide: feature-space/kernel representation (3), ridge penalty + kernel trick (3), derivative-based marginal effects (2), contrast with DK-OLS (2).
 - D3: (i) 45.2 > 29.8 → reject r = 0 (1); 19.3 > 15.5 → reject r ≤ 1 (1); 6.5 < 9.2 → do not reject r ≤ 2 → stop; rank = **2** (2); (ii) max-eigenvalue: 30.1 > 21.1 rejects r = 0; 15.2 > 14.3 rejects r = 1 (borderline — only 0.9 above the critical value); 2.4 < 3.8 does not reject r = 2 → both procedures agree on rank 2; the borderline rejection at step r = 1 is worth flagging, but the sequential rules converge on rank 2 (3); (iii) too low: omitted cointegrating relations → misspecified dynamics, invalid restrictions and distorted adjustment coefficients; too high: spurious "cointegration" among stationary combinations and an over-identified VECM with unreliable inference (3).
