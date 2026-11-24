@@ -237,7 +237,7 @@ for fname in sorted(os.listdir(mroot)):
 
 # 9: registry consistency
 reg = open(os.path.join(ROOT, "registry.md"), encoding="utf-8").read()
-reg_keys, seen_rows = set(), []
+reg_keys, seen_rows, data_rows = set(), [], []
 for line in reg.splitlines():
     path_m = re.search(r"`(papers/[^`]+)`", line)
     if "| run-" in line and path_m:
@@ -258,11 +258,14 @@ for line in reg.splitlines():
         if (slug, run) in seen_rows:
             err(f"duplicate registry row for {slug}/{run}")
         seen_rows.append((slug, run))
+        data_rows.append((slug, run, date_m.group(1) if date_m else ""))
         reg_keys.add((slug, run))
         if (slug, run) not in manifests:
             err(f"registry row for {slug}/{run} has no manifest")
     elif path_m:
         err(f"line contains a papers/ path outside a run row: {line.strip()[:80]}")
+if data_rows and [r[2] for r in data_rows] != sorted([r[2] for r in data_rows], reverse=True):
+    err("registry is not newest-first (rows must be ordered by date, descending)")
 for key in manifests:
     if key not in reg_keys:
         err(f"manifest for {key[0]}/{key[1]} has no registry row")

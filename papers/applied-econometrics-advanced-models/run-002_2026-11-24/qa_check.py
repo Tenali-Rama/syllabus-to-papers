@@ -218,9 +218,11 @@ MOD_IDX = {"M1": 1, "M2": 2, "M3": 3, "M4": 4}
 for diff in PAPERS:
     fm, body, qs, key = paper_data[diff]
     # 1. half-life must use persistence ln(0.5)/ln(α + β); never ln(β)
+    _bad = len(re.findall(r"ln\(?\s*β\s*\)|\\ln\(\\beta\)", body))
+    _good = len(re.findall(r"ln\(?\s*α\s*\+\s*β\s*\)|\\ln\(\\alpha\s*\+\s*\\beta\)|ln\(0\.5\)/ln\(0\.9", body))
     check(f"{diff}: [P1] half-life uses ln(α+β), not ln(β)",
-          ("ln(β)" not in body) and ("ln(α + β)" in body or "ln(0.5)/ln(0.9" in body or "ln(0.5)/ln(0.94" in body),
-          f"ln(β) occurrences: {body.count('ln(β)')}")
+          _bad == 0 and _good > 0,
+          f"bad-form occurrences: {_bad}, persistence-form found: {_good}")
     # 2. Arellano–Bond instruments s >= 2 stated wherever the (T-1)(T-2)/2 count appears
     for q in qs:
         if "(T − 1)(T − 2)/2" in q["full"]:

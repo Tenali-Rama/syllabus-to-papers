@@ -52,7 +52,7 @@ Layout: per `tool/PAPER_FORMAT.md` (mandatory). Body: total marks and duration e
    - REVIEWER: score with `tool/reviewer_rubric.md`. If < 75/90, feed the ranked defect list back into SETTER and repeat. Do not commit below 75.
 4. **Write the run.** Create `papers/<slug>/run-NNN_<date>/` with all files (rename papers to `easy.md`/`medium.md`/`hard.md` and add frontmatter), plus a `PAPER-INDEX.md`.
 5. **Write the manifest.** `manifests/<slug>_run-NNN.json` (schema below).
-6. **Update `registry.md`.** Append one row to the table. Never edit or delete previous rows.
+6. **Update `registry.md`.** Insert the new run as the FIRST row (newest-first). Never edit or delete existing rows.
 6b. **Update `README.md` navigation.** Add the new run to the "Latest papers" section at the top (title, date, score, tap-friendly links to easy/medium/hard + PAPER-INDEX), and move the previously-latest run of that syllabus into the collapsed "All papers" table. Never remove links — only reposition.
 7. **Open a pull request.** CI validates structure; a failing check means fix and push — do not force-merge.
 
