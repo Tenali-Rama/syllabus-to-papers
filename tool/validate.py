@@ -20,7 +20,7 @@ Checks (fail = non-zero exit):
  9. Registry rows: schema (date format, path exists, unique (slug,run)); every
     manifest has a row; every row has a manifest; syllabus files exist.
 """
-import json, os, re, subprocess, sys, collections
+import fnmatch, glob, json, os, re, subprocess, sys, collections
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REQUIRED_KEYS = ["syllabus", "run", "difficulty", "paper_number", "marks",
@@ -289,6 +289,21 @@ for line in reg.splitlines():
         err(f"line contains a papers/ path outside a run row: {line.strip()[:80]}")
 if data_rows and [r[2] for r in data_rows] != sorted([r[2] for r in data_rows], reverse=True):
     err("registry is not newest-first (rows must be ordered by date, descending)")
+
+# table integrity across all markdown files: separator row must match header column count
+for path in glob.glob(os.path.join(ROOT, "**", "*.md"), recursive=True):
+    if "/.git/" in path: continue
+    lines = open(path, encoding="utf-8").read().splitlines()
+    for i, line in enumerate(lines[:-1]):
+        if (re.match(r"^\s*\|.+:\s*\|\s*$", line.replace("-", "-")) is None
+                and set(line.replace("|", "").replace(" ", "").replace("-", "").replace(":", "")) == set()
+                and line.strip().startswith("|") and "|" in line.strip()[1:]):
+            hdr = lines[i-1] if i > 0 else ""
+            if not hdr.strip().startswith("|"): continue
+            n_sep = len([c for c in line.strip().strip("|").split("|")])
+            n_hdr = len(hdr.strip().strip("|").split("|"))
+            if n_sep != n_hdr:
+                err(f"{os.path.relpath(path, ROOT)}:L{i+1}: table separator has {n_sep} columns, header has {n_hdr} — table won't render")
 for key in manifests:
     if key not in reg_keys:
         err(f"manifest for {key[0]}/{key[1]} has no registry row")
