@@ -146,7 +146,7 @@ for slug in sorted(os.listdir(papers_root)):
                 err(f"{rel}: reviewer_score below 75")
 
             # 3: tags, count, sum
-            tags = re.findall(r"\(M(\d{1,2}),\s*(\d{1,2})(?:\s*marks?)?((?:,\s*S\d{1,2})*)\)", body)
+            tags = re.findall(r"\(M(\d{1,2}),\s*(\d{1,2})(?:\s*marks?)?((?:,\s*S\d{1,2})+)(?:[^)]*)\)", body)
             if len(tags) < MIN_QUESTIONS:
                 level = "FAIL" if v2_runs.get(key) else "LEGACY-FAIL"
                 if v2_runs.get(key):

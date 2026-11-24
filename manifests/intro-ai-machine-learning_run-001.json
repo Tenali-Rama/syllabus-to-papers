@@ -1,0 +1,14 @@
+{
+  "syllabus": "intro-ai-machine-learning",
+  "run": "run-001_2026-11-24",
+  "date": "2026-11-24",
+  "status": "accepted",
+  "reviewer_score": "81/90",
+  "papers": [
+    {"difficulty": "easy", "file": "easy.md", "marks": 100},
+    {"difficulty": "medium", "file": "medium.md", "marks": 100},
+    {"difficulty": "hard", "file": "hard.md", "marks": 100}
+  ],
+  "modules_covered": 8,
+  "notes": "Sparse syllabus test: 26 sub-topics (7 syllabus-derived, 19 analyzer-decomposed). 37 questions/paper, 96.2-100% per-paper coverage. First run with full five-lens evaluation (reviewer + student + teacher + quality + verifier audit): teacher caught an 11-marks-on-10 key and a factual arithmetic error the 77/90 technical pass missed; student caught recycled long answers and guessable MCQs. All 13 defects fixed and re-verified; adjusted score 81/90 ACCEPTED. Residual polish notes: medium Q30 phrasing fixed post-score."
+}
