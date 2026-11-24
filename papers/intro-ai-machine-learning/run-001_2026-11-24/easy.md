@@ -11,12 +11,17 @@ qa_verdict: ACCEPTED
 reviewer_score: "81/90"
 ---
 
-# Introduction to AI & Machine Learning — End-Semester Exam (Easy Paper)
+# Introduction to AI & Machine Learning — End-Semester Examination
 
-**Total marks: 100 | Duration: 3 hours**
-Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-topic IDs.
+**Paper 1 (Easy) · Total marks: 100 · Duration: 3 hours**
 
-## Section A — Modules 1 & 2: ML Basics and Classification Algorithms (10 questions, 22 marks)
+| Instructions | |
+|---|---|
+| Answer all questions | |
+
+Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-topic IDs.
+
+## Section A — Modules 1 & 2: ML Basics and Classification Algorithms (10 questions × mixed marks = 22 marks)
 
 **Q1.** Which statement correctly distinguishes classification from regression?
 (A) Classification predicts continuous values; regression predicts categories
@@ -36,7 +41,8 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 (A) ii → i → iii → iv  (B) ii → iv → i → iii  (C) ii → iv → iii → i  (D) iv → ii → i → iii
 *(M1, 2 marks, S2)*
 
-**Q4.** *(Numerical)* An inbox provider has **1,200 labeled emails** and splits them **70% train / 30% test**. State the number of emails in each set, and name the problem that training accuracy alone cannot detect. *(M1, 2 marks, S2, S3)*
+**Q4.** *(Numerical)* An inbox provider has **1,200 labeled emails** and splits them **70% train / 30% test**. State the number of emails in each set, and name the problem that training accuracy alone cannot detect.
+*(M1, 2 marks, S2, S3)*
 
 **Q5.** In a decision tree for loan approval, a **leaf node** represents:
 (A) A question about one attribute  (B) A final predicted decision (class)  (C) The root of the tree  (D) A measurement error
@@ -69,7 +75,9 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 (D) Randomly, since no neighbors are used
 *(M2, 2 marks, S7)*
 
-## Section B — Module 3: Neural Networks and Deep Learning (6 questions, 16 marks)
+---
+
+## Section B — Module 3: Neural Networks and Deep Learning (6 questions × mixed marks = 16 marks)
 
 **Q11.** A **perceptron** makes its decision by:
 (A) Averaging the inputs
@@ -106,7 +114,9 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 **Q16.** *(Numerical)* A perceptron has weights **w₁ = 0.4, w₂ = −0.6**, bias **b = 0.1**, and step activation with threshold 0 (output 1 if net ≥ 0, else 0). For the input **x₁ = 1, x₂ = 1**, compute the net input and the perceptron's output, showing the substitution.
 *(M3, 5 marks, S8)*
 
-## Section C — Modules 4 & 5: Reinforcement Learning; NLP & Large Language Models (8 questions, 18 marks)
+---
+
+## Section C — Modules 4 & 5: Reinforcement Learning; NLP & Large Language Models (8 questions × mixed marks = 18 marks)
 
 **Q17.** In reinforcement learning, a **reward** is:
 (A) The model's parameters
@@ -153,7 +163,9 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 **Q24.** Explain in 2–3 sentences what a **knowledge cutoff** is, and name one situation where it could cause an LLM to give an outdated answer.
 *(M5, 3 marks, S18)*
 
-## Section D — Modules 6 & 7: Computer Vision; Responsible AI (8 questions, 19 marks)
+---
+
+## Section D — Modules 6 & 7: Computer Vision; Responsible AI (8 questions × mixed marks = 19 marks)
 
 **Q25.** **Image classification** takes an image as input and outputs:
 (A) A bounding box per object
@@ -200,7 +212,9 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 (iv) an appeal channel where an applicant can have the decision re-examined by a human caseworker.
 *(M7, 3 marks, S24)*
 
-## Section E — Module 8 and Integrative Long Answers (5 questions, 25 marks)
+---
+
+## Section E — Module 8 and Integrative Long Answers (5 questions × mixed marks = 25 marks)
 
 **Q33.** Name one real AI application in **healthcare** and state what data it uses.
 *(M8, 2 marks, S25)*
@@ -229,9 +243,9 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 
 ---
 
-## Answer Key — Easy Paper (with mark splits)
+## Answer Key
 
-**Section A — Modules 1 & 2 (22 marks)**
+### Section A — Modules 1 & 2 (22 marks)
 - Q1 (2): **B**. Classification outputs discrete labels, regression outputs continuous values; A swaps the two, C confuses supervised/unsupervised.
 - Q2 (2): **C**. Blood pressure is continuous → regression. Distractor A is the trap of equating "medical" with classification.
 - Q3 (2): **B**. Collect → clean → train → evaluate. C and D also place data before training, but C evaluates before any model is trained and D cleans before any data is collected; A trains before cleaning and evaluates before cleaning completes. Only B trains on cleaned data and then evaluates on held-out data.
@@ -246,7 +260,7 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 - Q9 (3): Pruning removes branches that fit noise in the training emails, simplifying the tree *(1–2)*; fully pure leaves encode accidental patterns of the training sample, so they fail to generalize to new mail *(1–2)*. *(Split: 1 mark what pruning does, 2 marks why purity ≠ generalization.)*
 - Q10 (2): **B**. k = 1 uses exactly the nearest neighbor's class.
 
-**Section B — Module 3 (16 marks)**
+### Section B — Module 3 (16 marks)
 - Q11 (2): **B**. Perceptron = weighted sum + bias → step threshold.
 - Q12 (2): **A**. Without non-linear activations, stacked layers collapse to one linear map.
 - Q13 (2): **B**. ReLU(x) = max(0, x) → max(0, −3.5) = 0.
@@ -254,7 +268,7 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 - Q15 (3): **B**. Pooling downsamples feature maps, keeping strong activations and cutting computation; filter learning happens in convolutional layers, not pooling.
 - Q16 (5): net = w₁x₁ + w₂x₂ + b = 0.4(1) + (−0.6)(1) + 0.1 = **−0.1** *(3 marks: formula + correct arithmetic)*; −0.1 < 0 → output **0** *(2 marks)*.
 
-**Section C — Modules 4 & 5 (18 marks)**
+### Section C — Modules 4 & 5 (18 marks)
 
 *(Module 4 questions.)*
 
@@ -270,7 +284,7 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 - Q23 (2): **B**. LLMs generate token-by-token via next-token prediction; A describes retrieval, not generation.
 - Q24 (3): Cutoff = training data ends at a date, so later events are unknown *(2)*; e.g. asking about a product released or a law passed after the cutoff gives stale answers *(1)*.
 
-**Section D — Modules 6 & 7 (19 marks)**
+### Section D — Modules 6 & 7 (19 marks)
 
 *(Module 6 questions.)*
 
@@ -286,7 +300,7 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 - Q31 (3): Demographic parity asks the positive-decision (approval) rate to be similar across demographic groups *(2)*, e.g. applicants from each neighbourhood approved at roughly the same rate regardless of group *(1)*.
 - Q32 (3): Correct pair: (ii) and (iv) *(1 each)*. Third mark — why each helps *(1)*: (ii) human review of each denial before it is sent catches erroneous or biased automatic denials before harm occurs, and the stated-reason requirement makes every decision checkable; (iv) the appeal channel lets wrongly denied applicants get the decision re-examined by a human caseworker after the fact. (i) re-measures accuracy but is model maintenance, not oversight of individual decisions; (iii) is a data-quality step, not oversight.
 
-**Section E — Module 8 and long answers (25 marks)**
+### Section E — Module 8 and long answers (25 marks)
 
 *(Module 8 questions.)*
 

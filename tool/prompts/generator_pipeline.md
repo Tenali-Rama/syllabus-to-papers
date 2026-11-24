@@ -54,4 +54,5 @@ Machine-verify with scripts (`verify.py`, `qa_check.py`):
 Fix violations, re-verify, report honestly with [M-verify.py]/[M-qa_check.py]/[Manual] evidence labels. An "n/a" on a required check is a FAIL.
 
 ## Stage 4 — Packaging
+Formatting: follow `tool/PAPER_FORMAT.md` exactly (header block, section headings with counts×marks, tag lines, Markdown tables for data, fenced code for formulas, structured answer key). Formatting-only: never alter content.
 Add YAML frontmatter to each paper (exact keys per AGENTS.md; qa_verdict: PENDING until reviewed) and write `PAPER-INDEX.md` summarizing the run. Scripts must be path-portable: resolve paper paths relative to the script's own directory. Never reference paths outside the run directory.

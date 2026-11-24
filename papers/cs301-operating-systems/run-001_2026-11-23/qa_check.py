@@ -9,7 +9,7 @@ sec = {"easy":None,"medium":None,"hard":None}
 for name in ["paper1_easy","paper2_medium","paper3_hard"]:
     key = "easy" if "easy" in name else ("medium" if "medium" in name else "hard")
     txt = open(os.path.join(_d, f"{name.split('_')[1]}.md")).read()
-    qs = re.findall(r"\*\*([ABCD]\d+)\.\s*\((M\d),\s*(\d+)\)\*\*", txt)
+    qs = re.findall(r"\*\*([ABCD]\d+)\.\*\*[\s\S]*?\n\*\((M\d),\s*(\d+)\)\*", txt)
     # recompute totals
     total = sum(int(m) for _,_,m in qs)
     mt = collections.Counter()

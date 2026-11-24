@@ -34,7 +34,7 @@ qa_verdict: ACCEPTED|PENDING
 reviewer_score: "<N>/90"
 ---
 ```
-Body: total marks and duration exactly as the syllabus's assessment scheme declares (there is no default — real exams range from 5-mark quizzes to 1000-mark university papers, 5 minutes to 4.5 hours), **≥35 questions per paper**, every question tagged `(Mn, marks, Sk)` where Sk are the blueprint's sub-topic IDs, sections with counts and totals, brief answer key with mark splits at the end.
+Layout: per `tool/PAPER_FORMAT.md` (mandatory). Body: total marks and duration exactly as the syllabus's assessment scheme declares (there is no default — real exams range from 5-mark quizzes to 1000-mark university papers, 5 minutes to 4.5 hours), **≥35 questions per paper**, every question tagged `(Mn, marks, Sk)` where Sk are the blueprint's sub-topic IDs, sections with counts and totals, brief answer key with mark splits at the end.
 
 ### Quality bar
 - **Quality**: papers must pass the 12-criteria gate in `tool/QUALITY_BAR.md` (criteria 1–6 are hard gates).

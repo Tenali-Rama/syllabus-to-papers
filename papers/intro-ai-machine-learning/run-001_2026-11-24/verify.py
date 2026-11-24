@@ -87,7 +87,7 @@ for f, diff in [("easy.md", "easy"), ("medium.md", "medium"), ("hard.md", "hard"
     missing_keys = [q for q, _, _, _ in qs if f"{q} (" not in key]
     check(f"{f}: every question keyed", not missing_keys, str(missing_keys))
     # sections >= 10 marks: parse section headers
-    for m in re.finditer(r"^## Section [A-E].*?\((\d+) questions?, (\d+) marks?\)", body, re.M):
+    for m in re.finditer(r"^## Section [A-E].*?\((\d+) questions?[^)]*?(\d+) marks?\)", body, re.M):
         n, mk = int(m.group(1)), int(m.group(2))
         check(f"{f}: section with {mk} marks >= 10", mk >= 10, m.group(0))
 

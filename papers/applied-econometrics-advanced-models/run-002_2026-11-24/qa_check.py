@@ -46,16 +46,21 @@ def parse_paper(path):
                 fm[k.strip()] = v.strip().strip('"')
     body = text[m.end():] if m else text
     qs = []
-    heads = list(re.finditer(r"\*\*([A-F]\d+)\.\s*\((M\d),\s*(\d+),\s*([^)]*)\)\*\*", body))
+    # PAPER_FORMAT layout: bold "Qn." stem, italic tag line directly under it
+    heads = list(re.finditer(r"(?<!- )\*\*([A-F]\d+)\.\*\*", body))
     for i, hm in enumerate(heads):
-        qid, mod, marks, stag = hm.group(1), hm.group(2), int(hm.group(3)), hm.group(4)
+        qid = hm.group(1)
+        seg0 = body[hm.start():heads[i + 1].start() if i + 1 < len(heads) else len(body)]
+        tagm = re.search(r"\*\((M\d),\s*(\d+),\s*([^)]*)\)\*", seg0)
+        mod, marks, stag = tagm.group(1), int(tagm.group(2)), tagm.group(3)
         start = hm.start()
         end = heads[i + 1].start() if i + 1 < len(heads) else len(body)
         seg = body[start:end]
         subtopics = set(re.findall(r"S\d+", stag))
         kind = "MCQ" if qid.startswith("A") else (
             "numerical" if qid.startswith("D") else "long-answer" if qid.startswith("E") else "short-answer")
-        stem_text = re.sub(r"\*\*[A-F]\d+\.\s*\([^)]*\)\*\*", "", seg).strip()[:200]
+        stem_text = re.sub(r"\*\*[A-F]\d+\.\*\*", "", seg)
+        stem_text = re.sub(r"\*\([^)]*\)\*", "", stem_text).strip()[:200]
         qs.append(dict(qid=qid, module=mod, marks=marks, subtopics=subtopics,
                        kind=kind, stem=stem_text, full=seg))
     # answer key sanity: MCQ answers listed
@@ -153,12 +158,12 @@ for diff, fname in PAPERS.items():
     opts_ok = all(len(re.findall(r"\([a-d]\)", q["full"])) == 4 for q in mcqs)
     check(f"{diff}: every MCQ has 4 options", opts_ok,
           f"bad: {[q['qid'] for q in mcqs if len(re.findall(chr(92) + '([a-d]' + chr(92) + ')', q['full'])) != 4]}")
-    key_answers = re.findall(r"([A-D]\d+)\)?\s*\(([a-d])\)", key)
+    key_answers = re.findall(r"([A-D]\d+)\.?\)?\s*\(([a-d])\)", key)
     check(f"{diff}: MCQ answer key covers all MCQs", len(key_answers) == len(mcqs),
           f"key={len(key_answers)}, mcqs={len(mcqs)}")
     # criterion 5-6: every MCQ key entry carries a one-line justification of the mechanism
     # (quality-bar hard gate; a bare letter list is a defect)
-    just_lines = re.findall(r"^- ([A-D]\d+) \(([a-d])\) — (.+)$", key, re.M)
+    just_lines = re.findall(r"^- \*\*([A-D]\d+)\. \(([a-d])\)\*\* — (.+)$", key, re.M)
     keyed_ids = {a[0] for a in key_answers if a[0].startswith("A") and a[0][1:].isdigit()}
     mcq_ids = {q["qid"] for q in mcqs}
     check(f"{diff}: MCQ key entries carry justification lines (criterion 5-6)",
@@ -250,7 +255,7 @@ for diff in PAPERS:
 # 5. MCQ correct-answer letters spread (no letter > 50%)
 for diff in PAPERS:
     _, body, qs, key = paper_data[diff]
-    ans = re.findall(r"([A-D]\d+)\)?\s*\(([a-d])\)", key)
+    ans = re.findall(r"([A-D]\d+)\.?\)?\s*\(([a-d])\)", key)
     letters = [a[1] for a in ans if a[0].startswith("A") and a[0][1:].isdigit()]
     from collections import Counter
     cnt = Counter(letters)

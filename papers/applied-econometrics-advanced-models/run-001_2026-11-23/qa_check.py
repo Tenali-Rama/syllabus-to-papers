@@ -69,10 +69,10 @@ for diff, fname in FILES.items():
 
     # MCQs: 10 per paper, 4 options each
     sec_a = body.split("## Section A")[1].split("## Section B")[0]
-    mcq_tags = re.findall(r"\*\*[A-D]\d+\. \((M\d), 1\)\*\*", sec_a)
+    mcq_tags = re.findall(r"\*\*[A-D]\d+\.\*\*[^\n]*\n\*\(M\d, 1\)\*", sec_a)
     check(f"{diff}: 10 MCQs of 1 mark in Section A", len(mcq_tags) == 10, str(len(mcq_tags)))
     # options may wrap to the following line: check the span from each MCQ to the next
-    parts = re.split(r"\*\*[A-D]\d+\. \((M\d), 1\)\*\*", sec_a)[1:]
+    parts = re.split(r"\*\*([A-D]\d+)\.\*\*[^\n]*\n\*\(M\d, 1\)\*", sec_a)[1:]
     bad = []
     for i in range(0, len(parts) - 1, 2):
         chunk = parts[i + 1]  # text after this tag, before the next tag
@@ -82,12 +82,12 @@ for diff, fname in FILES.items():
 
     # short answers: 10 x 2 marks
     sec_b = body.split("## Section B")[1].split("## Section C")[0]
-    shorts = re.findall(r"\*\*B\d+\. \((M\d), 2\)\*\*", sec_b)
+    shorts = re.findall(r"\*\*B\d+\.\*\*[^\n]*\n\*\(M\d, 2\)\*", sec_b)
     check(f"{diff}: 10 short answers of 2 marks", len(shorts) == 10, str(len(shorts)))
 
     # numericals: count matches composition
     sec_c = body.split("## Section C")[1].split("## Section D")[0]
-    nums = re.findall(r"\*\*C\d+\. \((M\d), (\d+)\)\*\*", sec_c)
+    nums = re.findall(r"\*\*C\d+\.\*\*[^\n]*\n\*\(M(\d), (\d+)\)\*", sec_c)
     check(f"{diff}: numerical count matches composition", len(nums) == EXPECTED_NUMERICALS[diff],
           f"got {len(nums)}")
     if diff == "easy":
@@ -98,7 +98,7 @@ for diff, fname in FILES.items():
 
     # long answers <= 10 marks each
     sec_d = body.split("## Section D")[1].split("## Answer Key")[0]
-    longs = re.findall(r"\*\*D\d+\. \((M\d), (\d+)\)\*\*", sec_d)
+    longs = re.findall(r"\*\*D\d+\.\*\*[^\n]*\n\*\(M(\d), (\d+)\)\*", sec_d)
     check(f"{diff}: all long answers <= 10 marks", all(int(n) <= 10 for _, n in longs), str(longs))
 
     # answer key with mark splits
@@ -110,8 +110,8 @@ for diff, fname in FILES.items():
 stems = {}
 for diff, text in papers.items():
     body = text.split("## Answer Key")[0]
-    for q in re.findall(r"\*\*([A-D]\d+)\. \((M\d), \d+\)\*\* (.+)", body):
-        stem = re.sub(r"\s+", " ", q[2])[:60]
+    for q in re.findall(r"\*\*([A-D]\d+)\.\*\* (.+)", body, re.M):
+        stem = re.sub(r"\s+", " ", q[1])[:60]
         stems.setdefault(stem, []).append(f"{diff}:{q[0]}")
 dups = {k: v for k, v in stems.items() if len(v) > 1}
 check("no cross-paper duplicated question stems", not dups, str(dups))

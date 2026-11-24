@@ -11,12 +11,18 @@ qa_verdict: ACCEPTED
 reviewer_score: "81/90"
 ---
 
-# Introduction to AI & Machine Learning — End-Semester Exam (Hard Paper)
+# Introduction to AI & Machine Learning — End-Semester Examination
 
-**Total marks: 100 | Duration: 3 hours**
-Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-topic IDs. Unless stated otherwise, log = log₂; round final numerical answers to 3 decimal places.
+**Paper 3 (Hard) · Total marks: 100 · Duration: 3 hours**
 
-## Section A — Modules 1 & 2: ML Basics and Classification Algorithms (10 questions, 22 marks)
+| Instructions | |
+|---|---|
+| Answer all questions | |
+| Unless stated otherwise, log = log₂; round final numerical answers to 3 decimal places | |
+
+Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-topic IDs.
+
+## Section A — Modules 1 & 2: ML Basics and Classification Algorithms (10 questions × mixed marks = 22 marks)
 
 **Q1.** A junior data scientist tunes a model, checks accuracy on the same 500 rows used for training, and ships the model. Identify the **evaluation-design flaw** and its consequence.
 *(M1, 2 marks, S2)*
@@ -48,7 +54,9 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 **Q10.** After testing every candidate attribute at a node, a tree builder finds **information gain = 0 for all of them**. What does this tell you about the node, and what should the algorithm do?
 *(M2, 2 marks, S5)*
 
-## Section B — Module 3: Neural Networks and Deep Learning (6 questions, 16 marks)
+---
+
+## Section B — Module 3: Neural Networks and Deep Learning (6 questions × mixed marks = 16 marks)
 
 **Q11.** Deep networks overwhelmingly use ReLU-style activations rather than sigmoid. Give two distinct technical reasons (e.g. gradient behaviour, sparsity/computation), each tied to a failure mode of sigmoid in deep stacks.
 *(M3, 2 marks, S9)*
@@ -67,14 +75,20 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 *(M3, 3 marks, S11)*
 
 **Q16.** *(Numerical — CNN dimensions)* An input image of size **28 × 28 × 1** passes through:
-Layer 1: convolution, **16 filters, kernel 3×3, stride 1, padding 1**.
-Layer 2: max-pooling **2×2, stride 2**.
+
+| Layer | Operation | Parameters |
+|---|---|---|
+| 1 | Convolution | **16 filters, kernel 3×3, stride 1, padding 1** |
+| 2 | Max-pooling | **2×2, stride 2** |
+
 (a) Compute Layer 1's output dimensions, showing the formula with substituted values. *(2 marks)*
 (b) Compute Layer 2's output dimensions. *(2 marks)*
 (c) State how many trainable weights (including biases) Layer 1 has. *(1 mark)*
 *(M3, 5 marks, S12)*
 
-## Section C — Modules 4 & 5: Reinforcement Learning; NLP & Large Language Models (8 questions, 18 marks)
+---
+
+## Section C — Modules 4 & 5: Reinforcement Learning; NLP & Large Language Models (8 questions × mixed marks = 18 marks)
 
 **Q17.** A vacuum robot is rewarded for "dirt collected per hour". It learns to repeatedly suck and re-release the same pile of crumbs. Name this failure mode and evaluate which fix is better: (i) change the reward to "floor cleanliness measured by sensor", or (ii) cap re-cleaning of the same cell. Justify.
 *(M4, 2 marks, S14)*
@@ -104,7 +118,9 @@ Layer 2: max-pooling **2×2, stride 2**.
 **Q24.** *(Design)* A finance team needs every LLM reply to be a JSON object with exactly the keys `vendor`, `amount_inr`, `due_date` extracted from an invoice. Write the four prompt elements you would include and justify each in one clause (role; exact output schema with an example; instruction to use "null" for missing fields; instruction to output nothing else).
 *(M5, 3 marks, S16)*
 
-## Section D — Modules 6 & 7: Computer Vision; Responsible AI (8 questions, 19 marks)
+---
+
+## Section D — Modules 6 & 7: Computer Vision; Responsible AI (8 questions × mixed marks = 19 marks)
 
 **Q25.** A PCB-inspection dataset has 2% "defect" images. The team proposes to report accuracy only. Evaluate the proposal and recommend the metric pair you would report instead, with one sentence of justification.
 *(M6, 2 marks, S21, S19)*
@@ -134,7 +150,9 @@ Layer 2: max-pooling **2×2, stride 2**.
 **Q32.** Define **equalized odds** in one sentence and explain in one more sentence why it is a stricter requirement than demographic parity.
 *(M7, 2 marks, S22)*
 
-## Section E — Module 8 and Integrative Long Answers (5 questions, 25 marks)
+---
+
+## Section E — Module 8 and Integrative Long Answers (5 questions × mixed marks = 25 marks)
 
 **Q33.** An emergency department wants an AI triage assistant that prioritizes patients. Evaluate this deployment: name its highest-risk failure mode and one design control that specifically addresses it.
 *(M8, 2 marks, S25)*
@@ -156,9 +174,9 @@ Layer 2: max-pooling **2×2, stride 2**.
 
 ---
 
-## Answer Key — Hard Paper (with mark splits)
+## Answer Key
 
-**Section A — Modules 1 & 2 (22 marks)**
+### Section A — Modules 1 & 2 (22 marks)
 - Q1 (2): Flaw: evaluating on training data — no held-out set *(1)*; consequence: reported accuracy measures memorization, generalization is unknown, likely overfit model ships *(1)*.
 - Q2 (2): Regression — passenger count is numeric and meaningful to interpolate *(1)*; discretizing into levels turns it into classification, losing precision but gaining robustness to count noise *(1)*.
 - Q3 (2): Depth 6 — validation peaks there; beyond it the model trades generalization for training memorization (overfitting beyond depth 6) *(1 diagnosis + 1 justified choice)*.
@@ -173,7 +191,7 @@ Layer 2: max-pooling **2×2, stride 2**.
 - Q9 (3): Cost: NB trains in one pass (feature counts) and predicts in milliseconds; kNN stores all mail and must scan/compress it per prediction — expensive at inbox scale *(1)*; new phrase: NB sees unseen tokens as zero-count evidence (handles gracefully via smoothing, slow to exploit), kNN also fails if the scam mail resembles nothing stored *(1)*; deploy NB for cost, accepting the novelty gap, optionally with periodic retraining *(1)*.
 - Q10 (2): The node's samples are already class-pure or no attribute correlates with the label locally *(1)*; the algorithm makes the node a leaf (predicting the majority class) — further splitting cannot help *(1)*.
 
-**Section B — Module 3 (16 marks)**
+### Section B — Module 3 (16 marks)
 - Q11 (2): Two reasons × 1 mark: sigmoid gradients shrink toward 0 for large |z|, so deep stacks suffer vanishing gradients; ReLU keeps gradient 1 on the positive side, and its zero output for negative inputs gives sparse, cheaper activations.
 - Q12 (2): **C** *(letter 1; justification 1)* — a linear output can emit any real value such as 34.7; sigmoid caps at (0,1) and softmax makes a distribution, both wrong for regression targets.
 - Q13 (2): With η = 50, one misclassified point throws the weights a huge distance, so training oscillates/diverges instead of settling *(1)*; with unscaled features the largest-magnitude feature dominates the 50·x term, compounding the overshoot *(1)*.
@@ -181,7 +199,7 @@ Layer 2: max-pooling **2×2, stride 2**.
 - Q15 (3): Data efficiency: CNN from scratch on 800 images overfits; transfer learning / weight sharing needs far fewer labeled examples than an MLP on 262,144 grayscale inputs (accept ≈786k if the answer states the RGB assumption, since 512×512×3 ≈ 786k — either figure is correct when its channel basis is stated) *(1.5)*; interpretability: pixel MLP gives no localization, while CNN feature-map visualizations (e.g. saliency over the lesion region) give clinicians checkable evidence — though neither is a full justification, supporting human review *(1.5)*.
 - Q16 (5): (a) Out = ⌊(28 + 2·1 − 3)/1⌋ + 1 = ⌊27⌋ + 1 = **28 → 28 × 28 × 16** *(2: 1 formula with substitution, 1 result incl. channels)*. (b) Pool: ⌊(28 − 2)/2⌋ + 1 = 13 + 1 = **14 → 14 × 14 × 16** *(2)*. (c) Weights = 3·3·1·16 = 144 + 16 biases = **160** *(1)*.
 
-**Section C — Modules 4 & 5 (18 marks)**
+### Section C — Modules 4 & 5 (18 marks)
 
 *(Module 4 questions.)*
 
@@ -197,7 +215,7 @@ Layer 2: max-pooling **2×2, stride 2**.
 - Q23 (2): **B** *(letter 1; justification 1)*. Sub-word tokenizers fragment differently around underscores/punctuation, changing token count and cost; output length alone does not set cost.
 - Q24 (3): Any three of the four elements, 1 mark each *(1 + 1 + 1)*: role ("you are an invoice-data extractor") pins task; exact schema with a worked JSON example fixes key names/order; "use null for missing fields" prevents invented values; "output nothing except JSON" keeps the reply machine-parseable. *(Tiebreaker note — the 4th element carries no mark of its own: if all four are present and correct, use their quality to break ties between otherwise equal answers.)*
 
-**Section D — Modules 6 & 7 (19 marks)**
+### Section D — Modules 6 & 7 (19 marks)
 
 *(Module 6 questions.)*
 
@@ -213,7 +231,7 @@ Layer 2: max-pooling **2×2, stride 2**.
 - Q31 (3): Three checks × 1 (check + artefact): per-group error/approval-rate analysis → disparity report; outcome-vs-decision review on a labeled sample → accuracy/calibration memo; documentation & access review (model card, data lineage, who can override) → audit log/model card update.
 - Q32 (2): Equalized odds requires equal true-positive and false-positive rates across groups *(1)*; it is stricter because demographic parity constrains only the decision rate, while equalized odds constrains both error types conditional on the true outcome *(1)*.
 
-**Section E — Module 8 and long answers (25 marks)**
+### Section E — Module 8 and long answers (25 marks)
 
 *(Module 8 questions.)*
 

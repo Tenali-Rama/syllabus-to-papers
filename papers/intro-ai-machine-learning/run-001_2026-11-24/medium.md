@@ -11,12 +11,18 @@ qa_verdict: ACCEPTED
 reviewer_score: "81/90"
 ---
 
-# Introduction to AI & Machine Learning — End-Semester Exam (Medium Paper)
+# Introduction to AI & Machine Learning — End-Semester Examination
 
-**Total marks: 100 | Duration: 3 hours**
-Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-topic IDs. Unless a question states otherwise, use log base 2 for entropy and round final numerical answers to 3 decimal places.
+**Paper 2 (Medium) · Total marks: 100 · Duration: 3 hours**
 
-## Section A — Modules 1 & 2: ML Basics and Classification Algorithms (10 questions, 22 marks)
+| Instructions | |
+|---|---|
+| Answer all questions | |
+| Unless a question states otherwise, use log base 2 for entropy and round final numerical answers to 3 decimal places | |
+
+Every question carries a tag `(Mn, marks, Sk)` = module, marks, blueprint sub-topic IDs.
+
+## Section A — Modules 1 & 2: ML Basics and Classification Algorithms (10 questions × mixed marks = 22 marks)
 
 **Q1.** A retailer wants to predict next month's **sales revenue** (in rupees) from advertising spend and seasonality data. Identify the learning task type and justify in one sentence.
 *(M1, 2 marks, S1)*
@@ -68,7 +74,9 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 **Q10.** A kNN classifier for house-type prediction switches its distance metric from Euclidean to one that weights "area in sq ft" 100× more than "number of balconies". Explain in 2–3 sentences what will happen to the neighbourhoods it finds and why.
 *(M2, 3 marks, S7)*
 
-## Section B — Module 3: Neural Networks and Deep Learning (6 questions, 16 marks)
+---
+
+## Section B — Module 3: Neural Networks and Deep Learning (6 questions × mixed marks = 16 marks)
 
 **Q11.** A student builds a 5-layer network in which every "activation" is the identity function. State precisely what class of functions this network can compute and why it cannot learn curved decision boundaries.
 *(M3, 2 marks, S9)*
@@ -94,14 +102,23 @@ Answer all questions. Every question carries a tag `(Mn, marks, Sk)` = module, m
 **Q15.** A team must classify 50,000 labeled X-ray images into "normal" / "abnormal". Give two reasons a CNN is a better architectural choice than a plain MLP on raw pixels in this setting.
 *(M3, 3 marks, S11)*
 
-**Q16.** *(Numerical — perceptron update)* A perceptron uses the convention y ∈ {+1, −1} and the update rule **w ← w + η·y·x, b ← b + η·y** on each mistake, with learning rate **η = 0.1**. Initial weights: **w = (0.5, −0.3), b = 0.2**. Step activation outputs sign(net), net = w·x + b. Training points, processed in order:
-- Point 1: x = (1, 2), true label y = **+1**
-- Point 2: x = (2, 1), true label y = **−1**
+**Q16.** *(Numerical — perceptron update)* A perceptron uses the convention y ∈ {+1, −1} and the update rule on each mistake, with learning rate **η = 0.1**. Initial weights: **w = (0.5, −0.3), b = 0.2**. Step activation outputs sign(net), net = w·x + b. Training points, processed in order:
+
+```
+w ← w + η·y·x,  b ← b + η·y
+```
+
+| Point | x | True label y |
+|---|---|---|
+| 1 | (1, 2) | **+1** |
+| 2 | (2, 1) | **−1** |
 
 For each point in order: compute net, decide whether an update occurs, and if so apply it. Report the **final weights and bias** after both points are processed, showing every intermediate value.
 *(M3, 5 marks, S8)*
 
-## Section C — Modules 4 & 5: Reinforcement Learning; NLP & Large Language Models (8 questions, 18 marks)
+---
+
+## Section C — Modules 4 & 5: Reinforcement Learning; NLP & Large Language Models (8 questions × mixed marks = 18 marks)
 
 **Q17.** In an ad-placement system that learns from click feedback, the **policy** is best described as:
 (A) The click-through rate
@@ -147,7 +164,9 @@ For each point in order: compute net, decide whether an update occurs, and if so
 **Q24.** *(Numerical — token cost)* An LLM API charges **$0.50 per 1 million input tokens** and **$1.50 per 1 million output tokens**. A document-QA service sends a **350-token prompt** each call and caps the response at **150 tokens**. Compute the cost of **1,000 calls**, showing the per-call cost as an intermediate step.
 *(M5, 3 marks, S17)*
 
-## Section D — Modules 6 & 7: Computer Vision; Responsible AI (8 questions, 19 marks)
+---
+
+## Section D — Modules 6 & 7: Computer Vision; Responsible AI (8 questions × mixed marks = 19 marks)
 
 **Q25.** To train a factory camera system to classify bottles as "cracked" or "intact", describe the labeled dataset you need (one sentence: images plus what labels).
 *(M6, 2 marks, S19)*
@@ -183,7 +202,9 @@ For each point in order: compute net, decide whether an update occurs, and if so
 **Q32.** A "default risk" label was recorded by a loan officer's subjective judgement rather than observed repayment outcomes. Explain in 2–3 sentences how this **label/measurement bias** propagates into the trained model.
 *(M7, 3 marks, S23)*
 
-## Section E — Module 8 and Integrative Long Answers (5 questions, 25 marks)
+---
+
+## Section E — Module 8 and Integrative Long Answers (5 questions × mixed marks = 25 marks)
 
 **Q33.** An eye hospital deploys retinal-photo screening for diabetic retinopathy. State the task type and one **deployment constraint** (e.g. hardware, connectivity, or human-review requirement) the hospital must plan for.
 *(M8, 2 marks, S25)*
@@ -213,9 +234,9 @@ Given: log₂0.6 = −0.737, log₂0.4 = −1.322, log₂0.2 = −2.322, log₂0
 
 ---
 
-## Answer Key — Medium Paper (with mark splits)
+## Answer Key
 
-**Section A — Modules 1 & 2 (22 marks)**
+### Section A — Modules 1 & 2 (22 marks)
 - Q1 (2): Regression — revenue is a continuous numeric target *(1 task + 1 justification)*.
 - Q2 (2): **B**. Human-assigned labels + discrete target = supervised classification; C is RL, A is clustering.
 - Q3 (2): Data cleaning/preparation stage *(1)*; errors and duplicates distort the learned patterns, so they must be fixed before the model fits them *(1)*.
@@ -230,7 +251,7 @@ Given: log₂0.6 = −0.737, log₂0.4 = −1.322, log₂0.2 = −2.322, log₂0
 - Q9 (3): Assumption: features are conditionally independent given the class *(1)*; example: "free" and "winner" co-occur in spam, violating independence *(1)*; yet the classifier still ranks spam highly because the correlated evidence points the same way *(1)*.
 - Q10 (3): The weighted metric makes points differ almost only in area, so neighbours become near-duplicates in area while differing freely in balconies *(1.5)*; the classifier effectively ignores balconies, and any comparable-area house counts as a neighbour *(1.5)*.
 
-**Section B — Module 3 (16 marks)**
+### Section B — Module 3 (16 marks)
 - Q11 (2): Composition of linear maps is linear *(1)*, so the network can only represent linear boundaries regardless of depth and cannot bend them around clusters *(1)*.
 - Q12 (2): **C** — sigmoid maps to the open interval (0, 1); [−1, 1] is tanh's range.
 - Q13 (2): **B**. Backprop = chain-rule gradients flowing output→input; it does not create data or predictions.
@@ -238,7 +259,7 @@ Given: log₂0.6 = −0.737, log₂0.4 = −1.322, log₂0.2 = −2.322, log₂0
 - Q15 (3): Any two, 1.5 marks each: convolutions exploit local spatial structure and share weights, so they need far less data/parameters than a dense net on 50k+ pixels; pooling gives translation robustness for lesion position; dense MLP on raw pixels overfits and ignores locality.
 - Q16 (5): Point 1: net = 0.5(1) + (−0.3)(2) + 0.2 = 0.1 > 0 → predict +1 = true label → **no update** *(1)*. Point 2: net = 0.5(2) + (−0.3)(1) + 0.2 = 0.9 > 0 → predict +1, true −1 → mistake *(1)*. Update: w ← (0.5, −0.3) + 0.1·(−1)·(2, 1) = (0.5 − 0.2, −0.3 − 0.1) = **(0.3, −0.4)** *(1)*; b ← 0.2 + 0.1·(−1) = **0.1** *(1)*. Final: **w = (0.3, −0.4), b = 0.1** *(1: correct final statement)*.
 
-**Section C — Modules 4 & 5 (18 marks)**
+### Section C — Modules 4 & 5 (18 marks)
 
 *(Module 4 questions.)*
 
@@ -254,7 +275,7 @@ Given: log₂0.6 = −0.737, log₂0.4 = −1.322, log₂0.2 = −2.322, log₂0
 - Q23 (2): **B**. Grounding/citation in verified data targets the invented-content failure directly; higher temperature worsens it.
 - Q24 (3): Per call: input 350 × $0.50/10⁶ = $0.000175; output 150 × $1.50/10⁶ = $0.000225 → per-call **$0.0004** *(2 marks)*; 1,000 calls → **$0.40** *(1 mark)*.
 
-**Section D — Modules 6 & 7 (19 marks)**
+### Section D — Modules 6 & 7 (19 marks)
 
 *(Module 6 questions.)*
 
@@ -270,7 +291,7 @@ Given: log₂0.6 = −0.737, log₂0.4 = −1.322, log₂0.2 = −2.322, log₂0
 - Q31 (3): A model card documents intended use, training data summary, performance (incl. per-group), limitations and known failure modes *(2)*; helps stakeholders decide e.g. whether the tool suits their population, and where human review is required *(1)*.
 - Q32 (3): The model treats the officer's subjective judgement as ground truth *(1)*, so any consistent judgement pattern — leniency or prejudice toward certain groups or ages — becomes the target the model learns to reproduce *(1)*; observed repayments, not opinions, should define the label *(1)*.
 
-**Section E — Module 8 and long answers (25 marks)**
+### Section E — Module 8 and long answers (25 marks)
 
 *(Module 8 questions.)*
 

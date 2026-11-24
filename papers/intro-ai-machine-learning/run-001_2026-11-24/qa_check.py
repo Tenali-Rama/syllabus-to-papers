@@ -111,7 +111,7 @@ for diff, (t, qs) in papers.items():
 # 6. section header totals reconcile to 100 and counts to question count
 for diff, (t, qs) in papers.items():
     body = t.split("---", 2)[2]
-    secs = re.findall(r"^## Section [A-E].*?\((\d+) questions?, (\d+) marks?\)", body, re.M)
+    secs = re.findall(r"^## Section [A-E].*?\((\d+) questions?[^)]*?(\d+) marks?\)", body, re.M)
     qsum = sum(int(a) for a, _ in secs)
     msum = sum(int(b) for _, b in secs)
     check(f"{diff}: section headers sum to 37 questions/100 marks", qsum == len(qs) and msum == 100,
