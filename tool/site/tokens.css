@@ -1,0 +1,39 @@
+:root {
+  color-scheme: light dark;
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
+  --text-xs: 0.875rem; --text-sm: 0.9375rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
+  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+  --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
+  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+
+  /* Colour: every token is light-dark(light, dark). The scheme follows the system unless the visitor
+     picks one with the masthead toggle, which sets data-theme on <html> (see the rules below). */
+  --color-paper: light-dark(oklch(98.5% 0.004 90), oklch(19.5% 0.018 255));
+  --color-paper-2: light-dark(oklch(96% 0.007 88), oklch(23.5% 0.020 255));
+  --color-paper-3: light-dark(oklch(92.5% 0.010 85), oklch(28% 0.022 255));
+  --color-ink: light-dark(oklch(21% 0.016 255), oklch(94% 0.008 90));
+  --color-ink-2: light-dark(oklch(33% 0.016 255), oklch(85% 0.010 90));
+  --color-muted: light-dark(oklch(46% 0.016 255), oklch(73% 0.015 255));
+  --color-rule: light-dark(oklch(88% 0.008 90), oklch(33% 0.020 255));
+  --color-rule-2: light-dark(oklch(62% 0.014 90), oklch(52% 0.022 255));
+  --color-accent: light-dark(oklch(49% 0.125 62), oklch(82% 0.150 82));       /* amber as text, rules, focus */
+  --color-focus: light-dark(oklch(49% 0.125 62), oklch(82% 0.150 82));
+  --color-accent-fill: oklch(81% 0.160 80);                                   /* amber as a surface, same in both */
+  --color-accent-ink: oklch(21% 0.016 255);                                   /* text on the amber surface */
+  --color-band-bg: light-dark(oklch(22% 0.018 255), oklch(23.5% 0.020 255));
+  --color-band-fg: light-dark(oklch(97% 0.005 90), oklch(94% 0.008 90));
+  --color-band-muted: light-dark(oklch(82% 0.010 255), oklch(73% 0.015 255));
+  --color-band-rule: oklch(50% 0.020 255);
+  --color-band-num: oklch(82% 0.150 82);
+  --color-error: light-dark(oklch(50% 0.190 27), oklch(72% 0.160 27)); --color-success: light-dark(oklch(48% 0.120 150), oklch(75% 0.130 150));
+
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif; --font-body: "Newsreader", Georgia, "Times New Roman", serif;
+  --radius-card: 6px; --radius-ctl: 6px; --radius-pill: 999px; --rule-hair: 1px; --rule-heavy: 2px; --shadow-card: none;
+  --tracking-display: -0.015em; --display-weight: 500;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+@media print { :root, :root[data-theme] { color-scheme: light; } }

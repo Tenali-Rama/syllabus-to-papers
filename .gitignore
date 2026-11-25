@@ -1,0 +1,5 @@
+/site/
+__pycache__/
+*.pyc
+tool/node_modules/
+.hallmark/
