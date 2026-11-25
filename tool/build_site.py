@@ -216,7 +216,7 @@ def main():
 <p class="crumb"><a href="{rel}index.html#courses">All courses</a> / {html.escape(m["title"])}</p>
 <dl class="facts">{dl}</dl><nav class="btns" aria-label="Papers in this course">{tabs}</nav></div>"""
             doc = page(f'{m["title"]}, {difficulty_label(kind)}', rel,
-                       masthead(rel, True) + f'<main id="main">{head}<div class="container reading"><article>{body_html}</article></div>{pager}</main>' + PROGRESS_JS + READER_JS,
+                       masthead(rel, True) + f'<main id="main">{head}<div class="container reading"><article>{body_html}</article></div>{pager}</main>' + PROGRESS_JS + READER_JS + SAVE_JS,
                        f'{m["title"]}: {difficulty_label(kind)} practice paper', math=True)
             open(os.path.join(outdir, k_file(kind)), "w", encoding="utf-8").write(doc)
 
@@ -229,36 +229,31 @@ def main():
         rs.sort(key=lambda r: (r["date"], r["run"]), reverse=True)
         latest, older = rs[0], rs[1:]
         def link(r, k): return f'{slug}/{r["run"]}/{k_file(k)}'
-        first = "study" if "study" in latest["pages"] else "easy"
         btns = ""
         for k in ["study", "easy", "medium", "hard"]:
             if k in latest["pages"]:
-                btns += f'<a class="btn" href="{link(latest, k)}">{difficulty_label(k)}</a>'
+                cls = "btn btn--primary" if k == "study" else "btn"
+                btns += f'<a class="{cls}" href="{link(latest, k)}">{difficulty_label(k)}</a>'
             else:
-                btns += f'<span class="btn" aria-disabled="true">{difficulty_label(k)}: none yet</span>' if k == "study" else ""
+                btns += f'<span class="btn" aria-disabled="true">{difficulty_label(k)}</span>'
         older_html = ""
         if older:
-            older_html = '<p class="earlier label">Earlier runs: ' + ", ".join(
-                f'<a href="{link(r, "easy")}">{r["run"].split("_")[0]} ({r["date"]})</a>' for r in older) + "</p>"
+            older_html = '<details class="earlier"><summary>Earlier runs</summary><ul>' + "".join(
+                f'<li><a href="{link(r, "easy")}">Run {r["run"].split("_")[0].replace("run-", "")}, {r["date"]}</a></li>' for r in older) + "</ul></details>"
         d = latest["date"].split("-")
-        stand = f'{latest["modules_covered"]} modules, {latest.get("questions", 0)} questions a paper, QA score {latest["reviewer_score"]}.'
-        rows.append(f"""<li class="row" data-search="{html.escape((latest['title'] + ' ' + slug).lower())}">
-<h3><a href="{link(latest, first)}">{html.escape(latest['title'])}</a></h3>
-<div><p class="standfirst">{stand}</p>{older_html}</div>
-<div><p class="when">{int(d[2])} {MONTHS[int(d[1]) - 1]} {d[0]}</p><div class="btns">{btns}</div></div></li>""")
+        meta = f'{latest["modules_covered"]} modules · {latest.get("questions", 0)} questions · QA {latest["reviewer_score"]} · {int(d[2])} {MONTHS[int(d[1]) - 1]} {d[0]}'
+        rows.append(f"""<li class="row" data-search="{html.escape((latest['title'] + ' ' + slug + ' study easy medium hard').lower())}">
+<div class="row-main"><h3>{html.escape(latest['title'])}</h3><p class="meta">{meta}</p>{older_html}</div>
+<div class="btns">{btns}</div></li>""")
 
     n_papers = sum(len([k for k in r["pages"] if k != "study"]) for r in runs)
     body = masthead("") + f"""<main id="main">
-<section class="banner"><div class="container"><h1>Exam papers built from the syllabus</h1>
-<div><p class="lead">Each course has a study guide and three 100-mark papers.</p>
-<div class="btns"><a class="btn btn--primary" href="#courses">Browse the courses</a><a class="btn" href="{REPO_URL}">View the repository</a></div></div></div></section>
-<section class="index" id="courses"><div class="container opens">
-<div class="index-head"><h2>Courses</h2><div class="search"><label for="q">Search courses</label><input id="q" type="search" autocomplete="off"></div></div>
-<ul class="rows" id="rows">{"".join(rows)}</ul><p class="empty" id="empty" hidden>No course matches that search.</p></div></section>
-<section class="band-ink"><div class="container"><dl class="figures">
-<div><dd>{len(by_slug)}</dd><dt>Courses</dt></div><div><dd>{n_papers}</dd><dt>Papers</dt></div><div><dd>{total_q}</dd><dt>Questions</dt></div></dl></div></section>
-<section class="statement"><div class="container"><p>Every paper ships with a worked answer key. Each key stays folded until you open it.</p></div></section>
-</main>
+<section class="lp container" id="courses">
+<div class="lp-head"><h1>Papers</h1><p class="meta" id="count">{len(by_slug)} courses · {n_papers} papers · {total_q} questions</p></div>
+<a class="resume" id="resume" href="#" hidden><span class="label">Continue reading</span><strong id="resume-t"></strong></a>
+<div class="search"><label for="q">Search courses <span class="kbd">press /</span></label><input id="q" type="search" autocomplete="off" enterkeyhint="go" placeholder="e.g. econometrics, operating, AI"></div>
+<ul class="rows" id="rows">{"".join(rows)}</ul><p class="empty" id="empty" hidden>No course matches that search.</p>
+</section></main>
 <footer class="colophon"><div class="container"><p>Built from the repository on every push. Scores come from a reviewer rubric, out of 90.</p><a href="{REPO_URL}">GitHub</a></div></footer>
 {SEARCH_JS}"""
     open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(
@@ -268,9 +263,17 @@ def main():
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 SEARCH_JS = """<script>var q=document.getElementById('q'),cs=[].slice.call(document.querySelectorAll('.row'));
-q.addEventListener('input',function(){var s=q.value.trim().toLowerCase(),n=0;
-cs.forEach(function(c){var ok=!s||c.dataset.search.indexOf(s)>-1;c.hidden=!ok;if(ok)n++});
-document.getElementById('empty').hidden=!!n});</script>"""
+function filt(){var s=q.value.trim().toLowerCase().split(/\s+/).filter(Boolean),n=0;
+cs.forEach(function(c){var ok=s.every(function(w){return c.dataset.search.indexOf(w)>-1});c.hidden=!ok;if(ok)n++});
+document.getElementById('empty').hidden=!!n}
+q.addEventListener('input',filt);
+q.addEventListener('keydown',function(e){if(e.key==='Enter'){var a=document.querySelector('.row:not([hidden]) .btn--primary,.row:not([hidden]) .btn');if(a)location.href=a.href}});
+addEventListener('keydown',function(e){if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}});
+try{var l=JSON.parse(localStorage.getItem('last')||'null');if(l&&l.u&&l.t){var r=document.getElementById('resume');r.href=l.u;document.getElementById('resume-t').textContent=l.t;r.hidden=false}}catch(e){}
+</script>"""
+
+# Paper pages remember where you were, for the landing page's "Continue reading" card.
+SAVE_JS = """<script>try{localStorage.setItem('last',JSON.stringify({u:location.pathname,t:document.title}))}catch(e){}</script>"""
 
 def k_file(k):
     return {"study": "starter.html"}.get(k, f"{k}.html")
