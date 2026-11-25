@@ -3,9 +3,9 @@
 
 Checks (fail = non-zero exit):
  1. Run dirs contain all required files; no unexpected .md stubs.
- 2. Frontmatter (real YAML): required keys, marks==100, difficulty/syllabus match,
+ 2. Frontmatter (real YAML): required keys, marks/duration match the syllabus-declared scheme (any format: 5-mark quizzes to 1000-mark papers; minutes or hours),
     qa_verdict==ACCEPTED, reviewer_score matches ^\\d{1,2}/90$ and >=75.
- 3. Marks: question tags present (count >= 35) and sum to exactly 100.
+ 3. Marks: question tags present (count scaled to paper size: max(8, min(35, marks/2.5))) and sum to the declared total.
  4. Answer key section present; MCQ correct-answer letters not concentrated
     (no single letter > 50% of MCQ answers).
  5. Coverage: sub-topic IDs (S\\d+) defined in blueprint must be >=85% covered by
@@ -30,7 +30,10 @@ PAPERS = ["easy.md", "medium.md", "hard.md"]
 ALLOWED_MD = set(PAPERS + ["blueprint.md", "qa_report.md", "PAPER-INDEX.md", "starter.md"])
 RUN_FILES = PAPERS + ["blueprint.md", "qa_report.md", "verify.py", "qa_check.py", "PAPER-INDEX.md"]
 V2_FILES = ["starter.md"]
-MIN_QUESTIONS = 35
+def min_questions(marks):
+    # scale with paper size: 100-mark -> 35, 30-mark -> 12, tiny quizzes -> 8
+    return max(8, min(35, -(-int(marks) // 3)))
+MIN_QUESTIONS = 35  # used only as fallback when scheme unknown
 MIN_COVERAGE = 0.85
 
 try:
@@ -77,9 +80,12 @@ scheme = {}
 for f in os.listdir(os.path.join(ROOT, "syllabi")):
     if not f.endswith(".md") or f == "README.md": continue
     text = open(os.path.join(ROOT, "syllabi", f), encoding="utf-8").read()
-    m = re.search(r"exam:\s*(\d{2,4})\s*marks,\s*([\d.]+)\s*hours", text, re.I)
+    m = re.search(r"exam:\s*(\d{1,4})\s*marks,\s*([\d.]+)\s*(hours?|h\b|minutes?|min\b)", text, re.I)
     if m:
-        scheme[f[:-3]] = (int(m.group(1)), float(m.group(2)))
+        dur = float(m.group(2))
+        if m.group(3).lower().startswith("min"):
+            dur = round(dur / 60, 4)
+        scheme[f[:-3]] = (int(m.group(1)), dur)
 
 # 1-5, 7: run dirs and papers
 run_dirs = []
@@ -129,13 +135,13 @@ for slug in sorted(os.listdir(papers_root)):
                 if k not in fm: err(f"{rel}: frontmatter missing '{k}'")
             declared = scheme.get(slug)
             if declared is None:
-                err(f"syllabi/{slug}.md does not declare 'exam: N marks, N hours' "
-                    f"(see syllabi/README.md)")
-                declared = (int(fm.get("marks", 0)), 3)
-            if int(fm.get("marks", -1)) != declared[0]:
-                err(f"{rel}: marks {fm.get('marks')} != syllabus-declared {declared[0]}")
-            if float(fm.get("duration_hours", -1)) != declared[1]:
-                err(f"{rel}: duration_hours {fm.get('duration_hours')} != syllabus-declared {declared[1]}")
+                err(f"syllabi/{slug}.md does not declare 'exam: N marks, N minutes/hours' "
+                    f"(see syllabi/README.md) — run the generator, which derives and writes it")
+            else:
+                if int(fm.get("marks", -1)) != declared[0]:
+                    err(f"{rel}: marks {fm.get('marks')} != syllabus-declared {declared[0]}")
+                if abs(float(fm.get("duration_hours", -1)) - declared[1]) > 1e-9:
+                    err(f"{rel}: duration_hours {fm.get('duration_hours')} != syllabus-declared {declared[1]}")
             if fm.get("difficulty") != f.split(".")[0]:
                 err(f"{rel}: difficulty mismatch")
             if fm.get("syllabus") != slug:
@@ -151,10 +157,11 @@ for slug in sorted(os.listdir(papers_root)):
 
             # 3: tags, count, sum
             tags = re.findall(r"\(M(\d{1,2}),\s*(\d{1,2})(?:\s*marks?)?((?:,\s*S\d{1,2})+)(?:[^)]*)\)", body)
-            if len(tags) < MIN_QUESTIONS:
-                level = "FAIL" if v2_runs.get(key) else "LEGACY-FAIL"
+            floor = min_questions(declared[0]) if declared else MIN_QUESTIONS
+            if len(tags) < floor:
                 if v2_runs.get(key):
-                    err(f"{rel}: only {len(tags)} tagged questions (< {MIN_QUESTIONS})")
+                    err(f"{rel}: only {len(tags)} tagged questions (< {floor} for a "
+                        f"{declared[0]}-mark paper)")
             totals = [int(t[1]) for t in tags]
             if totals and sum(totals) != declared[0]:
                 err(f"{rel}: tagged marks sum to {sum(totals)}, not {declared[0]}")

@@ -19,7 +19,7 @@ Read `tool/QUALITY_BAR.md` before generating. All 12 criteria are binding; crite
 ## Stage 2 — Generation → `<run-dir>/easy.md`, `medium.md`, `hard.md`
 Generate from the blueprint only. Requirements:
 - the syllabus-declared total marks and duration each; every question tagged `(Mn, marks)` AND tagged with the sub-topic IDs it covers, e.g. `(M2, 3 marks, S7)`.
-- **Question-count floor: ≥35 questions per paper.** If marks don't fit, reduce per-question marks, not coverage. Target marks distribution: majority of questions in the 2–5 mark band; at most three 10-mark long answers per paper.
+- **Question-count floor (scaled to the declared total):** max(8, min(35, marks/3)) — i.e. 35+ for a 100-mark paper, ~12 for a 30-mark quiz, 8+ for tiny ones. If marks don't fit, reduce per-question marks, not coverage. Target marks distribution: majority of questions in the 2–5 mark band; at most three 10-mark long answers per paper.
 - Long answers ≤ 10 marks, split into (a)/(b)/(c) where each sub-part targets a different sub-topic.
 - No bundling for bundling's sake: a question tagged to a sub-topic must genuinely test it, not name-drop it.
 - Difficulty is structural: easy = recall/single-concept; medium = application/trace-through; hard = synthesis/evaluation/multi-concept numericals/perturbations.

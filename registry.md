@@ -1,4 +1,3 @@
-# Registry — All Paper Runs
 
 Newest-first index. New runs go in the FIRST row (right under the header). For programmatic search prefer `manifests/*.json`.
 
