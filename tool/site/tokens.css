@@ -11,23 +11,23 @@
 
   /* Colour: every token is light-dark(light, dark). The scheme follows the system unless the visitor
      picks one with the masthead toggle, which sets data-theme on <html> (see the rules below). */
-  --color-paper: light-dark(oklch(98.5% 0.004 90), oklch(19.5% 0.018 255));
-  --color-paper-2: light-dark(oklch(96% 0.007 88), oklch(23.5% 0.020 255));
-  --color-paper-3: light-dark(oklch(92.5% 0.010 85), oklch(28% 0.022 255));
-  --color-ink: light-dark(oklch(21% 0.016 255), oklch(94% 0.008 90));
-  --color-ink-2: light-dark(oklch(33% 0.016 255), oklch(85% 0.010 90));
-  --color-muted: light-dark(oklch(46% 0.016 255), oklch(73% 0.015 255));
-  --color-rule: light-dark(oklch(88% 0.008 90), oklch(33% 0.020 255));
+  --color-paper: light-dark(oklch(97.8% 0.008 85), oklch(19% 0.008 250));
+  --color-paper-2: light-dark(oklch(95% 0.010 85), oklch(22.5% 0.009 250));
+  --color-paper-3: light-dark(oklch(91.5% 0.012 85), oklch(27% 0.010 250));
+  --color-ink: light-dark(oklch(22% 0.010 80), oklch(89% 0.008 90));
+  --color-ink-2: light-dark(oklch(28% 0.010 80), oklch(85% 0.008 90));
+  --color-muted: light-dark(oklch(48% 0.012 80), oklch(70% 0.010 90));
+  --color-rule: light-dark(oklch(89% 0.010 85), oklch(30% 0.010 250));
   --color-rule-2: light-dark(oklch(62% 0.014 90), oklch(52% 0.022 255));
-  --color-accent: light-dark(oklch(49% 0.125 62), oklch(82% 0.150 82));       /* amber as text, rules, focus */
-  --color-focus: light-dark(oklch(49% 0.125 62), oklch(82% 0.150 82));
-  --color-accent-fill: oklch(81% 0.160 80);                                   /* amber as a surface, same in both */
-  --color-accent-ink: oklch(21% 0.016 255);                                   /* text on the amber surface */
+  --color-accent: light-dark(oklch(46% 0.085 190), oklch(78% 0.095 185));       /* amber as text, rules, focus */
+  --color-focus: light-dark(oklch(46% 0.085 190), oklch(78% 0.095 185));
+  --color-accent-fill: light-dark(oklch(88% 0.050 190), oklch(35% 0.060 190));                                   /* amber as a surface, same in both */
+  --color-accent-ink: light-dark(oklch(25% 0.050 190), oklch(94% 0.030 185));                                   /* text on the amber surface */
   --color-band-bg: light-dark(oklch(22% 0.018 255), oklch(23.5% 0.020 255));
   --color-band-fg: light-dark(oklch(97% 0.005 90), oklch(94% 0.008 90));
   --color-band-muted: light-dark(oklch(82% 0.010 255), oklch(73% 0.015 255));
   --color-band-rule: oklch(50% 0.020 255);
-  --color-band-num: oklch(82% 0.150 82);
+  --color-band-num: oklch(80% 0.095 185);
   --color-error: light-dark(oklch(50% 0.190 27), oklch(72% 0.160 27)); --color-success: light-dark(oklch(48% 0.120 150), oklch(75% 0.130 150));
 
   --font-display: "Newsreader", Georgia, "Times New Roman", serif; --font-body: "Newsreader", Georgia, "Times New Roman", serif;

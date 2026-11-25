@@ -25,6 +25,22 @@ p.style.transform='scaleX('+Math.min(1,h.scrollTop/m)+')'},{passive:true});})();
 # Runs in <head>, before first paint: apply a saved choice. With no saved choice the CSS follows the system.
 THEME_INIT_JS = """<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>"""
 
+# Reader preferences (text size, line width): applied before first paint so the page never jumps.
+READER_INIT_JS = """<script>try{var d=document.documentElement,f=localStorage.getItem('rfs'),w=localStorage.getItem('rw');if(f)d.style.setProperty('--read-fs',f+'px');if(w==='wide')d.setAttribute('data-measure','wide')}catch(e){}</script>"""
+
+READER_CONTROLS = """<span class="reader-ctl" role="group" aria-label="Reading controls"><button class="rc" id="fs-down" type="button" aria-label="Smaller text">A&minus;</button><button class="rc" id="fs-up" type="button" aria-label="Larger text">A+</button><button class="rc" id="w-toggle" type="button" aria-pressed="false" aria-label="Wider lines">&harr;</button></span>"""
+
+READER_JS = """<script>
+(function(){var d=document.documentElement,a=document.querySelector('.reading article');if(!a)return;
+function fs(){return parseFloat(getComputedStyle(a).fontSize)||20}
+function set(v){v=Math.max(15,Math.min(30,v));d.style.setProperty('--read-fs',v+'px');try{localStorage.setItem('rfs',v)}catch(e){}}
+document.getElementById('fs-down').onclick=function(){set(Math.round(fs())-1)};
+document.getElementById('fs-up').onclick=function(){set(Math.round(fs())+1)};
+var w=document.getElementById('w-toggle');w.setAttribute('aria-pressed',d.getAttribute('data-measure')==='wide');
+w.onclick=function(){var on=d.getAttribute('data-measure')!=='wide';if(on)d.setAttribute('data-measure','wide');else d.removeAttribute('data-measure');
+w.setAttribute('aria-pressed',on);try{localStorage.setItem('rw',on?'wide':'narrow')}catch(e){}};})();
+</script>"""
+
 # Runs right after the toggle button: reveal it, keep aria-pressed true to the scheme in use, save a choice.
 THEME_TOGGLE_JS = """<script>
 (function(){var b=document.getElementById('theme-toggle');if(!b)return;
@@ -41,14 +57,14 @@ def masthead(rel, progress=False):
     return f"""<a class="visually-hidden" href="#main">Skip to content</a>
 <header class="masthead"><div class="container">
 <a class="wordmark" href="{rel}index.html">Syllabus to Papers</a>
-<nav aria-label="Site"><a href="{rel}index.html#courses">Courses</a><a href="{REPO_URL}">GitHub</a><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button></nav></div>{bar}</header>
+<nav aria-label="Site"><a href="{rel}index.html#courses">Courses</a><a href="{REPO_URL}">GitHub</a>{READER_CONTROLS if progress else ""}<button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button></nav></div>{bar}</header>
 {THEME_TOGGLE_JS}"""
 
 def page(title, rel, body, desc="", math=False):
     kx = f'<link rel="stylesheet" href="{rel}katex/katex.min.css">' if math else ""
     return f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
-{THEME_INIT_JS}<title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark">
+{THEME_INIT_JS}{READER_INIT_JS}<title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 <link rel="stylesheet" href="{rel}fonts.css"><link rel="stylesheet" href="{rel}style.css">{kx}</head><body>{body}</body></html>"""
 
 def split_frontmatter(text):
@@ -71,7 +87,7 @@ def md_to_html(md, where=""):
     md = open_details(md)
     # gate 63: a meta line joined with middle dots becomes separate lines (same words)
     md = re.sub(r"^(\*\*Paper [^\n]*)$", lambda m: m[1].replace(" · ", "  \n"), md, flags=re.M)
-    r = subprocess.run(["pandoc", "-f", "gfm+tex_math_dollars+smart", "-t", "html5", "--mathjax"],
+    r = subprocess.run(["pandoc", "-f", "gfm+tex_math_dollars+smart+hard_line_breaks", "-t", "html5", "--mathjax"],
                        input=md, capture_output=True, text=True, check=True)
     return r.stdout
 
@@ -86,6 +102,8 @@ def render_math(h, where):
 def decorate(h):
     # (M3, 5 marks, S7) tags -> pill
     h = re.sub(r"<em>(\(M\d+,\s*\d+[^<]*?\))</em>", r'<span class="qtag">\1</span>', h)
+    # question stems: <p class="q"> so CSS can space and rule them
+    h = re.sub(r'<p><strong>(Q\d+[a-z]?\.)</strong>', r'<p class="q"><strong class="qn">\1</strong>', h)
     # collapse the Answer Key (everything from its <h2> to the next <h2>/end) so it isn't spoiled
     m = re.search(r'<h2 id="answer-key[^"]*">.*?</h2>', h)
     if m:
@@ -198,7 +216,7 @@ def main():
 <p class="crumb"><a href="{rel}index.html#courses">All courses</a> / {html.escape(m["title"])}</p>
 <dl class="facts">{dl}</dl><nav class="btns" aria-label="Papers in this course">{tabs}</nav></div>"""
             doc = page(f'{m["title"]}, {difficulty_label(kind)}', rel,
-                       masthead(rel, True) + f'<main id="main">{head}<div class="container reading"><article>{body_html}</article></div>{pager}</main>' + PROGRESS_JS,
+                       masthead(rel, True) + f'<main id="main">{head}<div class="container reading"><article>{body_html}</article></div>{pager}</main>' + PROGRESS_JS + READER_JS,
                        f'{m["title"]}: {difficulty_label(kind)} practice paper', math=True)
             open(os.path.join(outdir, k_file(kind)), "w", encoding="utf-8").write(doc)
 

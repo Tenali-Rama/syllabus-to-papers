@@ -116,3 +116,29 @@ details.answerkey .hint { color: var(--color-muted); margin-left: var(--space-md
 }
 @media (max-width: 40rem) { .masthead .wordmark { font-size: var(--text-lg); } .masthead nav { gap: var(--space-xs) var(--space-md); } .figures { grid-template-columns: minmax(0, 1fr); } .figures div { border-left: 0; padding: var(--space-md) 0; border-top: var(--rule-hair) solid var(--color-muted); } .figures div:first-child { border-top: 0; } }
 @media print { .masthead, .paper-head .btns, .pager, .crumb, .colophon { display: none; } body { background: none; } details.answerkey { display: none; } .reading article { grid-column: 1 / -1; } }
+
+/* ---- Study reading mode (paper pages) ----------------------------------------------------------
+   Calmer headings, one adjustable measure, readable question stems, tablet-sized touch targets.
+   User prefs: --read-fs (px, set by A-/A+) and html[data-measure="wide"] (set by the width button). */
+:root { --read-fs: 1.25rem; --measure: 62ch; }
+:root[data-measure="wide"] { --measure: 84ch; }
+.masthead { position: sticky; top: 0; padding-top: env(safe-area-inset-top, 0px); }
+.reader-ctl { display: inline-flex; gap: var(--space-xs); }
+.rc { min-width: 48px; min-height: 48px; padding: 0 var(--space-sm); border: var(--rule-hair) solid var(--color-rule-2); border-radius: var(--radius-ctl); background: none; color: var(--color-ink); font-family: var(--font-display); font-weight: 500; font-size: var(--text-sm); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.rc:hover { background: var(--color-paper-2); }
+.rc[aria-pressed="true"] { background: var(--color-accent-fill); border-color: var(--color-accent); color: var(--color-accent-ink); }
+.theme-toggle { min-height: 48px; }
+.reading article { grid-column: 1 / -1; justify-self: center; width: 100%; max-width: var(--measure); font-size: var(--read-fs); line-height: 1.7; letter-spacing: 0.005em; hyphens: auto; -webkit-hyphens: auto; }
+.reading article p, .reading article li { max-width: none; }
+.reading article > h1 { font-size: 1.9em; max-width: none; line-height: 1.15; margin-bottom: var(--space-md); }
+.reading article h2 { font-size: 1.3em; max-width: none; line-height: 1.2; margin: 2.2em 0 0.6em; }
+.reading article h3 { font-size: 1.1em; margin: 1.8em 0 0.3em; }
+.reading article p.q { margin: 0; padding: 1.1em 0 1.2em; border-top: var(--rule-hair) solid var(--color-rule); }
+.reading article p.q .qn { color: var(--color-accent); margin-right: 0.4em; font-weight: 650; }
+.reading article p.q .qtag { display: inline-block; margin-top: 0.4em; margin-left: 0; padding: 0 0.6em; border: var(--rule-hair) solid var(--color-rule-2); border-radius: var(--radius-pill); font-size: 0.72em; line-height: 1.7; }
+.reading article details.answerkey > summary { min-height: 48px; display: flex; align-items: center; flex-wrap: wrap; }
+.reading article details.answerkey .hint { display: none; }
+.paper-head .btn, .pager .btn { min-height: 48px; }
+.facts dd { font-size: var(--text-lg); }
+@media (min-width: 60.01rem) { .paper-head, .reading { padding-inline: var(--space-xl); } }
+@media (max-width: 40rem) { .reader-ctl { order: 3; width: 100%; } .masthead nav { width: 100%; justify-content: space-between; } }
