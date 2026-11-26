@@ -16,6 +16,7 @@ html = html.replace(/<span\s+class="math (inline|display)">\\(?:\(|\[)([\s\S]*?)
     return m;
   }
 });
+// Do not call process.exit() here: on a pipe it can cut stdout off at ~64 KB and silently truncate long pages.
+process.exitCode = bad.length ? 1 : 0;
 process.stdout.write(html);
 process.stderr.write(JSON.stringify({ rendered: n, failed: bad }) + "\n");
-process.exit(bad.length ? 1 : 0);
