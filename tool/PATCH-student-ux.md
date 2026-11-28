@@ -37,3 +37,15 @@ Fixes the top issues a student reviewer raised after attempting
 - Q22-style questions whose options are inline `(A)…(D)` text instead of the option list
   — a SETTER/format issue in `papers/**.md`; fix belongs in the generator prompt/quality bar.
 - Single-row instruction tables — same: content of individual paper markdown files.
+
+## Pass 2 — remaining phone fixes (same day)
+
+- **Reset guard** — "Reset this paper" now uses the same two-tap confirm
+  ("Tap again to erase all answers", auto-disarm 3.5s); a stray tap no longer wipes answers.
+- **Compact phone header** — below 760px the paper h1 drops to 1.28em and the meta line to
+  .86em, so Q1 fits (with its options) on the first screen instead of starting below the fold.
+- **Tighter option rows on phones** — below 760px options drop to 40px min-height with
+  reduced padding, and question padding/font-size tighten slightly.
+
+Verified by puppeteer at 390px: reset confirm wipes (0/37) while an armed-but-abandoned
+tap keeps answers; first-screen capture shows all of Q1's options above the fold.

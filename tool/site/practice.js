@@ -222,7 +222,15 @@
           }, 3500);
         }
       }
-      else if (t.closest(".rs")) { A.q = {}; draw(); }
+      else if (t.closest(".rs")) {                                            // two taps: a stray click must not wipe answers
+        var rb = t.closest(".rs");
+        if (rb.dataset.arm) { delete rb.dataset.arm; rb.textContent = "Reset this paper"; A.q = {}; draw(); }
+        else {
+          rb.dataset.arm = 1;
+          rb.textContent = "Tap again to erase all answers";
+          setTimeout(function () { if (rb.dataset.arm) { delete rb.dataset.arm; rb.textContent = "Reset this paper"; } }, 3500);
+        }
+      }
       else if (t.closest(".fab")) { sheet.hidden = false; }
       else if (t.closest(".scrim")) { sheet.hidden = true; }
       else if ((jump = t.closest(".gr [data-j]"))) {
