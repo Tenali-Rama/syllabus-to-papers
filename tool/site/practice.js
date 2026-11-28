@@ -31,6 +31,7 @@
         clear = document.getElementById("qc"), sug = document.getElementById("sug"),
         idx = null, sugList = [], sugSel = -1;
     rows.sort(function (a, b) { return a.dataset.n.localeCompare(b.dataset.n); }).forEach(function (r) { lst.appendChild(r); });
+    if (matchMedia("(max-width:640px)").matches) q.placeholder = "Search";   // the long one clips on a narrow header
 
     function toks(s) { return s.toLowerCase().trim().split(/\s+/).filter(Boolean); }
     function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
@@ -66,7 +67,7 @@
       function hit(h) { return t.every(function (w) { return h.indexOf(w) > -1; }); }
       (idx.courses || []).forEach(function (c) { if (hit(c.s)) out.push({ g: "Courses", t: c.t, d: c.g, u: c.u }); });
       (idx.papers || []).forEach(function (p) { if (hit(p.s)) out.push({ g: "Papers", t: p.c + " \u00b7 " + p.t, d: p.r, u: p.u }); });
-      (idx.questions || []).forEach(function (x) { if (hit(x.s)) out.push({ g: "Questions", t: x.t, d: x.c + " \u00b7 " + x.p, u: x.u }); });
+      (idx.questions || []).forEach(function (x) { if (hit(x.s)) out.push({ g: "Questions", t: x.t, d: x.p + " \u00b7 " + x.c, u: x.u }); });
       return out.slice(0, 12);
     }
     function closeSug() { if (sug) { sug.hidden = true; sug.innerHTML = ""; } sugSel = -1; sugList = []; }
