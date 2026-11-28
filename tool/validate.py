@@ -19,6 +19,10 @@ Checks (fail = non-zero exit):
     score/modules consistent with paper frontmatter.
  9. Registry rows: schema (date format, path exists, unique (slug,run)); every
     manifest has a row; every row has a manifest; syllabus files exist.
+ 10. Course tags: papers/<slug>/meta.json exists per course and holds a non-empty
+     list of strings that are lowercase, short, '#' free, <= 6 and free of
+     near-duplicates; user tags (Tags: line in the syllabus) are all kept; 2+
+     tags when the user gave none.
 """
 import fnmatch, glob, json, os, re, subprocess, sys, collections
 
@@ -296,6 +300,60 @@ for line in reg.splitlines():
         err(f"line contains a papers/ path outside a run row: {line.strip()[:80]}")
 if data_rows and [r[2] for r in data_rows] != sorted([r[2] for r in data_rows], reverse=True):
     err("registry is not newest-first (rows must be ordered by date, descending)")
+
+# 10: course tags. Tags belong to the course, so the file sits beside the run dirs, never inside one:
+#     a new run cannot change them. Rules per AGENTS.md "Course tags".
+TAG_MAX, TAG_LEN = 6, 30
+TAG_FORM = re.compile(r"[a-z0-9]+(?: [a-z0-9]+)*")
+def tag_key(t):
+    """Compare tags ignoring the differences the storage rules exist to remove."""
+    return re.sub(r"[\s_-]+", " ", t.strip().lstrip("#")).lower()
+def near_duplicates(a, b):
+    """'stats'/'statistics'-style repeats: same after normalising, singular vs plural, an initialism, or an abbreviation."""
+    ka, kb = tag_key(a), tag_key(b)
+    if ka == kb or ka.rstrip("s") == kb.rstrip("s"):
+        return True
+    initials = lambda k: "".join(w[0] for w in k.split())
+    if (len(ka.split()) > 1 and initials(ka) == kb.replace(" ", "")) or (len(kb.split()) > 1 and initials(kb) == ka.replace(" ", "")):
+        return True
+    # abbreviation of a single longer word ('stats' of 'statistics', 'maths' of 'mathematics'). Single short alphabetic
+    # words only, sharing at least 4 leading letters: longer words are treated as distinct subjects ('econometrics' vs 'economics').
+    short, long_ = sorted((ka, kb), key=len)
+    return " " not in ka and " " not in kb and 4 <= len(short) <= 5 and short.isalpha() and long_.startswith(short[:4])
+user_tags = {}
+for f in os.listdir(os.path.join(ROOT, "syllabi")):
+    if not f.endswith(".md") or f == "README.md": continue
+    m = re.search(r"^Tags:\s*(.+)$", open(os.path.join(ROOT, "syllabi", f), encoding="utf-8").read(), re.M)
+    if m: user_tags[f[:-3]] = [t.strip() for t in m.group(1).split(",") if t.strip()]
+for slug in sorted(os.listdir(papers_root)):
+    sdir = os.path.join(papers_root, slug)
+    if not os.path.isdir(sdir): continue
+    if not any(os.path.isdir(os.path.join(sdir, r)) for r in os.listdir(sdir)): continue
+    rel = f"papers/{slug}/meta.json"
+    try:
+        meta = json.load(open(os.path.join(ROOT, rel), encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        err(f"{rel}: unreadable or not valid JSON ({e}) — every course needs a tags file"); continue
+    tags = meta.get("tags") if isinstance(meta, dict) else None
+    if not isinstance(tags, list) or not tags:
+        err(f"{rel}: 'tags' must be a non-empty list of strings"); continue
+    for t in tags:
+        if not isinstance(t, str) or not t.strip(): err(f"{rel}: tag {t!r} is not a non-empty string")
+        elif "#" in t: err(f"{rel}: tag '{t}' must not contain '#' (the site adds it for display)")
+        elif t != t.lower(): err(f"{rel}: tag '{t}' must be lowercase")
+        elif t != t.strip() or "  " in t: err(f"{rel}: tag '{t}' has stray whitespace")
+        elif len(t) > TAG_LEN: err(f"{rel}: tag '{t}' is over {TAG_LEN} characters — tags are short")
+        elif not TAG_FORM.fullmatch(t): err(f"{rel}: tag '{t}' may only use lowercase letters, digits and single spaces")
+    strs = [t for t in tags if isinstance(t, str)]
+    for i, a in enumerate(strs):
+        for b in strs[i + 1:]:
+            if near_duplicates(a, b): err(f"{rel}: '{a}' and '{b}' are near-duplicates — merge them into one tag")
+    if len(tags) > TAG_MAX: err(f"{rel}: {len(tags)} tags, the maximum is {TAG_MAX} per course")
+    given = user_tags.get(slug, [])
+    kept = {tag_key(t) for t in strs}
+    for u in given:
+        if tag_key(u) not in kept: err(f"{rel}: user-given tag '{u}' (syllabi/{slug}.md) is missing — user tags are always kept")
+    if not given and len(strs) < 2: err(f"{rel}: only {len(strs)} tag(s) — generate 2–4 when the user gives none")
 
 # table integrity across all markdown files: separator row must match header column count
 for path in glob.glob(os.path.join(ROOT, "**", "*.md"), recursive=True):

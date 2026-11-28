@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """Build the GitHub Pages site into ./site (run from anywhere).
 
-  python tool/build_site.py          # needs: pandoc, PyYAML
+  python tool/build_site.py          # needs: pandoc, PyYAML, tool/node_modules (KaTeX)
 
-Reads manifests/*.json + papers/**.md, writes a landing page with one card per
-syllabus and a styled page for every paper / study starter.
+Reads manifests/*.json, papers/**.md and papers/<slug>/meta.json, and writes the prototype
+(Papers – prototype v8.html) as static pages filled with the real courses:
+
+  index.html            the course list: search, tag rail, Continue, one row per course
+  <slug>/index.html     the course: its tags and one row per paper
+  <slug>/<run>/*.html   each paper (questions answered in place) and the study guide
 """
 import html, json, os, re, shutil, subprocess, sys, glob
+from urllib.parse import quote
 import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -15,59 +20,48 @@ import practice
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "site")
 ASSETS = os.path.join(ROOT, "tool", "site")
-REPO_URL = "https://github.com/Tenali-Rama/syllabus-to-papers"
+BRAND = "Papers"
+KINDS = ["study", "easy", "medium", "hard"]
 
-FONTS = ""   # fonts are self-hosted: see write_fonts() and site/fonts.css
 
-# Runs in <head>, before first paint: apply a saved choice. With no saved choice the CSS follows the system.
-THEME_INIT_JS = """<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>"""
+def svg(path, size=22):
+    """The prototype's line icons."""
+    return (f'<svg width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+            f'stroke-linecap="round" stroke-linejoin="round">{path}</svg>')
 
-# Reader preferences (text size, line width): applied before first paint so the page never jumps.
-READER_INIT_JS = """<script>try{var d=document.documentElement,f=localStorage.getItem('rfs'),w=localStorage.getItem('rw');if(f)d.style.setProperty('--read-fs',f+'px');if(w==='wide')d.setAttribute('data-measure','wide')}catch(e){}</script>"""
 
-# Text size and line width live in one "Aa" popover so the header stays one slim row on phones.
-READER_CONTROLS = """<details class="aa" id="aa"><summary aria-label="Reading settings">Aa</summary><div class="aa-pop" role="group" aria-label="Reading settings"><button class="rc" id="fs-down" type="button" aria-label="Smaller text">A&minus;</button><button class="rc" id="fs-up" type="button" aria-label="Larger text">A+</button><button class="rc" id="w-toggle" type="button" aria-pressed="false" aria-label="Wider lines">&harr;</button></div></details>"""
+SUN = svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')
+MOON = svg('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>')
+BACK = svg('<path d="M15 5l-7 7 7 7"/>', 18)
 
-READER_JS = """<script>
-(function(){var d=document.documentElement,a=document.querySelector('.reading article');if(!a)return;
-function fs(){return parseFloat(getComputedStyle(a).fontSize)||20}
-function set(v){v=Math.max(15,Math.min(30,v));d.style.setProperty('--read-fs',v+'px');try{localStorage.setItem('rfs',v)}catch(e){}}
-document.getElementById('fs-down').onclick=function(){set(Math.round(fs())-1)};
-document.getElementById('fs-up').onclick=function(){set(Math.round(fs())+1)};
-var w=document.getElementById('w-toggle');w.setAttribute('aria-pressed',d.getAttribute('data-measure')==='wide');
-w.onclick=function(){var on=d.getAttribute('data-measure')!=='wide';if(on)d.setAttribute('data-measure','wide');else d.removeAttribute('data-measure');
-w.setAttribute('aria-pressed',on);try{localStorage.setItem('rw',on?'wide':'narrow')}catch(e){}};
-document.addEventListener('click',function(e){var x=document.getElementById('aa');if(x&&x.open&&!x.contains(e.target))x.open=false});})();
-</script>"""
+# Runs in <head>, before first paint: the saved theme, else the system's.
+THEME_INIT_JS = """<script>try{var c=JSON.parse(localStorage.getItem('papers-cfg')||'{}').theme,t=localStorage.getItem('theme');
+if(c==='dark'||(!c&&(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches))))document.documentElement.dataset.mode='dark'}catch(e){}</script>"""
 
-# Runs right after the toggle button: reveal it, keep aria-pressed true to the scheme in use, save a choice.
-THEME_TOGGLE_JS = """<script>
-(function(){var b=document.getElementById('theme-toggle');if(!b)return;
-var r=document.documentElement,mq=matchMedia('(prefers-color-scheme: dark)');
-function dark(){var t=r.getAttribute('data-theme');return t?t==='dark':mq.matches}
-function sync(){b.setAttribute('aria-pressed',dark())}
-b.hidden=false;sync();
-b.addEventListener('click',function(){var n=dark()?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}sync()});
-mq.addEventListener('change',sync);})();
-</script>"""
 
-def masthead(rel, reader=False, extra=""):
-    bar = '<div class="progress" id="progress"></div>' if reader else ""
-    brand = (f'<a class="wordmark back" href="{rel}index.html" aria-label="All courses">&larr;<span> All courses</span></a>' if reader
-             else f'<a class="wordmark" href="{rel}index.html">Syllabus to Papers</a>')
-    return f"""<a class="visually-hidden" href="#main">Skip to content</a>
-<header class="masthead"><div class="container">
-{brand}
-<nav aria-label="Site">{extra}{READER_CONTROLS if reader else ""}<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false" hidden><span aria-hidden="true">&#9680;</span></button></nav></div>{bar}</header>
-{THEME_TOGGLE_JS}"""
-
-def page(title, rel, body, desc="", math=False, attrs="", practice=False):
-    kx = f'<link rel="stylesheet" href="{rel}katex/katex.min.css">' if math else ""
-    px = f'<script src="{rel}practice.js" defer></script>' if practice else ""
+def page(title, rel, main, rail, crumbs=None, search=False, math=False, main_attrs=""):
+    """One screen of the prototype: the header (brand and search on the course list, breadcrumbs elsewhere, always
+    the theme toggle), then main beside its rail. crumbs = [(title, href), ...], "Papers" first, current page last."""
+    home = f"{rel}index.html"
+    if crumbs:
+        up = crumbs[-2]
+        head = (f'<nav class="cr" aria-label="Breadcrumb"><a class="wm" href="{home}">{BRAND}</a><i>/</i>'
+                + "".join(f'<a href="{h}">{html.escape(t)}</a><i>/</i>' for t, h in crumbs[1:-1])
+                + f'<span aria-current="page">{html.escape(crumbs[-1][0])}</span></nav>'
+                f'<a class="bk" href="{up[1]}">{BACK}{html.escape(up[0])}</a>')
+    else:
+        head = f'<span class="wm">{BRAND}</span>'
+        if search:
+            head += '<input class="search" id="q" type="search" placeholder="Search courses or tags" aria-label="Search">'
+    kx = f'\n<link rel="stylesheet" href="{rel}katex/katex.min.css">' if math else ""
     return f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark">
-{THEME_INIT_JS}{READER_INIT_JS}<title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
-<link rel="stylesheet" href="{rel}fonts.css"><link rel="stylesheet" href="{rel}style.css">{kx}</head><body {attrs}>{body}{px}</body></html>"""
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+{THEME_INIT_JS}<title>{html.escape(title)}</title>
+<link rel="stylesheet" href="{rel}style.css">{kx}</head><body>
+<div class="wrap"><header class="hd">{head}<button class="tg" id="tg" type="button" aria-label="Switch light or dark">{MOON}</button></header>
+<div class="cols"><main{main_attrs}>{main}</main><aside class="rail">{rail}</aside></div></div>
+<script src="{rel}practice.js" defer></script></body></html>"""
+
 
 def split_frontmatter(text):
     m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
@@ -78,6 +72,7 @@ def split_frontmatter(text):
     except Exception:
         return {}, text[m.end():]
 
+
 DETAILS = re.compile(r"^([ \t]*)<details><summary>(.*?)</summary>(.*)</details>[ \t]*$", re.M)
 
 def open_details(md):
@@ -85,12 +80,9 @@ def open_details(md):
     Split the tags onto their own lines with blank lines between so the inner text is read as markdown."""
     return DETAILS.sub(lambda m: f"{m[1]}<details><summary>{m[2]}</summary>\n\n{m[1]}{m[3].strip()}\n\n{m[1]}</details>", md)
 
-def md_to_html(md, where=""):
-    md = open_details(md)
-    # gate 63: a meta line joined with middle dots becomes separate lines (same words)
-    md = re.sub(r"^(\*\*Paper [^\n]*)$", lambda m: m[1].replace(" · ", "  \n"), md, flags=re.M)
+def md_to_html(md):
     r = subprocess.run(["pandoc", "-f", "gfm+tex_math_dollars+smart+hard_line_breaks", "-t", "html5", "--mathjax"],
-                       input=md, capture_output=True, text=True, check=True)
+                       input=open_details(md), capture_output=True, text=True, check=True)
     return r.stdout
 
 def render_math(h, where):
@@ -101,19 +93,6 @@ def render_math(h, where):
         sys.exit(f"MATH FAILED in {where}:\n  " + "\n  ".join(info.get("failed", ["unknown error"])))
     return r.stdout, info["rendered"]
 
-def decorate(h):
-    # (M3, 5 marks, S7) tags -> pill
-    h = re.sub(r"<em>(\(M\d+,\s*\d+[^<]*?\))</em>", r'<span class="qtag">\1</span>', h)
-    # collapse the Answer Key (everything from its <h2> to the next <h2>/end) so it isn't spoiled
-    m = re.search(r'<h2 id="answer-key[^"]*">.*?</h2>', h)
-    if m:
-        rest = h[m.end():]
-        nxt = re.search(r"<h2 ", rest)
-        end = m.end() + (nxt.start() if nxt else len(rest))
-        inner = h[m.end():end]
-        h = h[:m.start()] + f'<details class="answerkey"><summary>Answer key<span class="hint">Open it after your attempt.</span></summary>{inner}</details>' + h[end:]
-    return h
-
 def pretty(slug):
     return slug.replace("-", " ").title()
 
@@ -123,37 +102,37 @@ def count_questions(md):
 def difficulty_label(d):
     return {"easy": "Easy", "medium": "Medium", "hard": "Hard", "study": "Study guide"}[d]
 
-def write_fonts():
-    """Self-host the theme's one typeface: Newsreader, a variable serif with an optical-size axis (upright and italic)."""
-    fs = os.path.join(ROOT, "tool", "node_modules", "@fontsource-variable")
-    want = [("newsreader", "newsreader-latin-opsz-normal.woff2"),
-            ("newsreader", "newsreader-latin-opsz-italic.woff2")]
-    os.makedirs(os.path.join(OUT, "fonts"))
-    for pkg, f in want:
-        src = os.path.join(fs, pkg, "files", f)
-        if not os.path.exists(src):
-            sys.exit(f"font missing: {src}: run `npm install --prefix tool`")
-        shutil.copy(src, os.path.join(OUT, "fonts", f))
-    css = ("@font-face{font-family:'Newsreader';font-style:normal;font-display:swap;font-weight:200 800;"
-           "src:url(fonts/newsreader-latin-opsz-normal.woff2) format('woff2')}\n"
-           "@font-face{font-family:'Newsreader';font-style:italic;font-display:swap;font-weight:200 800;"
-           "src:url(fonts/newsreader-latin-opsz-italic.woff2) format('woff2')}\n")
-    open(os.path.join(OUT, "fonts.css"), "w").write(css)
+def course_tags(slug):
+    """Tags belong to the course, not the run: papers/<slug>/meta.json (rules in AGENTS.md, checked by validate.py)."""
+    rel = os.path.join("papers", slug, "meta.json")
+    p = os.path.join(ROOT, rel)
+    if not os.path.exists(p):
+        sys.exit(f"missing {rel}: every course has a tags file (see AGENTS.md, 'Course tags')")
+    with open(p, encoding="utf-8") as f:
+        tags = json.load(f).get("tags")
+    if not isinstance(tags, list) or not tags or not all(isinstance(t, str) and t for t in tags):
+        sys.exit(f"{rel}: 'tags' must be a non-empty list of strings")
+    return tags
 
-def topics_of(md):
-    """Study-guide sub-topics: {'S4': 'Tree structure, Gini impurity, entropy'}."""
-    out = {}
-    for m in re.finditer(r"^### (S\d+)\s*[\u2014-]\s*(.+?)\s*$", md, re.M):
-        out[m[1]] = re.sub(r"\s*(\[[GD]\]|\(M\d+[^)]*\))\s*$", "", m[2]).strip()
-    return out
+def tag_list(tags, href=None):
+    """The prototype's tag list. tags = the course's tag names, or {tag: courses carrying it} for the course list.
+    With href (a format string taking the url-encoded tag) the tags link to the course list filtered by that tag."""
+    names = sorted(tags) if isinstance(tags, dict) else tags
+    if href:
+        return '<div class="tl">' + "".join(f'<a href="{href.format(quote(t))}">{html.escape(t)}</a>' for t in names) + "</div>"
+    return '<div class="tl">' + "".join(
+        f'<button type="button" data-t="{html.escape(t, quote=True)}">{html.escape(t)} <em>{tags[t]}</em></button>' for t in names) + "</div>"
+
+def k_file(k):
+    return {"study": "starter.html"}.get(k, f"{k}.html")
+
 
 def main():
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
     os.makedirs(OUT)
-    for f in ("style.css", "tokens.css", "base.css", "practice.js"):
+    for f in ("style.css", "practice.js"):
         shutil.copy(os.path.join(ASSETS, f), OUT)
-    write_fonts()
     kdist = os.path.join(ROOT, "tool", "node_modules", "katex", "dist")
     if not os.path.isdir(kdist):
         sys.exit("katex missing: run `npm install --prefix tool` first")
@@ -168,142 +147,109 @@ def main():
         d = os.path.join(ROOT, "papers", m["syllabus"], m["run"])
         if not os.path.isdir(d):
             continue
-        m["dir"] = d
-        m["title"] = pretty(m["syllabus"])
+        m["dir"], m["title"] = d, pretty(m["syllabus"])
         runs.append(m)
 
-    total_math = 0
     files = {"study": "starter.md", "easy": "easy.md", "medium": "medium.md", "hard": "hard.md"}
     for m in runs:
         for kind, fn in files.items():
             src = os.path.join(m["dir"], fn)
             if not os.path.exists(src):
                 continue
-            fm, body = split_frontmatter(open(src, encoding="utf-8").read())
+            _, body = split_frontmatter(open(src, encoding="utf-8").read())
             h1 = re.search(r"^#\s+(.+)$", body, re.M)
             if kind != "study":
-                m["title"] = re.sub(r"\s+[\u2014-]\s+End-Semester Examination.*$", "", h1.group(1).strip() if h1 else m["title"])
-            m.setdefault("pages", {})[kind] = dict(body=body, fm=fm, nq=count_questions(body) if kind != "study" else len(topics_of(body)))
-        m["title"] = m["title"].replace(" \u2014 ", ": ")   # copy gate 19 (no dashes in page copy)
+                m["title"] = re.sub(r"\s+[—-]\s+End-Semester Examination.*$", "", h1.group(1).strip() if h1 else m["title"])
+            m.setdefault("pages", {})[kind] = {"body": body, "nq": len(re.findall(r"^### S\d+", body, re.M)) if kind == "study" else count_questions(body)}
+        m["title"] = m["title"].replace(" — ", ": ")   # copy gate 19 (no dashes in page copy)
 
-    # ---- paper pages ----
-    rel = "../" * 2
+    # ---- paper + study pages ----
+    total_math = 0
     for m in runs:
         pages = m.get("pages", {})
-        kinds = [k for k in ["study", "easy", "medium", "hard"] if k in pages]
-        outdir = os.path.join(OUT, m["syllabus"], m["run"])
-        os.makedirs(outdir, exist_ok=True)
-        for idx, kind in enumerate(kinds):
-            p, fm = pages[kind], pages[kind]["fm"]
+        os.makedirs(os.path.join(OUT, m["syllabus"], m["run"]), exist_ok=True)
+        for kind in KINDS:
+            if kind not in pages:
+                continue
+            p, rel, label = pages[kind], "../" * 2, difficulty_label(kind)
             where = f'{m["syllabus"]}/{m["run"]}/{k_file(kind)}'
-            md = p["body"]
-            if kind != "study":
-                head_md, key_md = practice.split_key(md)
-                head_md, _ = practice.transform(head_md, key_md, "starter.html" if "study" in pages else None)
-                md = head_md + ("\n" + key_md if key_md else "")
-            h = decorate(md_to_html(md))
             if kind == "study":
-                h = practice.tag_study_html(h)
-            body_html, n_math = render_math(h, where)
-            total_math += n_math
-            if kind != "study":
-                meta = f'{fm.get("marks", 100)} marks \u00b7 {fm.get("duration_hours", 3)} hours \u00b7 {p["nq"]} questions'
+                body = re.sub(r"^#[^\n]*\n", "", p["body"], count=1)       # the page's own title is "Study guide"
+                h, toc = practice.study_toc(practice.tag_study_html(md_to_html(body)))
+                nxt = next((k for k in ["easy", "medium", "hard"] if k in pages), None)
+                nx = f'<a class="nx" href="{k_file(nxt)}"><span>Start the {difficulty_label(nxt)} paper</span><span>\u203a</span></a>' if nxt else ""
+                main_html, attrs = f'<article class="note"><h1>Study guide</h1>{h}{nx}</article>', ""
+                rail = ('<section><h3>In this guide</h3><div class="toc">'
+                        + "".join(f'<a href="#h{i}" data-h="{i}">{t}</a>' for i, t in enumerate(toc)) + "</div></section>")
             else:
-                meta = f'{p["nq"]} topics \u00b7 read, tick off what you understand, then attempt Easy'
-            tabs = "".join(
-                f'<a href="{k_file(k)}"{" aria-current=\"page\"" if k == kind else ""}>{difficulty_label(k)}</a>' for k in kinds)
-            prev_k = kinds[idx - 1] if idx > 0 else None
-            next_k = kinds[idx + 1] if idx < len(kinds) - 1 else None
-            pager = ""
-            if prev_k or next_k:
-                pager = '<nav class="pager container" aria-label="Next paper">' + (
-                    f'<a class="btn" href="{k_file(prev_k)}"><span>Previous</span><span>{difficulty_label(prev_k)}</span></a>' if prev_k else "<span></span>"
-                ) + (f'<a class="btn btn--primary" href="{k_file(next_k)}"><span>Next</span><span>{difficulty_label(next_k)}</span></a>' if next_k else "") + "</nav>"
-            head = f'''<div class="container paper-head"><nav class="seg" aria-label="Papers in this course">{tabs}</nav><p class="meta">{html.escape(meta)}</p><div id="bar" class="bar"></div></div>'''
-            attrs = (f'data-kind="{"study" if kind == "study" else "paper"}" data-diff="{kind}" data-dur="{fm.get("duration_hours", 3)}" '
-                     f'data-course="{m["syllabus"]}" data-total="{p["nq"]}"')
-            doc = page(f'{m["title"]}, {difficulty_label(kind)}', rel,
-                       masthead(rel, True) + f'<main id="main">{head}<div class="container reading"><article>{body_html}</article></div>{pager}</main>' + READER_JS + SAVE_JS,
-                       f'{m["title"]}: {difficulty_label(kind)} practice paper', math=True, attrs=attrs, practice=True)
-            open(os.path.join(outdir, k_file(kind)), "w", encoding="utf-8").write(doc)
+                head_md, key_md = practice.split_key(p["body"])
+                meta, table, questions = practice.front_matter(head_md)
+                q_md, st = practice.transform(questions, key_md)
+                p["nq"] = st["n"]
+                front = (f'<p class="sub">{html.escape(meta)}</p>' if meta else "") + (f'<details class="front"><summary>Instructions</summary>\n\n{table}\n\n</details>' if table else "")
+                cells = "".join(f'<button type="button" data-j="{i}" aria-label="Question {l}">{l}</button>' for i, l in enumerate(st["labels"]))
+                counted = f'Questions \u00b7 0/{st["n"]} answered'
+                main_html = (f'{md_to_html(front + chr(10) + chr(10) + q_md)}<button type="button" class="rs" data-r="1" hidden>Reset this paper</button>'
+                             f'<button type="button" class="fab" data-g="1" aria-label="Question list">0/{st["n"]}</button>'
+                             f'<div class="sheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3><div class="gr">{cells}</div></div></div>')
+                attrs = f' data-kind="paper" data-course="{html.escape(m["title"], quote=True)}" data-paper="{label}"'
+                rail = f'<section><h3>{counted}</h3><div class="gr">{cells}</div></section>'
+            body_html, n_math = render_math(main_html, where)
+            total_math += n_math
+            doc = page(f'{m["title"]}, {label}', rel, body_html, rail, math=True, main_attrs=attrs,
+                       crumbs=[(BRAND, f"{rel}index.html"), (m["title"], "../index.html"), (label, None)])
+            with open(os.path.join(OUT, m["syllabus"], m["run"], k_file(kind)), "w", encoding="utf-8") as f:
+                f.write(doc)
 
-    # ---- landing ----
+    # ---- course pages + course list ----
     by_slug = {}
     for m in runs:
         by_slug.setdefault(m["syllabus"], []).append(m)
-    sections, weak = [], {}
-    for i, (slug, rs) in enumerate(by_slug.items(), 1):
+    courses = []
+    for slug, rs in by_slug.items():
         rs.sort(key=lambda r: (r["date"], r["run"]), reverse=True)
+        courses.append((slug, rs))
+    home_rows, tag_n = [], {}
+    for slug, rs in sorted(courses, key=lambda c: c[1][0]["title"].casefold()):
         latest, older = rs[0], rs[1:]
-        def link(r, k): return f'{slug}/{r["run"]}/{k_file(k)}'
-        steps = ""
-        for n, k in enumerate([k for k in ["study", "easy", "medium", "hard"] if k in latest["pages"]], 1):
-            pg = latest["pages"][k]
-            info = f'{pg["nq"]} topics' if k == "study" else f'{pg["nq"]} questions \u00b7 {pg["fm"].get("marks", 100)} marks \u00b7 {pg["fm"].get("duration_hours", 3)} h'
-            steps += (f'<li><a class="step step--{k}" href="{link(latest, k)}" data-n="{pg["nq"]}" data-kind="{k}">'
-                      f'<span class="sk">{"Start here" if k == "study" else f"Step {n}"}</span><strong>{"Study guide" if k == "study" else difficulty_label(k)}</strong>'
-                      f'<span class="sm" data-base="{info}">{info}</span><span class="sbar"></span></a></li>')
-        older_html = ""
+        title, tags = latest["title"], course_tags(slug)
+        for t in tags:
+            tag_n[t] = tag_n.get(t, 0) + 1
+
+        def rows_of(run, note=""):
+            out = ""
+            for k in KINDS:
+                if k in run["pages"]:
+                    n = run["pages"][k]["nq"]
+                    right = "Read this first" if k == "study" else f'{n} question{"s" if n != 1 else ""}'
+                    out += (f'<a class="row" href="{run["run"]}/{k_file(k)}"><span><b>{difficulty_label(k)}</b>'
+                            + (f'<small>{note}</small>' if note else "") + f'</span><span class="r">{right}</span></a>')
+            return out
+
+        earlier = ""
         if older:
-            older_html = '<details class="earlier"><summary>Earlier runs</summary>' + "".join(
-                f'<p><span class="on">{r["date"]}</span>' + " ".join(
-                    f'<a href="{link(r, k)}">{difficulty_label(k)}</a>' for k in ["study", "easy", "medium", "hard"] if k in r["pages"]) + "</p>" for r in older) + "</details>"
-        sections.append(f'<section class="course"><h2><span class="no">{i:02d}</span>{html.escape(latest["title"])}</h2><ol class="path">{steps}</ol>{older_html}</section>')
-        sr = next((r for r in rs if "study" in r["pages"]), None)
-        if sr:
-            weak[slug] = {"title": latest["title"], "topics": topics_of(sr["pages"]["study"]["body"])}
+            earlier = '<div class="lab">Earlier runs</div><div class="rows">' + "".join(
+                rows_of(r, f'Run {int(r["run"].split("_")[0][4:])} \u00b7 {r["date"]}') for r in older) + "</div>"
+        main_html = (f'<h1>{html.escape(title)}</h1><div class="inl">{tag_list(sorted(tags), "../index.html#tag={}")}</div>'
+                     f'<div class="lab">Papers</div><div class="rows">{rows_of(latest)}</div>{earlier}')
+        doc = page(title, "../", main_html, f'<section><h3>Tags</h3>{tag_list(sorted(tags), "../index.html#tag={}")}</section>',
+                   crumbs=[(BRAND, "../index.html"), (title, None)])
+        with open(os.path.join(OUT, slug, "index.html"), "w", encoding="utf-8") as f:
+            f.write(doc)
 
-    body = masthead("", False, '<a class="navlink" href="weak.html">Weak spots</a>') + f"""<main id="main" class="container home">
-<a class="resume" id="resume" href="#" hidden><span class="rl">Continue</span><strong id="resume-t"></strong><span class="rp" id="resume-p"></span></a>
-<div id="courses">{"".join(sections)}</div></main>
-{LANDING_JS}"""
-    open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(
-        page("Syllabus to Papers", "", body, "Practice exam papers built from syllabi."))
+        n_q = sum(latest["pages"][k]["nq"] for k in latest["pages"] if k != "study")
+        home_rows.append(f'<a class="row" data-c="{slug}" data-n="{html.escape(title, quote=True)}" data-s="{html.escape((title + " " + " ".join(tags)).lower(), quote=True)}" href="{slug}/index.html">'
+                         f'<span><b>{html.escape(title)}</b><small>{html.escape(" \u00b7 ".join(tags))}</small></span><span class="r">{n_q} question{"s" if n_q != 1 else ""}</span></a>')
 
-    wbody = masthead("", False, '<a class="navlink" href="index.html">Courses</a>') + f"""<main id="main" class="container home">
-<h1 class="pg">Weak spots</h1><p class="meta">Topics you missed most, from the questions you answered on this device. Each links to its study-guide section.</p>
-<div id="weak"></div></main>
-<script type="application/json" id="wk">{json.dumps(weak)}</script>{WEAK_JS}"""
-    open(os.path.join(OUT, "weak.html"), "w", encoding="utf-8").write(page("Weak spots", "", wbody, "Topics to revise."))
-    print(f"built {sum(len(r['pages']) for r in runs)} pages across {len(by_slug)} courses, {total_math} formulas rendered by KaTeX -> {OUT}")
+    main_html = (f'<div id="nav" hidden><div class="lab">Continue</div><div class="rows"><a class="row" href="#">'
+                 f'<span><b></b><small></small></span><span class="r"></span></a></div></div>'
+                 f'<h1 class="lab" id="cl">Courses</h1><div class="rows" id="lst">{"".join(home_rows)}</div>'
+                 '<p class="sub" id="none" hidden>Nothing matches. Try a course name or tag.</p>')
+    rail = f'<section><h3>Tags</h3>{tag_list(tag_n, None)}</section>'
+    with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:
+        f.write(page(BRAND, "", main_html, rail, search=True))
+    print(f"built {sum(len(r['pages']) for r in runs)} pages across {len(courses)} courses, {total_math} formulas rendered by KaTeX -> {OUT}")
 
-# Home: read per-paper stats written by practice.js ('stat:<path>' = {a: answered, n: total, ok: correct}).
-LANDING_JS = """<script>try{
-var g=function(k){return localStorage.getItem(k)};
-document.querySelectorAll('.course').forEach(function(c){var nxt=null;
-c.querySelectorAll('.step').forEach(function(a){var s=null;try{s=JSON.parse(g('stat:'+a.pathname))}catch(e){}
-var n=+a.dataset.n,m=a.querySelector('.sm'),done=false;
-if(s&&s.a){var f=Math.min(1,s.a/n);a.style.setProperty('--p',f);done=s.a>=n;
-m.textContent=a.dataset.kind==='study'?s.a+' of '+n+' topics understood':s.a+' of '+n+' answered'+(s.ok!=null&&s.a?' \u00b7 '+Math.round(100*s.ok/s.a)+'% correct':'')}
-if(done)a.classList.add('done');else if(!nxt)nxt=a});
-if(nxt){nxt.classList.add('next');var k=nxt.querySelector('.sk');k.textContent='Next up'}});
-var l=JSON.parse(g('last')||'null');
-if(l&&l.u){var v=parseFloat(g('p:'+l.u))||0;var r=document.getElementById('resume');r.href=l.u;
-document.getElementById('resume-t').textContent=l.t;document.getElementById('resume-p').textContent=v>.02?Math.round(v*100)+'% down the page':'';r.hidden=false}
-}catch(e){}</script>"""
-
-# Weak spots: aggregate the saved answers ('a:<path>' = {c: course, s: study path, q: {id: {ok, t: [S tags]}}}).
-WEAK_JS = """<script>(function(){var wk=JSON.parse(document.getElementById('wk').textContent),agg={},box=document.getElementById('weak');
-try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k.indexOf('a:')!==0)continue;var st=JSON.parse(localStorage.getItem(k));if(!st||!st.c)continue;
-var c=agg[st.c]=agg[st.c]||{t:{},s:st.s,n:0,ok:0};Object.keys(st.q||{}).forEach(function(q){var e=st.q[q];if(e.ok==null)return;c.n++;c.ok+=e.ok?1:0;
-(e.t||[]).forEach(function(t){var x=c.t[t]=c.t[t]||{a:0,m:0};x.a++;if(!e.ok)x.m++})})}}catch(e){}
-var slugs=Object.keys(agg);if(!slugs.length){box.innerHTML='<p class="empty">Nothing yet. Answer some questions in a practice paper and your weakest topics will show up here.</p>';return}
-slugs.forEach(function(s){var c=agg[s],info=wk[s]||{title:s,topics:{}};var rows=Object.keys(c.t).map(function(t){return {t:t,a:c.t[t].a,m:c.t[t].m}}).filter(function(r){return r.m>0}).sort(function(a,b){return b.m/b.a-a.m/a.a||b.m-a.m});
-var h='<section class="course"><h2>'+info.title+'</h2><p class="meta">'+c.ok+' of '+c.n+' graded answers correct</p>';
-h+=rows.length?'<ol class="weak">'+rows.map(function(r){return '<li><a href="'+(c.s||'#')+'#'+r.t.toLowerCase()+'"><span class="wt">'+r.t+'</span><span class="wn">'+(info.topics[r.t]||'Topic')+'</span><span class="wm">missed '+r.m+' of '+r.a+'</span></a></li>'}).join('')+'</ol>':'<p class="empty">No misses recorded. Nice.</p>';
-box.insertAdjacentHTML('beforeend',h+'</section>')})})();</script>"""
-
-# Paper pages remember where you were (scroll position), for the home "Continue" card.
-SAVE_JS = """<script>(function(){var d=document.documentElement,u=location.pathname,t,
-m=function(){return Math.max(1,d.scrollHeight-d.clientHeight)};
-try{localStorage.setItem('last',JSON.stringify({u:u,t:document.title}));
-var s=parseFloat(localStorage.getItem('p:'+u));
-if(s>.02&&s<.95&&!location.hash)addEventListener('load',function(){scrollTo(0,s*m())})}catch(e){}
-addEventListener('scroll',function(){clearTimeout(t);t=setTimeout(function(){try{localStorage.setItem('p:'+u,Math.min(1,d.scrollTop/m()))}catch(e){}},250)},{passive:true})})();
-</script>"""
-
-def k_file(k):
-    return {"study": "starter.html"}.get(k, f"{k}.html")
 
 if __name__ == "__main__":
     main()

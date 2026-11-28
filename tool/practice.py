@@ -1,11 +1,12 @@
-"""Build-time helpers that turn a paper's markdown into practice-ready markup.
+"""Build-time helpers that turn a paper's markdown into the prototype's question markup.
 
-Each question block (**Q7.**, **A3.**, **B12.** ...) is wrapped in <div class="qb"> with
-data-* attributes (marks, sub-topic tags, MCQ answer letter) and carries its own answer-key
-entry inside a hidden <div class="qa">, so the page can reveal it right under the question.
+Each question block (**A1.**, **Q7.**, **B12.** ...) becomes a <section class="q"> with data-* attributes
+(marks, MCQ answer letter), its options as a markdown list (practice.js turns them into the prototype's
+buttons) and its answer-key entry inside a hidden <div class="ans">, so the page can reveal it right under
+the question.
 
-Papers differ in format (Q7 / A3 labels, (A) / (a) options, three answer-key styles), so every
-step is tolerant: a question the parser cannot understand is left exactly as written.
+Papers differ in format (A1 / Q7 labels, (A) / (a) options, three answer-key styles), so every step is
+tolerant: a question the parser cannot understand is left exactly as written.
 """
 import re
 
@@ -14,12 +15,27 @@ TAG = re.compile(r"^\*\(M(\d+),\s*(\d+)(?:\s*marks?)?((?:,\s*S\d+)*)[^)]*\)\*[ \
 OPT = re.compile(r"^\(([A-Da-d])\)[ \t]+(.+?)[ \t]*$")
 KEY_HEAD = re.compile(r"^## Answer Key[ \t]*$", re.M)
 ENTRY = re.compile(r"^- (?:\*\*)?(Q?[A-Z]?\d+)\b", re.M)
+META = re.compile(r"^\*\*(Paper[^\n]*?)\*\*[ \t]*$", re.M)
+FIRST_PART = re.compile(r"^#{1,6} |^\*\*[A-Z]?\d+\.\*\*", re.M)
 
 
 def split_key(md):
     """-> (body, key_section_text_or_'')"""
     m = KEY_HEAD.search(md)
     return (md[:m.start()], md[m.start():]) if m else (md, "")
+
+
+def front_matter(body):
+    """Split off what precedes a paper's first section or question. -> (meta line, instructions table, questions)
+
+    Only the bold "Paper 1 (Easy) · Total marks: 100 · Duration: 3 hours" line and the instructions table are
+    kept. The title is dropped (the breadcrumb already names the course and paper) and so is the note explaining
+    the (Mn, marks) tag, because the page shows each question's marks by the question."""
+    m = FIRST_PART.search(body, body.find("\n") + 1)
+    head, rest = (body[:m.start()], body[m.start():]) if m else ("", body)
+    meta = META.search(head)
+    table = "\n".join(l for l in head.splitlines() if l.startswith("|"))
+    return (meta.group(1).strip() if meta else ""), table, rest.lstrip("\n")
 
 
 def _norm(label):
@@ -60,14 +76,14 @@ def mcq_letter(answer):
     return m.group(1).upper() if m else None
 
 
-def transform(body, key_md, starter_href=None):
-    """Wrap each question. Returns (new_markdown, stats)."""
+def transform(body, key_md):
+    """Wrap each question. Returns (new_markdown, stats); stats['labels'] lists the questions in order."""
     keys = parse_key(key_md)
     lines = body.split("\n")
     starts = [i for i, l in enumerate(lines) if LABEL.match(l)]
     if not starts:
-        return body, {"n": 0}
-    out, last, n, with_key = lines[:starts[0]], None, 0, 0
+        return body, {"n": 0, "keyed": 0, "labels": []}
+    out, n, with_key, labels = lines[:starts[0]], 0, 0, []
     for j, s in enumerate(starts):
         e = starts[j + 1] if j + 1 < len(starts) else len(lines)
         for k in range(s + 1, e):                                    # a heading or rule ends the block
@@ -79,10 +95,10 @@ def transform(body, key_md, starter_href=None):
         label = LABEL.match(blk[0]).group(1)
         blk[0] = LABEL.sub("", blk[0], count=1)
         text = "\n".join(blk)
-        marks, tags = None, []
+        marks = None
         tm = TAG.search(text)
         if tm:
-            marks, tags = int(tm.group(2)), re.findall(r"S\d+", tm.group(3))
+            marks = int(tm.group(2))
             text = TAG.sub("", text, count=1)
         stem, opts, rest = [], [], []
         for l in text.split("\n"):
@@ -101,36 +117,63 @@ def transform(body, key_md, starter_href=None):
         if not is_mcq:                                              # (a)(b) sub-parts etc.: keep the text verbatim
             stem, opts, rest = text.split("\n"), [], []
         n += 1
-        with_key += bool(ans)
-        chips = f'<span class="chip chip-m">{marks} mark{"s" if marks != 1 else ""}</span>' if marks else ""
-        for t in tags:
-            chips += (f'<a class="chip chip-s" href="{starter_href}#{t.lower()}">{t}</a>' if starter_href
-                      else f'<span class="chip chip-s">{t}</span>')
-        attrs = f'class="qb" id="q-{label}" data-q="{label}" data-marks="{marks or 0}" data-tags="{",".join(tags)}"'
+        shown = label[1:] if label.startswith("Q") and label[1:].isdigit() else label
+        labels.append(shown)
+        mark = f"{marks} mark{'s' if marks != 1 else ''}" if marks else ""
+        attrs = f'class="q" data-q="{label}" data-marks="{marks or 0}"'
         if is_mcq:
             attrs += f' data-mcq="1" data-ans="{letter}"'
-        out += [f"<div {attrs}>", "", f'<div class="qh"><span class="qn">{label}</span>{chips}</div>', ""]
-        out += ["\n".join(stem).strip(), ""]
+        out += [f"<div {attrs}>", "",
+                f'<div class="qt"><span class="nn">{shown}</span><div class="qx">', "", "\n".join(stem).strip(), "",
+                f'</div><span class="mk">{mark}</span></div>']
         if is_mcq:
-            out += ['<div class="opts">', ""] + [f"- {o}" for o in opts] + ["", "</div>", ""]
+            out += ["", '<div class="opts">', ""] + [f"- {o}" for o in opts] + ["", "</div>"]
             if rest and "".join(rest).strip():
                 out += ["\n".join(rest).strip(), ""]
-        if ans:
-            if is_mcq:
-                expl = re.sub(r"^\*\*\(?[A-Da-d]\)?\*\*[.\s]*(?:[—-]\s*)?", "", ans).strip()
-                expl = f"**Answer {letter}.** {expl}".strip()
-            else:
-                expl = ans
-            out += ['<div class="qa" hidden>', "", expl, "", "</div>", ""]
-        out += ["</div>", ""] + [l for l in tail]
-    return "\n".join(out), {"n": n, "keyed": with_key}
+            why = re.sub(r"^\*\*\(?[A-Da-d]\)?\*\*[.\s]*(?:[—-]\s*)?", "", ans).strip()   # the option itself says which is correct
+            kind, text_out = "Why", why
+        else:
+            kind, text_out = "Answer", (ans or "").strip()
+            if text_out:
+                out += ["", f'<button class="show" data-s="{label}">Show answer</button>']
+        if text_out:
+            with_key += 1
+            out += ["", f'<div class="ans" hidden><span class="al">{kind}</span>', "", text_out, "", "</div>"]
+        out += ["", "</div>", ""] + [l for l in tail]
+    return "\n".join(out), {"n": n, "keyed": with_key, "labels": labels}
 
 
 def tag_study_html(h):
-    """Study guide: give each S-card a short, stable anchor (#s7) and label the bullet types."""
-    h = re.sub(r'<h3\s+id="[^"]*">\s*(S\d+)\b', lambda m: f'<h3 id="{m.group(1).lower()}">{m.group(1)}', h)
-    kinds = {"What it is": "what", "Worked mini-example": "ex", "Worked example": "ex", "Pitfall": "pit", "Self-check": "chk"}
-    for name, cls in kinds.items():
-        for wrap in ("", "<p>"):                                  # tight and loose lists
-            h = h.replace(f"<li>{wrap}<strong>{name}:</strong>", f'<li class="lbl lbl-{cls}">{wrap}<strong>{name}</strong>')
-    return h
+    """Study guide: turn each topic card's labelled bullets into the prototype's study blocks.
+    "What it is" -> a definition, "Pitfall" -> a tip, the worked example and the self-check -> paragraphs."""
+    labelled = re.compile(r"\s*(?:<p>)?<strong>(What it is|Worked mini-example|Worked example|Pitfall|Self-check):?</strong>:?\s*")
+
+    def card(m):
+        blocks, other = [], []
+        for item in re.findall(r"<li>(.*?)</li>", m.group(1), re.S):
+            k = labelled.match(item)
+            if not k:
+                other.append(f"<li>{item}</li>")
+                continue
+            kind = k.group(1)
+            text = re.sub(r"</p>\s*$", "", item[k.end():]).strip()   # a loose list wraps each item in <p>
+            if kind == "What it is":
+                blocks.append(f'<div class="def"><b>What it is</b>{text}</div>')
+            elif kind == "Pitfall":
+                blocks.append(f'<div class="tip"><b>Pitfall.</b> {text}</div>')
+            else:
+                blocks.append(f"<p><b>{kind}.</b> {text}</p>")
+        return "".join(blocks) + ("<ul>" + "".join(other) + "</ul>" if other else "")
+
+    return re.sub(r"<ul>(.*?)</ul>", card, h, flags=re.S)
+
+
+def study_toc(h):
+    """Give the guide's <h2>s the ids the prototype's "In this guide" list scrolls to. -> (html, titles)"""
+    titles = []
+
+    def num(m):
+        titles.append(m.group(1))
+        return f'<h2 id="h{len(titles) - 1}">{m.group(1)}</h2>'
+
+    return re.sub(r'<h2\s+id="[^"]*">(.*?)</h2>', num, h, flags=re.S), titles   # pandoc may wrap a long id onto the next line

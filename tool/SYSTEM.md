@@ -3,7 +3,7 @@
 > Historical note: this spec was validated on a CS301 sample (accepted 77/90). Scores mentioned below are iteration history, not guarantees.
 
 ## Purpose
-Input: a syllabus (markdown file in `syllabi/`).
+Input: a syllabus (markdown file in `syllabi/`), optionally with user-given tags (`tags: exam prep, statistics`, recorded as a `Tags:` line in the syllabus header).
 Output: 3 complete question papers of increasing difficulty (Easy / Medium / Hard), each 100 marks / 3 hours, with answer keys and a machine-verified QA report.
 
 ## Architecture: 3-stage pipeline (winner of a 2-architecture bake-off)
@@ -22,9 +22,10 @@ Read the syllabus. Emit `blueprint.md`:
 - 3-axis difficulty rubric (cognitive level, concepts combined, numerical complexity)
 - uniqueness constraint list (no template reuse, no data-set reuse, no cross-paper duplication)
 - per-paper composition line honoring the syllabus's stated question-type mix (the blueprint may never override the syllabus)
+- course tags → `papers/<slug>/meta.json` (course metadata, not a run file): keep the user's `Tags:` line verbatim, add 1–3 short, lowercase, reusable subject/level tags (`statistics`, `systems`), 2–4 in total when the user gives none, max 6, near-duplicates merged. On a later run leave the file unchanged unless the user asks.
 
 ### Stage 2 — Generation (subagent role: SETTER)
-Generate the three papers from the blueprint only. Each question tagged `(Mn, marks, Sk)` with sub-topic IDs. Difficulty is structural, not cosmetic:
+Generate the three papers from the blueprint only (tags in `papers/<slug>/meta.json` are read-only for this role). Each question tagged `(Mn, marks, Sk)` with sub-topic IDs. Difficulty is structural, not cosmetic:
 - ≥35 questions per paper; every paper covers ≥85% of the sub-topic inventory (100% across the run); the gradient comes from testing the SAME scope at different cognitive levels, never from omitting topics
 - Easy: recall, definitions, single-concept numericals (numericals required, ≤5 marks)
 - Medium: application, trace-throughs, algorithm execution (Banker's, scheduling, replacement)
@@ -56,6 +57,7 @@ Machine-verify with scripts, not prose:
 - fresh-data scan for canonical textbook values
 - cross-paper duplication scan
 Fix violations, re-verify, and report honestly with the standard labels `[M-verify.py]`, `[M-qa_check.py]`, `[Manual]`. An "n/a" on a required check = FAIL.
+Tags (`papers/<slug>/meta.json`) may be read by this role, never edited.
 
 ## Review loop
 A separate strict REVIEWER agent scores each output against `tool/reviewer_rubric.md` (weighted; /90, including the v2 breadth rules). The reviewer independently re-simulates numericals and re-adds marks — generator QA claims are never trusted. Score < 75 → defect list feeds back into the next generation round; ≥ 75 → accepted (with polish notes applied opportunistically).

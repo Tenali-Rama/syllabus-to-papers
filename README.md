@@ -8,7 +8,7 @@
 | **Applied Econometrics** | [📖 study first](papers/applied-econometrics-advanced-models/run-002_2026-11-24/starter.md) | [open](papers/applied-econometrics-advanced-models/run-002_2026-11-24/easy.md) | [open](papers/applied-econometrics-advanced-models/run-002_2026-11-24/medium.md) | [open](papers/applied-econometrics-advanced-models/run-002_2026-11-24/hard.md) |
 
 ## 🖥️ Better rendering (tablet/phone browser)
-[**Open the Papers Site**](https://tenali-rama.github.io/syllabus-to-papers/) — same papers, typeset math, built automatically. Use this if math shows raw in the app.
+[**Open the Papers Site**](https://tenali-rama.github.io/syllabus-to-papers/) — same papers, typeset math, built automatically; search by course name or filter by tag. Use this if math shows raw in the app.
 
 ## 🔍 Find more
 - Full index → [registry.md](registry.md)

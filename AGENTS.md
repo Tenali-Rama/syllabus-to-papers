@@ -36,6 +36,12 @@ reviewer_score: "<N>/90"
 ```
 Layout: per `tool/PAPER_FORMAT.md` (mandatory). Body: total marks and duration exactly as the syllabus's assessment scheme declares (there is no default — real exams range from 5-mark quizzes to 1000-mark university papers, 5 minutes to 4.5 hours), **question count scaled to paper size** (≈1 per 2–3 marks: 35+ for a 100-mark paper, ~12 for a 30-mark quiz, min 8 for tiny ones), every question tagged `(Mn, marks, Sk)` where Sk are the blueprint's sub-topic IDs, sections with counts and totals, brief answer key with mark splits at the end.
 
+### Course tags
+- Every course has `papers/<slug>/meta.json`: `{"tags": ["statistics", "exam prep"]}`. Tags belong to the **course, not to a run**: a new `run-NNN` never changes them unless the user asks. (The file sits beside the run dirs, so run history stays append-only.)
+- Rules (CI-checked by `tool/validate.py`): lowercase letters, digits and single spaces only; no `#` (the site adds it for display); at most 30 characters; at most 6 per course; no near-duplicates (`stats` and `statistics` are one tag).
+- **Input (optional)**: when handing over a syllabus the user may add tags, e.g. `tags: exam prep, statistics` — recorded as a `Tags: exam prep, statistics` header line in `syllabi/<slug>.md`. User-given tags are always kept. The ANALYZER may add 1–3 more from the syllabus content (subject area, level) and generates 2–4 in total when the user gives none.
+- The ANALYZER writes the file; SETTER and QA read tags but never edit them.
+
 ### Quality bar
 - **Quality**: papers must pass the 12-criteria gate in `tool/QUALITY_BAR.md` (criteria 1–6 are hard gates).
 - **Breadth**: every paper must cover ≥85% of the syllabus's sub-topics (per the blueprint's numbered inventory); 100% across the run. Question count ≥35 per paper.
@@ -44,9 +50,9 @@ Layout: per `tool/PAPER_FORMAT.md` (mandatory). Body: total marks and duration e
 ## Workflow A — Generate papers for a syllabus
 
 1. **Check the registry.** Read `registry.md`. If your syllabus (by slug or topic) already has an accepted run, decide whether to reuse it or create a new run.
-2. **Register the syllabus.** If absent, write `syllabi/<slug>.md` (plain markdown; include modules, assessment scheme, marks/duration constraints).
+2. **Register the syllabus.** If absent, write `syllabi/<slug>.md` (plain markdown; include modules, assessment scheme, marks/duration constraints). If the user supplied optional tags (`tags: exam prep, statistics`), record them as a `Tags:` header line (see "Course tags").
 3. **Run the pipeline** (4 subagent roles, per `tool/SYSTEM.md`):
-   - ANALYZER: syllabus → `blueprint.md`
+   - ANALYZER: syllabus → `blueprint.md`, and the course tags → `papers/<slug>/meta.json` (create it on the course's first run; keep user tags verbatim; on a later run leave an existing file unchanged unless the user asks)
    - SETTER: blueprint → `easy.md`, `medium.md`, `hard.md` (use `tool/prompts/generator_pipeline.md`)
    - QA ENGINEER: write `verify.py` + `qa_check.py`, machine-verify everything (including the starter's leak-scan and coverage), produce `qa_report.md`
    - REVIEWER: score with `tool/reviewer_rubric.md`. If < 75/90, feed the ranked defect list back into SETTER and repeat. Do not commit below 75.
