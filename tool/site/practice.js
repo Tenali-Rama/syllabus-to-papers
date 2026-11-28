@@ -114,8 +114,8 @@
       put("last", { u: path, c: M.dataset.course, p: M.dataset.paper });
       sync();
     }
-    M.addEventListener("click", function (ev) {
-      var t = ev.target, b = t.closest(".opt"), x, jump;
+    document.addEventListener("click", function (ev) {                  // on document, not main: the desktop rail (with its
+      var t = ev.target, b = t.closest(".opt"), x, jump;                // question grid) is an <aside> outside main, so clicks
       if (b) { x = b.closest(".q"); var e = A.q[x.dataset.q] || (A.q[x.dataset.q] = {}); if (!e.pick) e.pick = b.dataset.k; draw(); }
       else if (t.closest(".show")) { A.q[t.closest(".show").dataset.s] = { open: 1 }; draw(); }
       else if (t.closest(".rs")) { A.q = {}; draw(); }
