@@ -35,6 +35,8 @@ def front_matter(body):
     head, rest = (body[:m.start()], body[m.start():]) if m else ("", body)
     meta = META.search(head)
     table = "\n".join(l for l in head.splitlines() if l.startswith("|"))
+    rest = "\n".join(l for l in rest.splitlines()                      # drop the generator's internal (Mn, marks, Sk) note;
+                     if not l.strip().startswith("Every question carries a tag"))   # the page shows marks by each question
     return (meta.group(1).strip() if meta else ""), table, rest.lstrip("\n")
 
 

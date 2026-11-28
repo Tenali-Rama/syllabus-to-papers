@@ -41,9 +41,10 @@ THEME_INIT_JS = """<script>try{var c=JSON.parse(localStorage.getItem('papers-cfg
 if(c==='dark'||(!c&&(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches))))document.documentElement.dataset.mode='dark'}catch(e){}</script>"""
 
 
-def page(title, rel, main, rail, crumbs=None, search=False, math=False, main_attrs=""):
+def page(title, rel, main, rail, crumbs=None, search=False, math=False, main_attrs="", extra_hd=""):
     """One screen of the prototype: the header (brand and search on the course list, breadcrumbs elsewhere, always
-    the theme toggle), then main beside its rail. crumbs = [(title, href), ...], "Papers" first, current page last."""
+    the theme toggle, plus any extra paper-page controls), then main beside its rail.
+    crumbs = [(title, href), ...], "Papers" first, current page last."""
     home = f"{rel}index.html"
     if crumbs:
         up = crumbs[-2]
@@ -63,7 +64,7 @@ def page(title, rel, main, rail, crumbs=None, search=False, math=False, main_att
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 {THEME_INIT_JS}<title>{html.escape(title)}</title>
 <link rel="stylesheet" href="{rel}style.css">{kx}</head><body>
-<div class="wrap"><header class="hd">{head}<button class="tg" id="tg" type="button" aria-label="Switch light or dark">{MOON}</button></header>
+<div class="wrap"><header class="hd">{head}{extra_hd}<button class="tg" id="tg" type="button" aria-label="Switch light or dark">{MOON}</button></header>
 <div class="cols"><main{main_attrs}>{main}</main><aside class="rail">{rail}</aside></div></div>
 <script src="{rel}practice.js" defer></script></body></html>"""
 
@@ -216,9 +217,22 @@ def main():
                 bar = f'<div class="pb" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="{st["n"]}" aria-valuenow="0"><i></i></div>'
                 ring = ('<svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle class="rt" cx="22" cy="22" r="19"/>'
                         '<circle class="rf" cx="22" cy="22" r="19" pathLength="100" stroke-dasharray="0 100"/></svg>')
+                clock = svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', 16)
+                tm_hd = (f'<button class="tmb" id="tmb" type="button" aria-label="Exam timer">{clock}<span hidden>Timer</span></button>')
+                tm_sheet = ('<div class="sheet" id="tsheet" hidden><div class="scrim" data-tc="1"></div><div class="panel">'
+                            '<h3>Exam timer</h3><p class="tsub" id="tstat" hidden></p>'
+                            '<div id="tsetrow"><p class="tsub">Set how long you get, then start. The timer keeps counting even if you leave the page.</p>'
+                            '<div class="tp">' + "".join(f'<button type="button" data-tm="{v}">{v} min</button>' for v in (30, 60, 90, 120, 180)) + '</div>'
+                            '<div class="trow"><input id="tmin" type="number" min="1" max="480" inputmode="numeric" placeholder="Custom minutes" aria-label="Custom minutes">'
+                            '<button type="button" id="tgo">Start</button></div></div>'
+                            '<div class="trow"><button type="button" id="tpause" hidden>Pause</button>'
+                            '<button type="button" id="tresume" hidden>Resume</button>'
+                            '<button type="button" id="treset" hidden>Reset timer</button></div>'
+                            '</div></div>')
                 main_html = (f'{md_to_html(front + chr(10) + chr(10) + q_md)}<button type="button" class="rs" data-r="1" hidden>Reset this paper</button>'
                              f'<button type="button" class="fab" data-g="1" aria-label="Question list, 0 of {st["n"]} answered">{ring}<span>0/{st["n"]}</span></button>'
-                             f'<div class="sheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></div></div>')
+                             f'<div class="sheet qsheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></div></div>'
+                             + tm_sheet)
                 attrs = f' data-kind="paper" data-course="{html.escape(m["title"], quote=True)}" data-paper="{label}"'
                 rail = f'<section><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></section>'
             body_html, n_math = render_math(main_html, where)
@@ -229,7 +243,7 @@ def main():
             for i, t in enumerate(question_texts(body_html) if kind != "study" else []):
                 search_questions.append({"t": t, "c": m["title"], "p": label, "u": f"{url}#q{i}",
                                          "s": (t + " " + m["title"] + " " + label).lower()})
-            doc = page(f'{m["title"]}, {label}', rel, body_html, rail, math=True, main_attrs=attrs,
+            doc = page(f'{m["title"]}, {label}', rel, body_html, rail, math=True, main_attrs=attrs, extra_hd=tm_hd if kind != "study" else "",
                        crumbs=[(BRAND, f"{rel}index.html"), (m["title"], "../index.html"), (label, None)])
             with open(os.path.join(OUT, m["syllabus"], m["run"], k_file(kind)), "w", encoding="utf-8") as f:
                 f.write(doc)

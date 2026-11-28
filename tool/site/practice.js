@@ -211,7 +211,17 @@
     document.addEventListener("click", function (ev) {                  // on document, not main: the desktop rail (with its
       var t = ev.target, b = t.closest(".opt"), x, jump;                // question grid) is an <aside> outside main, so clicks
       if (b) { x = b.closest(".q"); var e = A.q[x.dataset.q] || (A.q[x.dataset.q] = {}); if (!e.pick) e.pick = b.dataset.k; draw(); }
-      else if (t.closest(".show")) { A.q[t.closest(".show").dataset.s] = { open: 1 }; draw(); }
+      else if (t.closest(".show")) {                                          // two taps: stray clicks don't spoil the answer
+        var sb = t.closest(".show");
+        if (sb.dataset.arm) { delete sb.dataset.arm; A.q[sb.dataset.s] = { open: 1 }; draw(); }
+        else {
+          sb.dataset.arm = 1; sb.classList.add("arm");
+          sb.textContent = "Tap again to reveal the answer";
+          setTimeout(function () {                                            // disarm if the second tap never comes
+            if (sb.dataset.arm) { delete sb.dataset.arm; sb.classList.remove("arm"); sb.textContent = "Show answer"; }
+          }, 3500);
+        }
+      }
       else if (t.closest(".rs")) { A.q = {}; draw(); }
       else if (t.closest(".fab")) { sheet.hidden = false; }
       else if (t.closest(".scrim")) { sheet.hidden = true; }
@@ -222,6 +232,55 @@
       }
     });
     addEventListener("scroll", sync, { passive: true });
+
+    /* ---- exam timer: student-set countdown; survives refresh via localStorage ---- */
+    var tmb = document.getElementById("tmb"), tsheet = document.getElementById("tsheet");
+    if (tmb && tsheet) {
+      var TK = "papers-timer:" + path, T = get(TK, null), iv = null,
+          tmin = document.getElementById("tmin");
+      function fmt(x) { var m = Math.floor(x / 60), s2 = x % 60; return m + ":" + (s2 < 10 ? "0" : "") + s2; }
+      function tdraw() {
+        var s = tmb.querySelector("span");
+        tmb.classList.toggle("on", !!T && T.left > 0);
+        tmb.classList.toggle("up", !!T && T.left === 0);
+        s.hidden = !T;
+        if (T) s.textContent = T.left === 0 ? "Time is up" : fmt(T.left) + (T.end ? "" : " |");
+        put(TK, T);
+      }
+      function tstop() { if (iv) { clearInterval(iv); iv = null; } }
+      function trun() {
+        tstop();
+        iv = setInterval(function () {
+          if (T && T.end) {
+            T.left = Math.max(0, Math.round((T.end - Date.now()) / 1000));
+            if (T.left === 0) T.end = null;                                  // stays at 0:00 (paused) once done
+            tdraw();
+          }
+        }, 500);
+      }
+      function tstart(sec) { T = { left: sec, end: Date.now() + sec * 1000 }; trun(); tdraw(); tsheet.hidden = true; }
+      function tpanel() {                                                    // sheet shows the actions the current state allows
+        var q2 = function (id) { return tsheet.querySelector(id); };
+        q2("#tsetrow").hidden = !!T;
+        q2("#tpause").hidden = !T || !T.end;
+        q2("#tresume").hidden = !T || !!T.end || T.left === 0;
+        q2("#treset").hidden = !T;
+        q2("#tstat").hidden = !T;
+        if (T) q2("#tstat").textContent = T.left === 0 ? "Time is up." : (T.end ? "Running \u00b7 " + fmt(T.left) + " left." : "Paused \u00b7 " + fmt(T.left) + " left.");
+      }
+      document.addEventListener("click", function (ev) {
+        var c = ev.target, p;
+        if (c.closest("#tmb")) { tpanel(); tsheet.hidden = false; }
+        else if (c.closest("[data-tc]")) { tsheet.hidden = true; }
+        else if ((p = c.closest("[data-tm]"))) { tstart(+p.dataset.tm * 60); }
+        else if (c.closest("#tgo")) { var v = parseInt(tmin.value, 10); if (v > 0 && v <= 480) tstart(v * 60); }
+        else if (c.closest("#tpause")) { if (T && T.end) { T.left = Math.max(0, Math.round((T.end - Date.now()) / 1000)); T.end = null; tstop(); tdraw(); tpanel(); } }
+        else if (c.closest("#tresume")) { if (T && !T.end && T.left > 0) { T.end = Date.now() + T.left * 1000; trun(); tdraw(); tpanel(); } }
+        else if (c.closest("#treset")) { T = null; tstop(); tdraw(); tpanel(); }
+      });
+      if (T && T.end) trun();
+      tdraw();
+    }
     draw();
   }
 
