@@ -1,16 +1,23 @@
+/* Self-hosted fonts (copied from node_modules by build_site.py): Source Sans 3 for the interface and papers,
+   Source Serif 4 for the study guide. Latin subset only; both are variable fonts. */
+@font-face{font-family:"Source Sans 3 Variable";font-style:normal;font-weight:200 900;font-display:swap;src:url(fonts/source-sans-3-latin-wght-normal.woff2) format("woff2-variations"),url(fonts/source-sans-3-latin-wght-normal.woff2) format("woff2")}
+@font-face{font-family:"Source Sans 3 Variable";font-style:italic;font-weight:200 900;font-display:swap;src:url(fonts/source-sans-3-latin-wght-italic.woff2) format("woff2-variations"),url(fonts/source-sans-3-latin-wght-italic.woff2) format("woff2")}
+@font-face{font-family:"Source Serif 4 Variable";font-style:normal;font-weight:200 900;font-display:swap;src:url(fonts/source-serif-4-latin-wght-normal.woff2) format("woff2-variations"),url(fonts/source-serif-4-latin-wght-normal.woff2) format("woff2")}
+@font-face{font-family:"Source Serif 4 Variable";font-style:italic;font-weight:200 900;font-display:swap;src:url(fonts/source-serif-4-latin-wght-italic.woff2) format("woff2-variations"),url(fonts/source-serif-4-latin-wght-italic.woff2) format("woff2")}
+
 /* Papers. The stylesheet of the prototype (Papers – prototype v8.html) carried over as is, followed by the few rules
    real papers and study guides need (marked "real content"). Where the prototype uses <button>, rows, tag pills and
    breadcrumbs are links here, so those selectors read "a, button". */
 
-:root{--bg:#fff;--tx:#1b1f23;--sub:#5f6770;--ln:#dfe2e6;--lk:#1b1f23;--ok:#1a7f37;--no:#c62828;--hl:#f3f5f6;--ft:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color-scheme:light}
-html[data-mode=dark]{--bg:#16181a;--tx:#e6e8ea;--sub:#9aa1a8;--ln:#2f3336;--lk:#e6e8ea;--ok:#5ec27d;--no:#ff8a80;--hl:#1e2124;color-scheme:dark}
+:root{--bg:#fff;--tx:#1b1f23;--sub:#5f6770;--ln:#dfe2e6;--lk:#1b1f23;--ok:#1a7f37;--no:#c62828;--hl:#f3f5f6;--pg:#2f6f73;--okbg:#f1f8f3;--ft:"Source Sans 3 Variable",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--fs:"Source Serif 4 Variable",Charter,"Iowan Old Style",Georgia,serif;color-scheme:light}
+html[data-mode=dark]{--bg:#16181a;--tx:#e6e8ea;--sub:#9aa1a8;--ln:#2f3336;--lk:#e6e8ea;--ok:#5ec27d;--no:#ff8a80;--hl:#1e2124;--pg:#6cc3c8;--okbg:#18261d;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 var(--ft);padding-bottom:56px}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.55 var(--ft);padding-bottom:56px}
 @media(min-width:900px){body{padding-bottom:40px}}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
 :focus-visible{outline:2px solid var(--lk);outline-offset:2px}
 svg{display:block}
-.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
 .hd{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;height:56px;background:var(--bg);border-bottom:1px solid var(--ln)}
 .hd>.tg{margin-left:auto}
 /* brand + breadcrumbs */
@@ -21,7 +28,8 @@ svg{display:block}
 .cr i{font-style:normal;margin:0 10px;color:var(--ln);font-size:1.2em}
 .cr [aria-current]{font-weight:600;overflow:hidden;text-overflow:ellipsis}
 .bk{display:flex;align-items:center;gap:8px;min-height:44px;color:var(--tx);font-weight:600}
-.bk svg{width:18px;height:18px}
+.bk svg{width:18px;height:18px;flex:none}
+.bk{min-width:0}.bk span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}   /* one line like the prototype, however long the course title */
 @media(min-width:640px){.cr{display:flex}.bk{display:none}}
 .search{flex:1;max-width:420px;height:38px;padding:0 12px;border:1px solid var(--ln);border-radius:6px;background:var(--hl);color:var(--tx);font:inherit}
 .search:focus{outline:0;border-color:var(--lk);background:var(--bg)}
@@ -29,7 +37,7 @@ svg{display:block}
 .tg:hover{color:var(--tx)}
 .cols{display:block}
 @media(min-width:900px){.cols{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:56px}}
-main{padding:28px 0 40px;min-width:0;max-width:720px}
+main{padding:28px 0 40px;min-width:0;max-width:800px}
 h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacing:-.01em}
 .sub{color:var(--sub);font-size:.92em}
 .lab{font-size:.88em;font-weight:600;color:var(--sub);margin:30px 0 6px}
@@ -53,7 +61,16 @@ h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacin
 .gr .d{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 .gr .c{outline:2px solid var(--lk);outline-offset:2px;font-weight:700}
 /* mobile: floating button + bottom sheet */
-.fab{position:fixed;right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;height:30px;padding:0 12px;border-radius:99px;background:var(--tx);color:var(--bg);font-size:.85em;font-weight:600;box-shadow:0 1px 6px rgba(0,0,0,.2);display:flex;align-items:center;font-variant-numeric:tabular-nums}
+.fab{position:fixed;right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;width:56px;height:56px;padding:0;border-radius:50%;background:var(--bg);color:var(--tx);border:1px solid var(--ln);box-shadow:0 2px 10px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;text-align:center;font-variant-numeric:tabular-nums}
+.fab .ring{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);transform:rotate(-90deg)}
+.fab circle{fill:none;stroke-width:3.5}
+.fab .rt{stroke:var(--ln)}.fab .rf{stroke:var(--pg);transition:stroke-dasharray .35s ease}.fab.full .rf{stroke:var(--ok)}
+.fab span{position:relative;font-size:.74em;font-weight:700;letter-spacing:-.01em}
+/* progress bar (rail and mobile sheet) */
+.pb{height:6px;border-radius:99px;background:var(--ln);overflow:hidden;margin:0 0 16px}
+.pb i{display:block;height:100%;width:0;background:var(--pg);border-radius:inherit;transition:width .35s ease}
+.pb.full i{background:var(--ok)}
+@media(prefers-reduced-motion:reduce){.pb i,.fab .rf{transition:none}}
 .sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end}
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.4)}
 .panel{position:relative;width:100%;max-height:70vh;overflow:auto;background:var(--bg);border-radius:16px 16px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px))}
@@ -64,18 +81,17 @@ h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacin
 .qt{display:grid;grid-template-columns:auto 1fr auto;gap:0 12px;align-items:baseline;margin:0 0 10px}
 .nn{color:var(--sub);font-weight:600;font-variant-numeric:tabular-nums;min-width:1.2em}
 .qx{font-size:1.05em;max-width:62ch}
-.mk{font-size:.8em;color:var(--sub);white-space:nowrap}
+.mk{font-size:.78em;font-weight:600;line-height:1.4;color:var(--sub);white-space:nowrap;padding:2px 10px;border:1px solid var(--ln);border-radius:99px;background:var(--hl)}.mk:empty{display:none}
 .opt{display:flex;gap:12px;width:100%;padding:9px 14px;min-height:46px;border:1px solid var(--ln);border-radius:8px;margin-top:6px;align-items:baseline}
 .opt:hover{background:var(--hl)}.opt b{color:var(--sub);font-weight:600;width:1.1em;flex:none}.opt span{flex:1}
 .opt.ok{border-color:var(--ok);border-width:2px}.opt.ok::after{content:"✓ correct";color:var(--ok);font-size:.88em}
 .opt.no{border-color:var(--no);border-width:2px}.opt.no::after{content:"✗ your answer";color:var(--no);font-size:.88em}
-.ans{margin-top:12px;padding:12px 16px;background:var(--hl);border:1px solid var(--ln);border-radius:8px;max-width:62ch}
-.ans .al{display:block;font-size:.8em;font-weight:700;color:var(--tx);margin-bottom:2px}
+.ans{margin-top:12px;padding:12px 16px;background:var(--okbg);border:1px solid var(--ln);border-left:4px solid var(--ok);border-radius:4px 8px 8px 4px;max-width:62ch}
+.ans .al{display:block;font-size:.8em;font-weight:700;color:var(--ok);margin-bottom:2px}
 .ans p{margin:0}
 .show{min-height:44px;font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--ln)}.show:hover{text-decoration-color:var(--tx)}
 .rs{color:var(--sub);font-size:.88em;min-height:44px;margin-top:8px}.rs:hover{color:var(--tx);text-decoration:underline}
-.note{line-height:1.7;max-width:64ch}
-.note h2{font-size:1.25em;line-height:1.3;margin:1.8em 0 .3em;scroll-margin-top:72px}
+.note h1+p{margin-top:1.4em}   /* real guides open with a lead paragraph; the prototype's opens with a heading */
 .note p{margin:.7em 0}.note ul{padding-left:1.2em}.note li{margin:.4em 0}
 .f{background:var(--hl);padding:12px 16px;margin:1em 0;border-radius:6px;overflow-x:auto;white-space:nowrap;font-family:Georgia,serif;font-style:italic}
 .def{border-left:3px solid var(--ln);padding-left:16px;margin:1.1em 0}.def b{display:block}
@@ -95,7 +111,10 @@ h1.lab{line-height:1.5;letter-spacing:0;font-size:.88em;font-weight:600}
 .qx p,.qx ul,.qx ol,.qx table,.ans p,.ans ul,.ans ol,.ans table{margin:0}
 .qx>*+*,.ans>*+*{margin-top:.6em}
 .qx ul,.qx ol,.ans ul,.ans ol{padding-left:1.2em}
-.katex{font-size:1.08em}.katex-display{overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.katex{font-size:1.08em}.katex-display{overflow-x:auto;overflow-y:hidden;padding:2px 0;margin:.8em 0}
+/* worked solutions: inline maths a touch larger, display maths on its own light panel with room above and below */
+.ans .katex{font-size:1.12em}
+.ans .katex-display{margin:1em 0;padding:.6em .9em;background:var(--bg);border:1px solid var(--ln);border-radius:6px}
 /* a paper's meta line, its instructions (folded away, like the prototype's hidden answers) and its section headings,
    which read like the prototype's "Courses" / "Papers" labels */
 .front{margin-top:8px;max-width:62ch;font-size:.92em;color:var(--sub)}
@@ -110,9 +129,15 @@ main>h2{font-size:.88em;font-weight:600;color:var(--sub);margin:30px 0 0;line-he
 .front th,.note th,.qx th,.ans th{font-weight:600}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--hl);padding:1px 5px;border-radius:4px}
 pre{background:var(--hl);border-radius:6px;padding:12px 16px;overflow-x:auto}pre code{background:none;padding:0}
-/* study guide */
-.note hr{border:0;border-top:1px solid var(--ln);margin:1.4em 0}
-.note h3{font-size:1.1em;line-height:1.25;margin:1.8em 0 .4em;font-weight:700;letter-spacing:-.01em;scroll-margin-top:72px}
+/* study guide: serif, larger, with a clear step from h1 to h2 to h3 */
+.note{font-family:var(--fs);font-size:1.12rem;line-height:1.75;max-width:70ch}
+.note h1{font-size:1.8em;line-height:1.2;margin:0 0 .5em;letter-spacing:-.015em}
+.note h2{position:relative;font-size:1.5em;line-height:1.25;font-weight:650;letter-spacing:-.01em;margin:2.6em 0 .5em;padding-top:1em;border-top:1px solid var(--ln);scroll-margin-top:72px}
+.note h2::before{content:"";position:absolute;top:-1px;left:0;width:48px;height:3px;background:var(--pg)}
+.note h1+h2{margin-top:1.2em}
+.note h3{font-family:var(--ft);font-size:1.1em;line-height:1.3;margin:1.9em 0 .4em;font-weight:700;letter-spacing:0;scroll-margin-top:72px}
+.note summary,.note .nx{font-family:var(--ft)}
+.note hr{border:0;border-top:1px solid var(--ln);margin:1.4em 0}.note hr:has(+h2){display:none}
 .note details{margin:.5em 0}
 .note summary{display:inline-flex;align-items:center;min-height:36px;cursor:pointer;color:var(--lk);font-weight:600}
 .note details[open]{background:var(--hl);border-radius:6px;padding:10px 16px}

@@ -48,7 +48,7 @@ def page(title, rel, main, rail, crumbs=None, search=False, math=False, main_att
         head = (f'<nav class="cr" aria-label="Breadcrumb"><a class="wm" href="{home}">{BRAND}</a><i>/</i>'
                 + "".join(f'<a href="{h}">{html.escape(t)}</a><i>/</i>' for t, h in crumbs[1:-1])
                 + f'<span aria-current="page">{html.escape(crumbs[-1][0])}</span></nav>'
-                f'<a class="bk" href="{up[1]}">{BACK}{html.escape(up[0])}</a>')
+                f'<a class="bk" href="{up[1]}">{BACK}<span>{html.escape(up[0])}</span></a>')
     else:
         head = f'<span class="wm">{BRAND}</span>'
         if search:
@@ -136,6 +136,11 @@ def main():
     kdist = os.path.join(ROOT, "tool", "node_modules", "katex", "dist")
     if not os.path.isdir(kdist):
         sys.exit("katex missing: run `npm install --prefix tool` first")
+    os.makedirs(os.path.join(OUT, "fonts"))                              # self-hosted UI and reading fonts
+    for pkg, face in (("source-sans-3", "source-sans-3"), ("source-serif-4", "source-serif-4")):
+        fdir = os.path.join(ROOT, "tool", "node_modules", "@fontsource-variable", pkg, "files")
+        for style in ("normal", "italic"):
+            shutil.copy(os.path.join(fdir, f"{face}-latin-wght-{style}.woff2"), os.path.join(OUT, "fonts"))
     os.makedirs(os.path.join(OUT, "katex"))
     shutil.copy(os.path.join(kdist, "katex.min.css"), os.path.join(OUT, "katex"))
     shutil.copytree(os.path.join(kdist, "fonts"), os.path.join(OUT, "katex", "fonts"))
@@ -189,11 +194,14 @@ def main():
                 front = (f'<p class="sub">{html.escape(meta)}</p>' if meta else "") + (f'<details class="front"><summary>Instructions</summary>\n\n{table}\n\n</details>' if table else "")
                 cells = "".join(f'<button type="button" data-j="{i}" aria-label="Question {l}">{l}</button>' for i, l in enumerate(st["labels"]))
                 counted = f'Questions \u00b7 0/{st["n"]} answered'
+                bar = f'<div class="pb" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="{st["n"]}" aria-valuenow="0"><i></i></div>'
+                ring = ('<svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle class="rt" cx="22" cy="22" r="19"/>'
+                        '<circle class="rf" cx="22" cy="22" r="19" pathLength="100" stroke-dasharray="0 100"/></svg>')
                 main_html = (f'{md_to_html(front + chr(10) + chr(10) + q_md)}<button type="button" class="rs" data-r="1" hidden>Reset this paper</button>'
-                             f'<button type="button" class="fab" data-g="1" aria-label="Question list">0/{st["n"]}</button>'
-                             f'<div class="sheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3><div class="gr">{cells}</div></div></div>')
+                             f'<button type="button" class="fab" data-g="1" aria-label="Question list, 0 of {st["n"]} answered">{ring}<span>0/{st["n"]}</span></button>'
+                             f'<div class="sheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></div></div>')
                 attrs = f' data-kind="paper" data-course="{html.escape(m["title"], quote=True)}" data-paper="{label}"'
-                rail = f'<section><h3>{counted}</h3><div class="gr">{cells}</div></section>'
+                rail = f'<section><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></section>'
             body_html, n_math = render_math(main_html, where)
             total_math += n_math
             doc = page(f'{m["title"]}, {label}', rel, body_html, rail, math=True, main_attrs=attrs,

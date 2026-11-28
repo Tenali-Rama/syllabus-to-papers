@@ -103,7 +103,12 @@
         b.classList.toggle("d", done(i));
         b.setAttribute("aria-label", "Question " + qs[i].querySelector(".nn").textContent + (done(i) ? ", answered" : ""));
       });
-      fab.textContent = d + "/" + qs.length;
+      var pct = qs.length ? d / qs.length * 100 : 0, full = d > 0 && d === qs.length;
+      $$(".pb").forEach(function (b) { b.setAttribute("aria-valuenow", d); b.classList.toggle("full", full); b.querySelector("i").style.width = pct + "%"; });
+      fab.querySelector("span").textContent = d + "/" + qs.length;
+      fab.querySelector(".rf").setAttribute("stroke-dasharray", pct + " 100");
+      fab.classList.toggle("full", full);
+      fab.setAttribute("aria-label", "Question list, " + d + " of " + qs.length + " answered");
       reset.hidden = !d;
       put("a:" + path, A); put("stat:" + path, { a: d, n: qs.length });
       put("last", { u: path, c: M.dataset.course, p: M.dataset.paper });
