@@ -211,7 +211,7 @@ def main():
                 meta, table, questions = practice.front_matter(head_md)
                 q_md, st = practice.transform(questions, key_md)
                 p["nq"] = st["n"]
-                front = (f'<p class="sub">{html.escape(meta)}</p>' if meta else "") + (f'<details class="front"><summary>Instructions</summary>\n\n{table}\n\n</details>' if table else "")
+                front = (f'<p class="sub">{html.escape(meta)}</p>' if meta else "") + f'<details class="front"><summary>Instructions</summary>\n\n{practice.instructions_md(table)}\n\n</details>'
                 cells = "".join(f'<button type="button" data-j="{i}" aria-label="Question {l}">{l}</button>' for i, l in enumerate(st["labels"]))
                 counted = f'Questions \u00b7 0/{st["n"]} answered'
                 bar = f'<div class="pb" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="{st["n"]}" aria-valuenow="0"><i></i></div>'

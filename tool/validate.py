@@ -152,6 +152,12 @@ for slug in sorted(os.listdir(papers_root)):
                 err(f"{rel}: syllabus slug mismatch")
             if fm.get("qa_verdict") != "ACCEPTED":
                 err(f"{rel}: qa_verdict is not ACCEPTED")
+            run_date = (re.search(r"run-\d{3}_(\d{4}-\d{2}-\d{2})", rdir) or [None, "0000"])[1]
+            if run_date >= "2026-11-28":                                # gate new runs; older runs render fixed at build time
+                for i, line in enumerate(body.splitlines(), 1):
+                    if len(re.findall(r"\((?:A|B|C|D)\)", line)) >= 2:
+                        err(f"{rel}:{i}: MCQ options written inline on one line "
+                            f"(generator_pipeline.md constraint 9: one option per line)")
             score = str(fm.get("reviewer_score", ""))
             m = re.match(r"^(\d{1,2})/90$", score)
             if not m:

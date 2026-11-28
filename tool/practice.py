@@ -44,6 +44,48 @@ def _norm(label):
     return label[1:] if label.startswith("Q") and label[1:].isdigit() else label
 
 
+INLINE_OPT = re.compile(r"\(([A-D])\)[ \t]+")
+
+def expand_inline_options(text):
+    """MCQ options must be one per line. If a setter wrote them inline on one line
+    ('(A) x  (B) y  (C) z  (D) w'), split them so the site renders option rows."""
+    out = []
+    for l in text.split("\n"):
+        hits = list(INLINE_OPT.finditer(l))
+        if len(hits) >= 2 and [h.group(1) for h in hits] == list("ABCD")[:len(hits)]:
+            pre = l[:hits[0].start()].strip()
+            parts = [l[h.end():hits[i + 1].start()].strip() for i, h in enumerate(hits[:-1])]
+            parts.append(l[hits[-1].end():].strip())
+            if pre:
+                parts[0] = (parts[0] + " " + pre).strip()
+            out += [f"({h.group(1)}) {p}" for h, p in zip(hits, parts)]
+        else:
+            out.append(l)
+    return "\n".join(out)
+
+
+def instructions_md(table):
+    """The paper's instruction block as markdown. Old runs carry a thin single-column table
+    ('| Instructions | |'); normalise every row into a list and add what the page itself
+    guarantees, so the folded instructions read properly on every run."""
+    items = []
+    for l in (table or "").splitlines():
+        l = l.strip()
+        if not l.startswith("|"):
+            continue
+        cells = [c.strip() for c in l.strip("|").split("|")]
+        if cells and all(set(c) <= set("-: ") for c in cells):
+            continue                                                    # separator row
+        first = cells[0] if cells else ""
+        if not first or first.lower() == "instructions":
+            continue                                                    # header row
+        items.append(first + (f": {cells[1]}" if len(cells) > 1 and cells[1] else ""))
+    if not items:
+        items = ["Answer all questions"]
+    items.append("The marks for each question are shown beside it.")
+    return "**Instructions**\n\n" + "\n".join(f"- {i}" for i in items)
+
+
 def parse_key(key):
     """Answer-key section -> {label: markdown}. Handles three observed styles:
     '- Q7 (3): **B**. text', '- **A1. (b)** — text', '- **B1.** text'."""
@@ -102,6 +144,7 @@ def transform(body, key_md):
         if tm:
             marks = int(tm.group(2))
             text = TAG.sub("", text, count=1)
+        text = expand_inline_options(text)
         stem, opts, rest = [], [], []
         for l in text.split("\n"):
             om = OPT.match(l)

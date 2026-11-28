@@ -36,6 +36,11 @@ Mandatory constraints (each violation = automatic failure):
 6. No leading questions.
 7. No token sections (each section ≥ 10 marks, with counts and totals).
 8. Difficulty gradient per the rubric's axes, not adjectives.
+9. **MCQ options are a markdown list, one option per line** (`(A) text` on its own line under the
+   stem). NEVER write options inline on one line ("(A) x (B) y (C) z (D) w") — the site renders
+   options as tappable rows and inline options break that; validate.py rejects such lines.
+10. The instructions table carries one instruction per row in its first column ("| Answer all
+    questions | |"); the site normalises rendering, but sparse or multi-instruction rows are a FAIL.
 
 ## Stage 2b — Consistency adjudication (trace-derived rule)
 For every numerical: derive the answer from the printed stem ONLY (parse the stem; never transcribe expected values from the key) and compare to the key. Any disagreement = spec/key divergence = FAIL. Ban constant-vs-constant assertions (check(a, a) style) — a tautological check is a FAIL.

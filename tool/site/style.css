@@ -88,11 +88,13 @@ h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacin
 .fab circle{fill:none;stroke-width:3.5}
 .fab .rt{stroke:var(--ln)}.fab .rf{stroke:var(--pg);transition:stroke-dasharray .35s ease}.fab.full .rf{stroke:var(--ok)}
 .fab span{position:relative;font-size:.66em;font-weight:700;letter-spacing:-.01em}
+.fab{transition:opacity .25s ease,transform .25s ease}
+.fab.hide{opacity:0;pointer-events:none;transform:scale(.88)}
 /* progress bar (rail and mobile sheet) */
 .pb{height:6px;border-radius:99px;background:var(--ln);overflow:hidden;margin:0 0 16px}
 .pb i{display:block;height:100%;width:0;background:var(--pg);border-radius:inherit;transition:width .35s ease}
 .pb.full i{background:var(--ok)}
-@media(prefers-reduced-motion:reduce){.pb i,.fab .rf{transition:none}.gr button{transition:none}.gr .d,.gr .c,.sheet:not([hidden]) .panel .gr button,.q.flash{animation:none}}
+@media(prefers-reduced-motion:reduce){.pb i,.fab,.fab .rf{transition:none}.gr button{transition:none}.gr .d,.gr .c,.sheet:not([hidden]) .panel .gr button,.q.flash{animation:none}}
 .sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end}
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.4)}
 .panel{position:relative;width:100%;max-height:70vh;overflow:auto;background:var(--bg);border-radius:16px 16px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px))}

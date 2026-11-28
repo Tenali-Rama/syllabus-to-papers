@@ -240,6 +240,13 @@
       }
     });
     addEventListener("scroll", sync, { passive: true });
+    var lastY = scrollY;
+    addEventListener("scroll", function () {                    // hide the floating button while scrolling down:
+      var y = scrollY;                                          // it covered option text and marks pills on phones
+      if (y > lastY + 4 && y > 160) fab.classList.add("hide");
+      else if (y < lastY - 4 || y <= 160) fab.classList.remove("hide");
+      lastY = y;
+    }, { passive: true });
 
     /* ---- exam timer: student-set countdown; survives refresh via localStorage ---- */
     var tmb = document.getElementById("tmb"), tsheet = document.getElementById("tsheet");

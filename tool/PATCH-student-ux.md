@@ -49,3 +49,24 @@ Fixes the top issues a student reviewer raised after attempting
 
 Verified by puppeteer at 390px: reset confirm wipes (0/37) while an armed-but-abandoned
 tap keeps answers; first-screen capture shows all of Q1's options above the fold.
+
+## Pass 3 — fab overlap, inline options, instructions (same day)
+
+- **Floating button overlap (fully fixed)** — the 1/37 button now fades out while scrolling
+  down and returns on scroll up (or near the top), so it no longer covers option text or
+  marks pills on phones. Reduced-motion users get no transition.
+- **Inline MCQ options** — `practice.transform` now expands one-line option runs
+  ("(A) x (B) y (C) z (D) w") into proper option rows, so affected questions in existing
+  runs (e.g. Q22 of intro-ai-machine-learning run-001) render and score as real MCQs
+  without touching their append-only sources.
+- **Prevention for future runs** — generator_pipeline.md gains mandatory constraints 9
+  (options one per line; inline = automatic failure) and 10 (instructions table: one
+  instruction per row); validate.py rejects inline-option lines in every run dated
+  2026-11-28 or later.
+- **Instructions rendering** — the thin single-column instruction table is normalised at
+  build time into a proper list ("Answer all questions" / "The marks for each question are
+  shown beside it."), so every run's folded instructions read correctly.
+
+Verified by puppeteer at 390px: fab hides scrolling down / returns scrolling up; Q22
+renders 4 tappable options and tapping B marks it correct (1/37 answered); instructions
+render as a list; validate.py passes all 4 run dirs; no JS errors.
