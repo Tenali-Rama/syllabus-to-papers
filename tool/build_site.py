@@ -156,7 +156,7 @@ def main():
     if not os.path.isdir(kdist):
         sys.exit("katex missing: run `npm install --prefix tool` first")
     os.makedirs(os.path.join(OUT, "fonts"))                              # self-hosted UI and reading fonts
-    for pkg, face in (("source-sans-3", "source-sans-3"), ("source-serif-4", "source-serif-4")):
+    for pkg, face in (("source-sans-3", "source-sans-3"), ("source-serif-4", "source-serif-4"), ("literata", "literata")):
         fdir = os.path.join(ROOT, "tool", "node_modules", "@fontsource-variable", pkg, "files")
         for style in ("normal", "italic"):
             shutil.copy(os.path.join(fdir, f"{face}-latin-wght-{style}.woff2"), os.path.join(OUT, "fonts"))
@@ -198,14 +198,26 @@ def main():
                 continue
             p, rel, label = pages[kind], "../" * 2, difficulty_label(kind)
             where = f'{m["syllabus"]}/{m["run"]}/{k_file(kind)}'
+            clock = svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', 16)
+            tm_hd = (f'<button class="tmb" id="tmb" type="button" aria-label="Exam timer">{clock}<span hidden>Timer</span></button>'
+                     f'<span class="tset" id="tset" hidden><input id="tmin" type="text" inputmode="numeric" placeholder="Minutes, e.g. 90" aria-label="Timer minutes">'
+                     f'<button type="button" id="tgo">Start</button></span>')
+            tm_sheet = ('<div class="tpop" id="tsheet" hidden>'
+                        '<div class="trow" id="trunrow" hidden><span id="tstat"></span>'
+                        '<button type="button" id="tpause" hidden>Pause</button>'
+                        '<button type="button" id="tresume" hidden>Resume</button>'
+                        '<button type="button" id="treset" hidden>Reset</button></div>'
+                        '</div>')
             if kind == "study":
                 body = re.sub(r"^#[^\n]*\n", "", p["body"], count=1)       # the page's own title is "Study guide"
                 h, toc = practice.study_toc(practice.tag_study_html(md_to_html(body)))
                 nxt = next((k for k in ["easy", "medium", "hard"] if k in pages), None)
                 nx = f'<a class="nx" href="{k_file(nxt)}"><span>Start the {difficulty_label(nxt)} paper</span><span>\u203a</span></a>' if nxt else ""
-                main_html, attrs = f'<article class="note"><h1>Study guide</h1>{h}{nx}</article>', ""
+                main_html = f'<article class="note"><h1>Study guide</h1>{h}{nx}</article>' + tm_sheet
+                attrs = ' data-kind="study"'
                 rail = ('<section><h3>In this guide</h3><div class="toc">'
                         + "".join(f'<a href="#h{i}" data-h="{i}">{t}</a>' for i, t in enumerate(toc)) + "</div></section>")
+                extra_hd = tm_hd + '<span class="rd" id="rd">0%</span>'
             else:
                 head_md, key_md = practice.split_key(p["body"])
                 meta, table, questions = practice.front_matter(head_md)
@@ -217,23 +229,15 @@ def main():
                 bar = f'<div class="pb" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="{st["n"]}" aria-valuenow="0"><i></i></div>'
                 ring = ('<svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle class="rt" cx="22" cy="22" r="19"/>'
                         '<circle class="rf" cx="22" cy="22" r="19" pathLength="100" stroke-dasharray="0 100"/></svg>')
-                clock = svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', 16)
-                tm_hd = (f'<button class="tmb" id="tmb" type="button" aria-label="Exam timer">{clock}<span hidden>Timer</span></button>')
-                tm_sheet = ('<div class="tpop" id="tsheet" hidden>'
-                            '<div class="trow" id="tsetrow"><input id="tmin" type="text" inputmode="numeric" placeholder="Minutes, e.g. 90" aria-label="Timer minutes">'
-                            '<button type="button" id="tgo">Start</button></div>'
-                            '<div class="trow" id="trunrow" hidden><span id="tstat"></span>'
-                            '<button type="button" id="tpause" hidden>Pause</button>'
-                            '<button type="button" id="tresume" hidden>Resume</button>'
-                            '<button type="button" id="treset" hidden>Reset</button></div>'
-                            '</div>')
-                main_html = (f'{md_to_html(front + chr(10) + chr(10) + q_md)}<button type="button" class="rs" data-r="1" hidden>'
+                main_html = ('<h1>Question Paper</h1>' + md_to_html(front + chr(10) + chr(10) + q_md) +
+                             f'<button type="button" class="rs" data-r="1" hidden>'
                              f'{svg("<path d=\'M3 12a9 9 0 1 0 2.6-6.4L3 8\'/><path d=\'M3 3v5h5\'/>", 15)}<span class="lb">Reset this paper</span></button>'
                              f'<button type="button" class="fab" data-g="1" aria-label="Question list, 0 of {st["n"]} answered">{ring}<span>0/{st["n"]}</span></button>'
                              f'<div class="sheet qsheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></div></div>'
                              + tm_sheet)
                 attrs = f' data-kind="paper" data-course="{html.escape(m["title"], quote=True)}" data-paper="{label}"'
                 rail = f'<section><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></section>'
+                extra_hd = tm_hd
             body_html, n_math = render_math(main_html, where)
             total_math += n_math
             url = f'{m["syllabus"]}/{m["run"]}/{k_file(kind)}'
@@ -242,7 +246,7 @@ def main():
             for i, t in enumerate(question_texts(body_html) if kind != "study" else []):
                 search_questions.append({"t": t, "c": m["title"], "p": label, "u": f"{url}#q{i}",
                                          "s": (t + " " + m["title"] + " " + label).lower()})
-            doc = page(f'{m["title"]}, {label}', rel, body_html, rail, math=True, main_attrs=attrs, extra_hd=tm_hd if kind != "study" else "",
+            doc = page(f'{m["title"]}, {label}', rel, body_html, rail, math=True, main_attrs=attrs, extra_hd=extra_hd,
                        crumbs=[(BRAND, f"{rel}index.html"), (m["title"], "../index.html"), (label, None)])
             with open(os.path.join(OUT, m["syllabus"], m["run"], k_file(kind)), "w", encoding="utf-8") as f:
                 f.write(doc)

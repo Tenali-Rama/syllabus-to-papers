@@ -40,6 +40,8 @@ def front_matter(body):
     table = "\n".join(l for l in head.splitlines() if l.startswith("|"))
     rest = "\n".join(l for l in rest.splitlines()                      # drop the generator's internal (Mn, marks, Sk) note;
                      if not l.strip().startswith("Every question carries a tag"))   # the page shows marks by each question
+    if rest.startswith("#"):                                           # the page's own <h1> is "Question Paper" (like the
+        rest = rest.split("\n", 1)[1] if "\n" in rest else ""          # study guide's "Study guide"), so drop the md title
     return (meta.group(1).strip() if meta else ""), table, rest.lstrip("\n")
 
 

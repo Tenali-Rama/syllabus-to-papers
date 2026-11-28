@@ -98,3 +98,33 @@ height):
 
 Verified by puppeteer at 390px: reveal arm→confirm shows the answer, reset arm→confirm
 wipes answers (0/37), a stray armed tap disarms and keeps answers; no JS errors.
+
+## Pass 6 — reading experience overhaul (same day)
+
+- **"Question Paper" title** — paper pages now carry a plain h1 like the study guide's
+  "Study guide"; the generator's long course-name title was leaking onto the page via a
+  front-matter boundary bug (body starts with a newline, so the h1 never matched the
+  drop logic) — fixed in `practice.front_matter`.
+- **Cards instead of dividers** — questions are soft rounded cards (border, 12px radius,
+  whitespace between) and section headings are tinted chips; the wall of hairline
+  dividers is gone, so questions and sections separate clearly.
+- **Timer on study guides too** — the timer chip and state now work on every study guide
+  (state is per-page-path as before).
+- **Timer input in the frozen top bar** — when idle, tapping the chip puts the
+  "Minutes, e.g. 90" input + Start directly in the sticky header (no popover); the
+  small popover remains only for pause/resume/reset while running.
+- **Literata for reading content** — question text, answers and the study guide switch
+  to Literata (Google's ebook-reading serif; self-hosted variable font), chosen for
+  calm long-session reading; the UI stays Source Sans 3.
+- **Study-guide emphasis** — bold text gets a tinted chip, italics a heavier weight, so
+  bold/italic/highlight are visually distinct.
+- **Reading % chip** — study guides show a scroll-progress percentage in the top bar
+  (0→100%), mirroring the paper's answered counter.
+- **"In this guide" rail** — numbered items, calmer spacing, and the current section
+  highlights while scrolling (scroll spy).
+- **Question grid/panel** — rounder cells, raised panel with border, thicker progress bar.
+
+Verified by puppeteer at 390px + 1440px: title present; timer input sits inside the
+frozen bar and fits (no overlap with the theme toggle); 90-min Enter-start works;
+study page shows the % chip (41% mid-read, 100% at end), TOC scroll spy marks one
+active item; no JS errors.
