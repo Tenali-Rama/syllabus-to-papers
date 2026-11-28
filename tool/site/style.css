@@ -79,11 +79,6 @@ h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacin
 .gr .c{outline:2px solid var(--lk);outline-offset:2px;font-weight:700;animation:gr-ring .5s ease}
 @keyframes gr-pop{50%{transform:scale(.86)}}
 @keyframes gr-ring{0%{outline-color:transparent;outline-offset:6px}}
-/* legend under the grid: filled = answered, outline = not answered */
-.gl{display:flex;align-items:center;gap:16px;margin:10px 0 0;font-size:.78em;color:var(--sub)}
-.gl span{display:inline-flex;align-items:center;gap:6px}
-.gl i{width:12px;height:12px;border:1px solid var(--ln);border-radius:3px}
-.gl .gd{background:var(--tx);border-color:var(--tx)}
 /* mobile sheet: cells fade in with a small per-cell delay */
 .sheet:not([hidden]) .panel .gr button{animation:gr-rise .3s ease backwards;animation-delay:calc(var(--i,0)*12ms)}
 @keyframes gr-rise{from{opacity:0;transform:translateY(6px)}}

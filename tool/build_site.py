@@ -216,12 +216,11 @@ def main():
                 bar = f'<div class="pb" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="{st["n"]}" aria-valuenow="0"><i></i></div>'
                 ring = ('<svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle class="rt" cx="22" cy="22" r="19"/>'
                         '<circle class="rf" cx="22" cy="22" r="19" pathLength="100" stroke-dasharray="0 100"/></svg>')
-                legend = '<p class="gl"><span><i class="gd"></i>answered</span><span><i></i>not answered</span></p>'
                 main_html = (f'{md_to_html(front + chr(10) + chr(10) + q_md)}<button type="button" class="rs" data-r="1" hidden>Reset this paper</button>'
                              f'<button type="button" class="fab" data-g="1" aria-label="Question list, 0 of {st["n"]} answered">{ring}<span>0/{st["n"]}</span></button>'
-                             f'<div class="sheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3>{bar}<div class="gr">{cells}</div>{legend}</div></div>')
+                             f'<div class="sheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></div></div>')
                 attrs = f' data-kind="paper" data-course="{html.escape(m["title"], quote=True)}" data-paper="{label}"'
-                rail = f'<section><h3>{counted}</h3>{bar}<div class="gr">{cells}</div>{legend}</section>'
+                rail = f'<section><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></section>'
             body_html, n_math = render_math(main_html, where)
             total_math += n_math
             url = f'{m["syllabus"]}/{m["run"]}/{k_file(kind)}'
