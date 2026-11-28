@@ -11,6 +11,9 @@ tolerant: a question the parser cannot understand is left exactly as written.
 import re
 
 LABEL = re.compile(r"^\*\*([A-Z]?\d+)\.\*\*[ \t]*", re.M)
+EYE = ('<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/>'
+       '<circle cx="12" cy="12" r="3"/></svg>')
 TAG = re.compile(r"^\*\(M(\d+),\s*(\d+)(?:\s*marks?)?((?:,\s*S\d+)*)[^)]*\)\*[ \t]*$", re.M)
 OPT = re.compile(r"^\(([A-Da-d])\)[ \t]+(.+?)[ \t]*$")
 KEY_HEAD = re.compile(r"^## Answer Key[ \t]*$", re.M)
@@ -180,7 +183,7 @@ def transform(body, key_md):
         else:
             kind, text_out = "Answer", (ans or "").strip()
             if text_out:
-                out += ["", f'<button class="show" data-s="{label}">Show answer</button>']
+                out += ["", f'<button class="show" data-s="{label}">{EYE}<span class="lb">Show answer</span></button>']
         if text_out:
             with_key += 1
             out += ["", f'<div class="ans" hidden><span class="al">{kind}</span>', "", text_out, "", "</div>"]

@@ -227,7 +227,8 @@ def main():
                             '<button type="button" id="tresume" hidden>Resume</button>'
                             '<button type="button" id="treset" hidden>Reset</button></div>'
                             '</div>')
-                main_html = (f'{md_to_html(front + chr(10) + chr(10) + q_md)}<button type="button" class="rs" data-r="1" hidden>Reset this paper</button>'
+                main_html = (f'{md_to_html(front + chr(10) + chr(10) + q_md)}<button type="button" class="rs" data-r="1" hidden>'
+                             f'{svg("<path d=\'M3 12a9 9 0 1 0 2.6-6.4L3 8\'/><path d=\'M3 3v5h5\'/>", 15)}<span class="lb">Reset this paper</span></button>'
                              f'<button type="button" class="fab" data-g="1" aria-label="Question list, 0 of {st["n"]} answered">{ring}<span>0/{st["n"]}</span></button>'
                              f'<div class="sheet qsheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></div></div>'
                              + tm_sheet)

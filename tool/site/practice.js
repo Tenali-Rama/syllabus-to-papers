@@ -216,19 +216,19 @@
         if (sb.dataset.arm) { delete sb.dataset.arm; A.q[sb.dataset.s] = { open: 1 }; draw(); }
         else {
           sb.dataset.arm = 1; sb.classList.add("arm");
-          sb.textContent = "Tap again to reveal the answer";
+          sb.querySelector(".lb").textContent = "Tap again to reveal";
           setTimeout(function () {                                            // disarm if the second tap never comes
-            if (sb.dataset.arm) { delete sb.dataset.arm; sb.classList.remove("arm"); sb.textContent = "Show answer"; }
+            if (sb.dataset.arm) { delete sb.dataset.arm; sb.classList.remove("arm"); sb.querySelector(".lb").textContent = "Show answer"; }
           }, 3500);
         }
       }
       else if (t.closest(".rs")) {                                            // two taps: a stray click must not wipe answers
         var rb = t.closest(".rs");
-        if (rb.dataset.arm) { delete rb.dataset.arm; rb.textContent = "Reset this paper"; A.q = {}; draw(); }
+        if (rb.dataset.arm) { delete rb.dataset.arm; A.q = {}; draw(); }
         else {
-          rb.dataset.arm = 1;
-          rb.textContent = "Tap again to erase all answers";
-          setTimeout(function () { if (rb.dataset.arm) { delete rb.dataset.arm; rb.textContent = "Reset this paper"; } }, 3500);
+          rb.dataset.arm = 1; rb.classList.add("arm");
+          rb.querySelector(".lb").textContent = "Tap again to erase all answers";
+          setTimeout(function () { if (rb.dataset.arm) { delete rb.dataset.arm; rb.classList.remove("arm"); rb.querySelector(".lb").textContent = "Reset this paper"; } }, 3500);
         }
       }
       else if (t.closest(".fab")) { sheet.hidden = false; }

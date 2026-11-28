@@ -83,3 +83,18 @@ under the header chip:
 Verified by puppeteer at 390px: Enter-start shows 44:59 on the chip and closes the
 popover; pause shows "Paused at 44:58"; outside-click and Esc both close; reset clears
 the chip; no JS errors.
+
+## Pass 5 — guard buttons redesign (same day)
+
+"Show answer" and "Reset this paper" are no longer underlined text links. Both are now
+proper buttons in the site's existing visual language (1px border, 8px radius, 38px
+height):
+- **Show answer**: neutral outline button with an eye icon
+- **Reset this paper**: red-tinted outline button with an undo icon — destructive
+  intent is visible before any interaction
+- **Armed (second-tap confirm)**: the reveal button fills solid dark ("Tap again to
+  reveal"), the reset button fills solid red ("Tap again to erase all answers") — the
+  confirm state is unmistakable, and both auto-disarm after 3.5s back to idle
+
+Verified by puppeteer at 390px: reveal arm→confirm shows the answer, reset arm→confirm
+wipes answers (0/37), a stray armed tap disarms and keeps answers; no JS errors.

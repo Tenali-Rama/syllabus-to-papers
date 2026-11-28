@@ -115,8 +115,12 @@ h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacin
 .ans{margin-top:12px;padding:12px 16px;background:var(--okbg);border:1px solid var(--ln);border-left:4px solid var(--ok);border-radius:4px 8px 8px 4px;max-width:62ch}
 .ans .al{display:block;font-size:.8em;font-weight:700;color:var(--ok);margin-bottom:2px}
 .ans p{margin:0}
-.show{min-height:44px;font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--ln)}.show:hover{text-decoration-color:var(--tx)}
-.rs{color:var(--sub);font-size:.88em;min-height:44px;margin-top:8px}.rs:hover{color:var(--tx);text-decoration:underline}
+.show{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:6px 14px;border:1px solid var(--ln);border-radius:8px;font-weight:600;font-size:.92em;color:var(--tx);background:var(--bg)}
+.show svg{color:var(--sub);flex:none}
+.show:hover{border-color:var(--lk);background:var(--hl)}
+.rs{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:6px 14px;border:1px solid var(--ln);border-radius:8px;font-weight:600;font-size:.92em;color:var(--no);background:var(--bg);margin-top:10px}
+.rs svg{flex:none;opacity:.75}
+.rs:hover{border-color:var(--no);background:var(--hl)}
 .note h1+p{margin-top:1.4em}   /* real guides open with a lead paragraph; the prototype's opens with a heading */
 .note p{margin:.7em 0}.note ul{padding-left:1.2em}.note li{margin:.4em 0}
 .f{background:var(--hl);padding:12px 16px;margin:1em 0;border-radius:6px;overflow-x:auto;white-space:nowrap;font-family:Georgia,serif;font-style:italic}
@@ -187,8 +191,11 @@ pre{background:var(--hl);border-radius:6px;padding:12px 16px;overflow-x:auto}pre
 .trow #tgo{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 .trow #tgo:hover{opacity:.9;background:var(--tx)}
 .trow #tstat{flex:1;color:var(--sub);font-variant-numeric:tabular-nums;font-size:.95em;min-width:0}
-/* guarded reveal: the armed pill invites the confirming second tap */
-.show.arm{text-decoration:none;background:var(--hl);border:1px solid var(--lk);border-radius:99px;padding:4px 14px}
+/* armed guards: solid confirm state, no second looks needed */
+.show.arm{background:var(--tx);border-color:var(--tx);color:var(--bg)}
+.show.arm svg{color:inherit}
+.rs.arm{background:var(--no);border-color:var(--no);color:var(--bg)}
+.rs.arm svg{opacity:1}
 /* phone density: shorter title block, tighter questions and option rows */
 @media(max-width:759px){
   main h1{font-size:1.28em;margin-bottom:2px}
