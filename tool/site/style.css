@@ -73,10 +73,20 @@ h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacin
 .inl{margin-top:12px}.inl .tl{flex-direction:row;flex-wrap:wrap;gap:6px}.inl .tl a,.inl .tl button{border:1px solid var(--ln);margin:0;border-radius:99px;padding:3px 12px}.inl .tl em{display:none}
 /* question number grid */
 .gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:8px}
-.gr button{height:40px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ln);border-radius:6px;font-variant-numeric:tabular-nums}
+.gr button{height:40px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ln);border-radius:6px;font-variant-numeric:tabular-nums;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease}
 .gr button:not(.d):hover{background:var(--hl)}.gr .d:hover{opacity:.85}
-.gr .d{background:var(--tx);color:var(--bg);border-color:var(--tx)}
-.gr .c{outline:2px solid var(--lk);outline-offset:2px;font-weight:700}
+.gr .d{background:var(--tx);color:var(--bg);border-color:var(--tx);animation:gr-pop .25s ease}
+.gr .c{outline:2px solid var(--lk);outline-offset:2px;font-weight:700;animation:gr-ring .5s ease}
+@keyframes gr-pop{50%{transform:scale(.86)}}
+@keyframes gr-ring{0%{outline-color:transparent;outline-offset:6px}}
+/* legend under the grid: filled = answered, outline = not answered */
+.gl{display:flex;align-items:center;gap:16px;margin:10px 0 0;font-size:.78em;color:var(--sub)}
+.gl span{display:inline-flex;align-items:center;gap:6px}
+.gl i{width:12px;height:12px;border:1px solid var(--ln);border-radius:3px}
+.gl .gd{background:var(--tx);border-color:var(--tx)}
+/* mobile sheet: cells fade in with a small per-cell delay */
+.sheet:not([hidden]) .panel .gr button{animation:gr-rise .3s ease backwards;animation-delay:calc(var(--i,0)*12ms)}
+@keyframes gr-rise{from{opacity:0;transform:translateY(6px)}}
 /* mobile: floating button + bottom sheet */
 .fab{position:fixed;right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;width:56px;height:56px;padding:0;border-radius:50%;background:var(--bg);color:var(--tx);border:1px solid var(--ln);box-shadow:0 2px 10px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;text-align:center;font-variant-numeric:tabular-nums}
 .fab .ring{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);transform:rotate(-90deg)}
@@ -87,7 +97,7 @@ h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacin
 .pb{height:6px;border-radius:99px;background:var(--ln);overflow:hidden;margin:0 0 16px}
 .pb i{display:block;height:100%;width:0;background:var(--pg);border-radius:inherit;transition:width .35s ease}
 .pb.full i{background:var(--ok)}
-@media(prefers-reduced-motion:reduce){.pb i,.fab .rf{transition:none}}
+@media(prefers-reduced-motion:reduce){.pb i,.fab .rf{transition:none}.gr button{transition:none}.gr .d,.gr .c,.sheet:not([hidden]) .panel .gr button,.q.flash{animation:none}}
 .sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end}
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.4)}
 .panel{position:relative;width:100%;max-height:70vh;overflow:auto;background:var(--bg);border-radius:16px 16px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px))}
@@ -95,6 +105,8 @@ h1{font-size:1.75em;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacin
 /* questions */
 .q{padding:20px 0;border-bottom:1px solid var(--ln);scroll-margin-top:72px}
 .q:first-of-type{border-top:1px solid var(--ln)}
+.q.flash{animation:q-flash 1s ease}
+@keyframes q-flash{0%,55%{background:var(--hl)}}
 .qt{display:grid;grid-template-columns:auto 1fr auto;gap:0 12px;align-items:baseline;margin:0 0 10px}
 .nn{color:var(--sub);font-weight:600;font-variant-numeric:tabular-nums;min-width:1.2em}
 .qx{font-size:1.05em;max-width:62ch}

@@ -152,6 +152,7 @@
     var path = location.pathname, A = get("a:" + path, { q: {} });
     A.q = A.q || {};
     var fab = M.querySelector(".fab"), sheet = M.querySelector(".sheet"), reset = M.querySelector(".rs");
+    $$(".gr [data-j]").forEach(function (b, i) { b.style.setProperty("--i", i); });   // per-cell delay for the sheet's stagger-in
     qs.forEach(function (x, i) {
       x.id = "q" + i;
       var list = x.querySelector(".opts");
@@ -169,7 +170,7 @@
     function sync() {                                                             // highlight the question on screen in the number grid
       var k = 0;
       qs.forEach(function (x, i) { if (x.getBoundingClientRect().top < 140) k = i; });
-      $$(".gr [data-j]").forEach(function (b) { b.classList.toggle("c", +b.dataset.j === k); });
+      $$(".gr [data-j]").forEach(function (b) { var on = +b.dataset.j === k; b.classList.toggle("c", on); if (on) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current"); });
     }
     function draw() {
       var d = 0;
@@ -194,6 +195,7 @@
         var i = +b.dataset.j;
         b.classList.toggle("d", done(i));
         b.setAttribute("aria-label", "Question " + qs[i].querySelector(".nn").textContent + (done(i) ? ", answered" : ""));
+        b.title = b.getAttribute("aria-label");
       });
       var pct = qs.length ? d / qs.length * 100 : 0, full = d > 0 && d === qs.length;
       $$(".pb").forEach(function (b) { b.setAttribute("aria-valuenow", d); b.classList.toggle("full", full); b.querySelector("i").style.width = pct + "%"; });
@@ -213,7 +215,11 @@
       else if (t.closest(".rs")) { A.q = {}; draw(); }
       else if (t.closest(".fab")) { sheet.hidden = false; }
       else if (t.closest(".scrim")) { sheet.hidden = true; }
-      else if ((jump = t.closest(".gr [data-j]"))) { sheet.hidden = true; qs[+jump.dataset.j].scrollIntoView({ behavior: glide, block: "start" }); }
+      else if ((jump = t.closest(".gr [data-j]"))) {
+        var el = qs[+jump.dataset.j]; sheet.hidden = true;
+        el.scrollIntoView({ behavior: glide, block: "start" });
+        el.classList.add("flash"); setTimeout(function () { el.classList.remove("flash"); }, 1000);   // show where the jump landed
+      }
     });
     addEventListener("scroll", sync, { passive: true });
     draw();
