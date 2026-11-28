@@ -70,3 +70,16 @@ tap keeps answers; first-screen capture shows all of Q1's options above the fold
 Verified by puppeteer at 390px: fab hides scrolling down / returns scrolling up; Q22
 renders 4 tappable options and tapping B marks it correct (1/37 answered); instructions
 render as a list; validate.py passes all 4 run dirs; no JS errors.
+
+## Pass 4 — timer UI redesign (same day)
+
+The bottom drawer with preset buttons is gone. The timer is now a small popover anchored
+under the header chip:
+- tap the chip → popover with a single "Minutes, e.g. 90" input + Start (Enter starts too)
+- while running, the popover is one row: "44:59 left · Pause · Reset" (Resume replaces
+  Pause when paused)
+- closes on outside tap or Esc; reset also closes it; per-paper persistence unchanged
+
+Verified by puppeteer at 390px: Enter-start shows 44:59 on the chip and closes the
+popover; pause shows "Paused at 44:58"; outside-click and Esc both close; reset clears
+the chip; no JS errors.

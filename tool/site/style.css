@@ -177,18 +177,16 @@ pre{background:var(--hl);border-radius:6px;padding:12px 16px;overflow-x:auto}pre
 .tmb.on{color:var(--tx);border-color:var(--tx)}
 .tmb.up{color:var(--no);border-color:var(--no)}
 @media(max-width:759px){.tmb:not(.on):not(.up) span{display:none}.tmb{padding:0 10px}}
-/* timer bottom sheet */
-.tsub{margin:2px 0 10px;color:var(--sub);font-size:.92em}
-.tp{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px}
-.tp button{min-height:40px;padding:6px 14px;border:1px solid var(--ln);border-radius:99px;font-weight:600;font-variant-numeric:tabular-nums}
-.tp button:hover{background:var(--hl)}
-.trow{display:flex;gap:8px;margin-top:10px}
-.trow input{flex:1;min-width:0;height:40px;padding:0 12px;border:1px solid var(--ln);border-radius:8px;background:var(--hl);color:var(--tx);font:inherit}
+/* timer popover: one input to set, one row to run */
+.tpop{position:fixed;top:calc(56px + 6px);right:16px;z-index:40;width:min(300px,calc(100vw - 24px));background:var(--bg);border:1px solid var(--ln);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.25);padding:12px}
+.trow{display:flex;gap:8px;align-items:center}
+.trow input{flex:1;min-width:0;height:38px;padding:0 12px;border:1px solid var(--ln);border-radius:8px;background:var(--hl);color:var(--tx);font:inherit}
 .trow input:focus{outline:0;border-color:var(--lk);background:var(--bg)}
-.trow button{min-height:40px;padding:6px 16px;border:1px solid var(--ln);border-radius:8px;font-weight:600}
+.trow button{min-height:38px;padding:4px 12px;border:1px solid var(--ln);border-radius:8px;font-weight:600;font-size:.92em;white-space:nowrap}
 .trow button:hover{background:var(--hl)}
 .trow #tgo{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 .trow #tgo:hover{opacity:.9;background:var(--tx)}
+.trow #tstat{flex:1;color:var(--sub);font-variant-numeric:tabular-nums;font-size:.95em;min-width:0}
 /* guarded reveal: the armed pill invites the confirming second tap */
 .show.arm{text-decoration:none;background:var(--hl);border:1px solid var(--lk);border-radius:99px;padding:4px 14px}
 /* phone density: shorter title block, tighter questions and option rows */

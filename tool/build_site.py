@@ -219,16 +219,14 @@ def main():
                         '<circle class="rf" cx="22" cy="22" r="19" pathLength="100" stroke-dasharray="0 100"/></svg>')
                 clock = svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', 16)
                 tm_hd = (f'<button class="tmb" id="tmb" type="button" aria-label="Exam timer">{clock}<span hidden>Timer</span></button>')
-                tm_sheet = ('<div class="sheet" id="tsheet" hidden><div class="scrim" data-tc="1"></div><div class="panel">'
-                            '<h3>Exam timer</h3><p class="tsub" id="tstat" hidden></p>'
-                            '<div id="tsetrow"><p class="tsub">Set how long you get, then start. The timer keeps counting even if you leave the page.</p>'
-                            '<div class="tp">' + "".join(f'<button type="button" data-tm="{v}">{v} min</button>' for v in (30, 60, 90, 120, 180)) + '</div>'
-                            '<div class="trow"><input id="tmin" type="number" min="1" max="480" inputmode="numeric" placeholder="Custom minutes" aria-label="Custom minutes">'
-                            '<button type="button" id="tgo">Start</button></div></div>'
-                            '<div class="trow"><button type="button" id="tpause" hidden>Pause</button>'
+                tm_sheet = ('<div class="tpop" id="tsheet" hidden>'
+                            '<div class="trow" id="tsetrow"><input id="tmin" type="text" inputmode="numeric" placeholder="Minutes, e.g. 90" aria-label="Timer minutes">'
+                            '<button type="button" id="tgo">Start</button></div>'
+                            '<div class="trow" id="trunrow" hidden><span id="tstat"></span>'
+                            '<button type="button" id="tpause" hidden>Pause</button>'
                             '<button type="button" id="tresume" hidden>Resume</button>'
-                            '<button type="button" id="treset" hidden>Reset timer</button></div>'
-                            '</div></div>')
+                            '<button type="button" id="treset" hidden>Reset</button></div>'
+                            '</div>')
                 main_html = (f'{md_to_html(front + chr(10) + chr(10) + q_md)}<button type="button" class="rs" data-r="1" hidden>Reset this paper</button>'
                              f'<button type="button" class="fab" data-g="1" aria-label="Question list, 0 of {st["n"]} answered">{ring}<span>0/{st["n"]}</span></button>'
                              f'<div class="sheet qsheet" hidden><div class="scrim" data-g="0"></div><div class="panel"><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></div></div>'

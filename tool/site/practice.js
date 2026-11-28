@@ -274,24 +274,30 @@
         }, 500);
       }
       function tstart(sec) { T = { left: sec, end: Date.now() + sec * 1000 }; trun(); tdraw(); tsheet.hidden = true; }
-      function tpanel() {                                                    // sheet shows the actions the current state allows
+      function tpanel() {                                                    // popover shows the one row the current state needs
         var q2 = function (id) { return tsheet.querySelector(id); };
         q2("#tsetrow").hidden = !!T;
+        q2("#trunrow").hidden = !T;
         q2("#tpause").hidden = !T || !T.end;
         q2("#tresume").hidden = !T || !!T.end || T.left === 0;
         q2("#treset").hidden = !T;
-        q2("#tstat").hidden = !T;
-        if (T) q2("#tstat").textContent = T.left === 0 ? "Time is up." : (T.end ? "Running \u00b7 " + fmt(T.left) + " left." : "Paused \u00b7 " + fmt(T.left) + " left.");
+        if (T) q2("#tstat").textContent = T.left === 0 ? "Time is up." : (T.end ? fmt(T.left) + " left" : "Paused at " + fmt(T.left));
       }
       document.addEventListener("click", function (ev) {
         var c = ev.target, p;
-        if (c.closest("#tmb")) { tpanel(); tsheet.hidden = false; }
-        else if (c.closest("[data-tc]")) { tsheet.hidden = true; }
-        else if ((p = c.closest("[data-tm]"))) { tstart(+p.dataset.tm * 60); }
-        else if (c.closest("#tgo")) { var v = parseInt(tmin.value, 10); if (v > 0 && v <= 480) tstart(v * 60); }
-        else if (c.closest("#tpause")) { if (T && T.end) { T.left = Math.max(0, Math.round((T.end - Date.now()) / 1000)); T.end = null; tstop(); tdraw(); tpanel(); } }
-        else if (c.closest("#tresume")) { if (T && !T.end && T.left > 0) { T.end = Date.now() + T.left * 1000; trun(); tdraw(); tpanel(); } }
-        else if (c.closest("#treset")) { T = null; tstop(); tdraw(); tpanel(); }
+        if (c.closest("#tmb")) { tsheet.hidden = !tsheet.hidden; if (!tsheet.hidden) { tpanel(); if (!T) { tmin.focus(); } } }
+        else if (!tsheet.hidden && !c.closest("#tsheet")) { tsheet.hidden = true; }
+        if (tsheet.hidden) return;
+        if ((p = c.closest("#tgo"))) { var v = parseInt(tmin.value, 10); if (v > 0 && v <= 480) tstart(v * 60); else tmin.focus(); }
+        else if ((p = c.closest("#tpause"))) { if (T && T.end) { T.left = Math.max(0, Math.round((T.end - Date.now()) / 1000)); T.end = null; tstop(); tdraw(); tpanel(); } }
+        else if ((p = c.closest("#tresume"))) { if (T && !T.end && T.left > 0) { T.end = Date.now() + T.left * 1000; trun(); tdraw(); tpanel(); } }
+        else if ((p = c.closest("#treset"))) { T = null; tstop(); tdraw(); tsheet.hidden = true; }
+      });
+      tmin.addEventListener("keydown", function (ev) {                       // Enter starts straight from the input
+        if (ev.key === "Enter") { var v = parseInt(tmin.value, 10); if (v > 0 && v <= 480) tstart(v * 60); }
+      });
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape" && !tsheet.hidden) tsheet.hidden = true;
       });
       if (T && T.end) trun();
       tdraw();
