@@ -33,6 +33,8 @@ def svg(path, size=22):
 SUN = svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')
 MOON = svg('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>')
 BACK = svg('<path d="M15 5l-7 7 7 7"/>', 18)
+FIND = svg('<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>', 16)
+X = svg('<path d="M18 6L6 18M6 6l12 12"/>', 14)
 
 # Runs in <head>, before first paint: the saved theme, else the system's.
 THEME_INIT_JS = """<script>try{var c=JSON.parse(localStorage.getItem('papers-cfg')||'{}').theme,t=localStorage.getItem('theme');
@@ -52,7 +54,10 @@ def page(title, rel, main, rail, crumbs=None, search=False, math=False, main_att
     else:
         head = f'<span class="wm">{BRAND}</span>'
         if search:
-            head += '<input class="search" id="q" type="search" placeholder="Search courses or tags" aria-label="Search">'
+            head += (f'<div class="sw"><span class="si">{FIND}</span>'
+                     f'<input class="search" id="q" type="search" placeholder="Search courses, papers and questions" aria-label="Search" autocomplete="off">'
+                     f'<button class="sq" id="qc" type="button" aria-label="Clear search" hidden>{X}</button>'
+                     f'<kbd class="sk">/</kbd><div class="sug" id="sug" hidden></div></div>')
     kx = f'\n<link rel="stylesheet" href="{rel}katex/katex.min.css">' if math else ""
     return f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -98,6 +103,19 @@ def pretty(slug):
 
 def count_questions(md):
     return len(re.findall(r"\(M\d+,\s*\d+", md))
+
+
+QDIV = re.compile(r'<div class="q"[^>]*>')
+
+def question_texts(doc):
+    """Plain-text snippets of each question, in page order; practice.js anchors them as #q0, #q1, ..."""
+    out = []
+    for chunk in QDIV.split(doc)[1:]:
+        chunk = chunk.split('<div class="sheet"')[0]
+        t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", chunk)).strip()
+        if t:
+            out.append(t[:200])
+    return out
 
 def difficulty_label(d):
     return {"easy": "Easy", "medium": "Medium", "hard": "Hard", "study": "Study guide"}[d]
@@ -170,6 +188,7 @@ def main():
 
     # ---- paper + study pages ----
     total_math = 0
+    search_papers, search_questions = [], []
     for m in runs:
         pages = m.get("pages", {})
         os.makedirs(os.path.join(OUT, m["syllabus"], m["run"]), exist_ok=True)
@@ -204,6 +223,12 @@ def main():
                 rail = f'<section><h3>{counted}</h3>{bar}<div class="gr">{cells}</div></section>'
             body_html, n_math = render_math(main_html, where)
             total_math += n_math
+            url = f'{m["syllabus"]}/{m["run"]}/{k_file(kind)}'
+            search_papers.append({"c": m["title"], "t": label, "r": f'{m["date"]} \u00b7 {m["run"]}', "u": url,
+                                  "s": (m["title"] + " " + label + " " + m["date"]).lower()})
+            for i, t in enumerate(question_texts(body_html) if kind != "study" else []):
+                search_questions.append({"t": t, "c": m["title"], "p": label, "u": f"{url}#q{i}",
+                                         "s": (t + " " + m["title"] + " " + label).lower()})
             doc = page(f'{m["title"]}, {label}', rel, body_html, rail, math=True, main_attrs=attrs,
                        crumbs=[(BRAND, f"{rel}index.html"), (m["title"], "../index.html"), (label, None)])
             with open(os.path.join(OUT, m["syllabus"], m["run"], k_file(kind)), "w", encoding="utf-8") as f:
@@ -217,12 +242,14 @@ def main():
     for slug, rs in by_slug.items():
         rs.sort(key=lambda r: (r["date"], r["run"]), reverse=True)
         courses.append((slug, rs))
-    home_rows, tag_n = [], {}
+    home_rows, tag_n, course_index = [], {}, []
     for slug, rs in sorted(courses, key=lambda c: c[1][0]["title"].casefold()):
         latest, older = rs[0], rs[1:]
         title, tags = latest["title"], course_tags(slug)
         for t in tags:
             tag_n[t] = tag_n.get(t, 0) + 1
+        course_index.append({"t": title, "g": " \u00b7 ".join(tags), "u": f"{slug}/index.html",
+                             "s": (title + " " + " ".join(tags)).lower()})
 
         def rows_of(run, note=""):
             out = ""
@@ -256,6 +283,8 @@ def main():
     rail = f'<section><h3>Tags</h3>{tag_list(tag_n, None)}</section>'
     with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:
         f.write(page(BRAND, "", main_html, rail, search=True))
+    with open(os.path.join(OUT, "search-index.json"), "w", encoding="utf-8") as f:   # the home search's suggestions
+        json.dump({"courses": course_index, "papers": search_papers, "questions": search_questions}, f, ensure_ascii=False)
     print(f"built {sum(len(r['pages']) for r in runs)} pages across {len(courses)} courses, {total_math} formulas rendered by KaTeX -> {OUT}")
 
 

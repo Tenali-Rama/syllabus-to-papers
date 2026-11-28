@@ -23,17 +23,92 @@
   mq.addEventListener("change", function () { if (!cfg.theme) theme(); });
   theme();
 
-  /* ---- course list: search, tags, Continue ---- */
+  /* ---- course list: search (words, suggestions, recents), tags, Continue ---- */
   var q = document.getElementById("q");
   if (q) {
     var st = { q: "" }, rows = $$(".row[data-c]"), lst = document.getElementById("lst"), cl = document.getElementById("cl"),
-        none = document.getElementById("none"), nav = document.getElementById("nav"), tags = $$(".rail [data-t]");
+        none = document.getElementById("none"), nav = document.getElementById("nav"), tags = $$(".rail [data-t]"),
+        clear = document.getElementById("qc"), sug = document.getElementById("sug"),
+        idx = null, sugList = [], sugSel = -1;
     rows.sort(function (a, b) { return a.dataset.n.localeCompare(b.dataset.n); }).forEach(function (r) { lst.appendChild(r); });
+
+    function toks(s) { return s.toLowerCase().trim().split(/\s+/).filter(Boolean); }
+    function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+    function hitsFor(s) {                                                    // every word must appear somewhere (name or tags)
+      var t = toks(s);
+      return t.length ? rows.filter(function (r) { return t.every(function (w) { return r.dataset.s.indexOf(w) > -1; }); }) : rows;
+    }
+    function mark(el, t) {                                                   // underline the typed words where they match
+      if (!el) return;
+      var raw = el.getAttribute("data-raw") || el.textContent;
+      el.setAttribute("data-raw", raw);
+      if (!t.length) { el.textContent = raw; return; }
+      var re = new RegExp("(" + t.map(escRe).join("|") + ")", "gi"), m, last = 0, frag = document.createDocumentFragment();
+      while ((m = re.exec(raw))) {
+        frag.appendChild(document.createTextNode(raw.slice(last, m.index)));
+        var mk = document.createElement("mark"); mk.textContent = m[0]; frag.appendChild(mk);
+        last = m.index + m[0].length;
+        if (!m[0].length) re.lastIndex++;
+      }
+      frag.appendChild(document.createTextNode(raw.slice(last)));
+      el.textContent = ""; el.appendChild(frag);
+    }
+
+    /* suggestions: courses, papers and questions from the prebuilt index; recents before you type */
+    try { fetch("search-index.json").then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j) idx = j; }).catch(function () {}); } catch (e) {}
+    function remember(e) {
+      var r = get("papers-recents", []).filter(function (x) { return x.u !== e.u; });
+      r.unshift({ t: e.t, d: e.d, u: e.u }); put("papers-recents", r.slice(0, 5));
+    }
+    function sugItems(s) {
+      var t = toks(s), out = [];
+      if (!t.length || !idx) return out;
+      function hit(h) { return t.every(function (w) { return h.indexOf(w) > -1; }); }
+      (idx.courses || []).forEach(function (c) { if (hit(c.s)) out.push({ g: "Courses", t: c.t, d: c.g, u: c.u }); });
+      (idx.papers || []).forEach(function (p) { if (hit(p.s)) out.push({ g: "Papers", t: p.c + " \u00b7 " + p.t, d: p.r, u: p.u }); });
+      (idx.questions || []).forEach(function (x) { if (hit(x.s)) out.push({ g: "Questions", t: x.t, d: x.c + " \u00b7 " + x.p, u: x.u }); });
+      return out.slice(0, 12);
+    }
+    function closeSug() { if (sug) { sug.hidden = true; sug.innerHTML = ""; } sugSel = -1; sugList = []; }
+    function drawSug() {
+      if (!sug) return;
+      var s = q.value.trim();
+      sugList = s ? sugItems(s) : get("papers-recents", []).map(function (r) { return { g: "Recent", t: r.t, d: r.d, u: r.u }; });
+      if (!sugList.length) {
+        sug.hidden = !s;                                                    // empty query with no recents: stay closed
+        if (s) { sug.textContent = ""; var d = document.createElement("div"); d.className = "sg"; d.textContent = "No matches"; sug.appendChild(d); }
+        sugSel = -1; return;
+      }
+      sug.textContent = ""; var g = null;
+      sugList.forEach(function (it, i) {
+        if (it.g !== g) { g = it.g; var h = document.createElement("div"); h.className = "sg"; h.textContent = g; sug.appendChild(h); }
+        var a = document.createElement("a"); a.className = "su" + (i === sugSel ? " on" : ""); a.href = it.u;
+        var sp = document.createElement("span"); sp.textContent = it.t; a.appendChild(sp);
+        var sm = document.createElement("small"); sm.textContent = it.d || ""; a.appendChild(sm);
+        a.addEventListener("mousedown", function (ev) { ev.preventDefault(); remember(it); location.href = it.u; });
+        sug.appendChild(a);
+      });
+      sug.hidden = false;
+    }
+    function moveSug(d) {
+      if (!sugList.length) return;
+      sugSel += d;
+      if (sugSel < -1) sugSel = sugList.length - 1;                          // -1 = nothing selected
+      if (sugSel >= sugList.length) sugSel = -1;
+      $$(".su", sug).forEach(function (a, i) { a.classList.toggle("on", i === sugSel); });
+    }
+    function qcShow() { if (clear) clear.hidden = !q.value; }
+
     function filt() {
-      var s = st.q.toLowerCase(), hits = rows.filter(function (r) { return r.dataset.s.indexOf(s) > -1; }), last = get("last", null), sc;
-      rows.forEach(function (r) { r.hidden = hits.indexOf(r) < 0; });
+      var t = toks(st.q), hits = t.length ? rows.filter(function (r) { return t.every(function (w) { return r.dataset.s.indexOf(w) > -1; }); }) : rows,
+          last = get("last", null), sc;
+      rows.forEach(function (r) {
+        var on = hits.indexOf(r) > -1;
+        r.hidden = !on;
+        if (on) { mark(r.querySelector("b"), t); mark(r.querySelector("small"), t); }
+      });
       q.value = st.q;
-      cl.textContent = st.q ? "Results" : "Courses";
+      cl.textContent = st.q ? "Results \u00b7 " + hits.length + (hits.length === 1 ? " course" : " courses") : "Courses";
       cl.hidden = lst.hidden = !hits.length;
       none.hidden = !st.q || !!hits.length;
       nav.hidden = !!st.q || !(last && last.u && last.c);
@@ -47,11 +122,27 @@
       }
       try { history.replaceState(null, "", st.q ? "#tag=" + encodeURIComponent(st.q) : location.pathname); } catch (e) {}
     }
-    q.addEventListener("input", function () { st.q = q.value; filt(); });
-    tags.forEach(function (b) { b.addEventListener("click", function () { st.q = st.q === b.dataset.t ? "" : b.dataset.t; filt(); }); });
+    q.addEventListener("input", function () { st.q = q.value; filt(); qcShow(); sugSel = -1; drawSug(); });
+    q.addEventListener("focus", drawSug);
+    q.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") { e.preventDefault(); moveSug(1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); moveSug(-1); }
+      else if (e.key === "Enter" && sugSel > -1 && sugList[sugSel]) { remember(sugList[sugSel]); location.href = sugList[sugSel].u; }
+    });
+    if (clear) clear.addEventListener("click", function () { st.q = ""; filt(); qcShow(); closeSug(); q.focus(); });
+    document.addEventListener("keydown", function (e) {                     // "/" or Ctrl-K focuses search, Esc clears it
+      var a = document.activeElement, typing = a && /^(input|textarea|select)$/i.test(a.tagName);
+      if ((e.key === "/" || (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey))) && !typing) { e.preventDefault(); q.focus(); q.select(); }
+      else if (e.key === "Escape" && a === q) {
+        if (q.value) { st.q = ""; filt(); qcShow(); }
+        closeSug(); q.blur();
+      }
+    });
+    document.addEventListener("click", function (e) { if (!e.target.closest(".sw")) closeSug(); });
+    tags.forEach(function (b) { b.addEventListener("click", function () { st.q = st.q === b.dataset.t ? "" : b.dataset.t; filt(); qcShow(); closeSug(); }); });
     var deep = /^#tag=(.+)$/.exec(location.hash);
     if (deep) { try { st.q = decodeURIComponent(deep[1]); } catch (e) {} }
-    filt();
+    filt(); qcShow();
   }
 
   /* ---- paper: answer in place ---- */

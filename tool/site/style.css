@@ -31,8 +31,25 @@ svg{display:block}
 .bk svg{width:18px;height:18px;flex:none}
 .bk{min-width:0}.bk span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}   /* one line like the prototype, however long the course title */
 @media(min-width:640px){.cr{display:flex}.bk{display:none}}
-.search{flex:1;max-width:420px;height:38px;padding:0 12px;border:1px solid var(--ln);border-radius:6px;background:var(--hl);color:var(--tx);font:inherit}
-.search:focus{outline:0;border-color:var(--lk);background:var(--bg)}
+/* search: icon, clear button, / hint and the suggestions dropdown */
+.sw{position:relative;flex:1;max-width:420px;display:flex;align-items:center}
+.search{width:100%;height:38px;padding:0 56px 0 34px;border:1px solid var(--ln);border-radius:8px;background:var(--hl);color:var(--tx);font:inherit}
+.search:focus{outline:0;border-color:var(--lk);background:var(--bg);box-shadow:0 1px 8px rgba(0,0,0,.14)}
+.search::-webkit-search-cancel-button{display:none}
+.si{position:absolute;left:10px;display:flex;color:var(--sub);pointer-events:none}
+.sw:focus-within .si{color:var(--tx)}
+.sq{position:absolute;right:34px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--sub);border-radius:50%}
+.sq:hover{color:var(--tx);background:var(--ln)}
+.sk{position:absolute;right:8px;padding:1px 7px;border:1px solid var(--ln);border-radius:5px;background:var(--bg);color:var(--sub);font-size:.72em;font-weight:600;pointer-events:none}
+.sw:focus-within .sk{display:none}
+@media(hover:none){.sk{display:none}}
+.sug{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:30;max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--ln);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.22)}
+.sg{padding:10px 14px 4px;font-size:.74em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sub)}
+.su{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 14px;min-height:40px}
+.su:hover,.su.on{background:var(--hl)}
+.su span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:.95em}
+.su small{flex:none;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--sub);font-size:.82em}
+mark{background:none;color:var(--tx);font-weight:700;text-decoration:underline;text-decoration-color:var(--pg);text-underline-offset:3px}
 .tg{width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--sub);flex:none;margin-right:-10px}
 .tg:hover{color:var(--tx)}
 .cols{display:block}
